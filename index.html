@@ -402,7 +402,7 @@ nav.main-links a:hover::after{right:0}
 .b-card p{font-size:13.5px;color:var(--text-dim);line-height:1.5}
 
 /* ============ WHO WE BUILD FOR ============ */
-.audience-wrap{margin-top:50px;position:relative}
+.audience-wrap{margin-top:50px;position:relative;overflow:hidden}
 .audience-track{display:flex;gap:14px;animation:scrollx2 40s linear infinite}
 .audience-wrap:hover .audience-track{animation-play-state:paused}
 @keyframes scrollx2{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -431,6 +431,7 @@ nav.main-links a:hover::after{right:0}
 .svc-card h3{font-size:19px;margin-bottom:10px}
 .svc-card p{font-size:14px;color:var(--text-dim);line-height:1.6;flex:1}
 .svc-card .go{margin-top:18px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--electric-2);display:flex;align-items:center;gap:6px;transition:gap .3s}
+.svc-card .go svg{width:14px;height:14px;flex:none}
 .svc-card:hover .go{gap:11px}
 
 /* ============ ADD-ONS ============ */
