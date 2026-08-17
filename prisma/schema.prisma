@@ -573,6 +573,7 @@ model Contact {
   moduleRecords     ModuleRecord[]
   mediaAssets       MediaAsset[]
 
+  @@unique([companyId, email])
   @@index([companyId, createdAt])
   @@index([companyId, lastActivityAt])
 }
