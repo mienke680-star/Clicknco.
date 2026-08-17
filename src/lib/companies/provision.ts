@@ -10,12 +10,12 @@ import type { WidgetType } from "@/generated/prisma/client";
 export const BUILTIN_MODULES = [
   { key: "contacts", name: "Contacts", icon: "Users" },
   { key: "pipelines", name: "Pipeline", icon: "Kanban" },
-  { key: "tasks", name: "Tasks", icon: "CheckSquare" },
+  { key: "tasks", name: "Tasks", icon: "SquareCheckBig" },
   { key: "forms", name: "Forms", icon: "FileText" },
   { key: "emails", name: "Emails", icon: "Mail" },
   { key: "automations", name: "Automations", icon: "Workflow" },
   { key: "documents", name: "Documents", icon: "FolderOpen" },
-  { key: "reports", name: "Reports", icon: "BarChart3" },
+  { key: "reports", name: "Reports", icon: "ChartColumn" },
   { key: "users", name: "Users", icon: "UserCog" },
   { key: "settings", name: "Settings", icon: "Settings" },
 ] as const;

@@ -13,8 +13,9 @@
 # testing
 /coverage
 
-# next.js
-/.next/
+# next.js (match anywhere — a misplaced `cd` before `next build` has written this
+# under src/app/ before; don't rely on it only ever landing at the repo root)
+.next/
 /out/
 
 # production

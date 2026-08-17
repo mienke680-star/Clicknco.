@@ -101,11 +101,11 @@ async function seedMarketingFeatures() {
   const features = [
     { icon: "Users", title: "CRM & Contacts", description: "Every lead and client in one place, with custom fields, tags and full activity history." },
     { icon: "Kanban", title: "Custom Pipelines", description: "Drag-and-drop stages built around how your business actually sells or delivers work." },
-    { icon: "CheckSquare", title: "Task Management", description: "List, kanban and calendar views keep every team on top of what's due." },
+    { icon: "SquareCheckBig", title: "Task Management", description: "List, kanban and calendar views keep every team on top of what's due." },
     { icon: "FileText", title: "Form Builder", description: "Capture enquiries straight into the right pipeline, contact or custom module." },
     { icon: "Workflow", title: "Automation", description: "Trigger emails, tasks, tags and notifications the moment something happens." },
     { icon: "FolderOpen", title: "Documents & Templates", description: "Store contracts and quotes, and generate new ones from merge-field templates." },
-    { icon: "BarChart3", title: "Reports", description: "Real numbers on leads, sales, tasks and team activity — filterable by date and user." },
+    { icon: "ChartColumn", title: "Reports", description: "Real numbers on leads, sales, tasks and team activity — filterable by date and user." },
     { icon: "Palette", title: "White-Label Branding", description: "Your logo, colours and domain — your team never needs to see the Click & Co name." },
     { icon: "ShieldCheck", title: "Role-Based Permissions", description: "Decide exactly what every staff member can view, edit or approve." },
     { icon: "Puzzle", title: "Custom Modules", description: "Properties, vehicles, jobs, mandates — any record type your business needs, no code required." },
@@ -122,7 +122,7 @@ async function seedMarketingFeatures() {
 
 async function seedIndustries() {
   const industries = [
-    { icon: "Home", name: "Real Estate" },
+    { icon: "House", name: "Real Estate" },
     { icon: "HardHat", name: "Construction" },
     { icon: "Building2", name: "Property Management" },
     { icon: "Megaphone", name: "Marketing" },
@@ -247,7 +247,7 @@ async function seedDemoCompany() {
         companyId: company.id,
         key: "properties",
         name: "Properties",
-        icon: "Home",
+        icon: "House",
         kind: "CUSTOM",
         active: true,
         sortOrder: 10,

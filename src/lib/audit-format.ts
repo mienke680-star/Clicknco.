@@ -1,0 +1,33 @@
+const LABELS: Record<string, string> = {
+  "user.login": "signed in",
+  "user.login_failed": "had a failed sign-in attempt",
+  "user.logout": "signed out",
+  "user.signup": "created their account",
+  "user.password_reset_requested": "requested a password reset",
+  "user.password_reset_completed": "reset their password",
+  "user.password_changed": "changed their password",
+  "user.email_verified": "verified their email",
+  "user.2fa_enabled": "enabled two-factor authentication",
+  "user.2fa_disabled": "disabled two-factor authentication",
+  "user.2fa_failed": "entered an invalid two-factor code",
+  "user.switch_company": "switched company",
+  "user.accepted_invite": "activated their account",
+  "admin.enter_company": "entered this company as Super Admin",
+  "company.created": "created the company",
+  "company.updated": "updated company details",
+  "company.suspended": "suspended the company",
+  "company.reactivated": "reactivated the company",
+  "company.archived": "archived the company",
+  "company.deleted": "deleted the company",
+  "contact.created": "created a contact",
+  "contact.updated": "updated a contact",
+  "contact.deleted": "deleted a contact",
+  "task.created": "created a task",
+  "task.completed": "completed a task",
+  "module.created": "created a custom module",
+  "module.updated": "updated a custom module",
+};
+
+export function describeAuditAction(action: string): string {
+  return LABELS[action] ?? action.replace(/[._]/g, " ");
+}
