@@ -30,6 +30,13 @@ const LABELS: Record<string, string> = {
   "task.completed": "completed a task",
   "module.created": "created a custom module",
   "module.updated": "updated a custom module",
+  "module.deleted": "deleted a custom module",
+  "module.field_added": "added a field to a module",
+  "module.field_updated": "updated a module field",
+  "module.field_deleted": "removed a module field",
+  "record.created": "created a record",
+  "record.updated": "updated a record",
+  "record.deleted": "deleted a record",
 };
 
 export function describeAuditAction(action: string): string {

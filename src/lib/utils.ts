@@ -70,3 +70,12 @@ export function slugify(value: string) {
 export function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
+
+/** Best-effort English singularization for module names in UI copy
+ * ("Properties" -> "Property", "Contacts" -> "Contact"). Not a full
+ * inflection engine — just the two patterns real module names hit. */
+export function singularize(name: string) {
+  if (/[a-z]ies$/i.test(name)) return name.slice(0, -3) + "y";
+  if (/[a-z]s$/i.test(name) && !/ss$/i.test(name)) return name.slice(0, -1);
+  return name;
+}
