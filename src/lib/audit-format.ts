@@ -37,6 +37,8 @@ const LABELS: Record<string, string> = {
   "record.created": "created a record",
   "record.updated": "updated a record",
   "record.deleted": "deleted a record",
+  "site.updated": "updated the public site",
+  "site.inquiry_status_changed": "updated an inquiry's status",
 };
 
 export function describeAuditAction(action: string): string {

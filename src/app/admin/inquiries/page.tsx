@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { SectionHeading, ComingSoon } from "@/components/ui/misc";
+import { SectionHeading } from "@/components/ui/misc";
+import { requireSuperAdmin } from "@/lib/auth/rbac";
+import { InquiriesClient } from "./inquiries-client";
 
 export const metadata: Metadata = { title: "Inquiries" };
 
-export default function InquiriesPage() {
+export default async function InquiriesPage() {
+  await requireSuperAdmin();
+
   return (
     <div>
       <SectionHeading title="Inquiries" description="Requests submitted through the public site's contact form." />
-      <ComingSoon title="Inquiries list coming next" />
+      <InquiriesClient />
     </div>
   );
 }

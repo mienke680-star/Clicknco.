@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { SectionHeading, ComingSoon } from "@/components/ui/misc";
+import { SectionHeading } from "@/components/ui/misc";
+import { requireSuperAdmin } from "@/lib/auth/rbac";
+import { SettingsClient } from "./settings-client";
 
 export const metadata: Metadata = { title: "Platform Settings" };
 
-export default function AdminSettingsPage() {
+export default async function AdminSettingsPage() {
+  await requireSuperAdmin();
+
   return (
     <div>
-      <SectionHeading title="Platform Settings" description="Site Manager (public site content), your profile and platform-wide security settings." />
-      <ComingSoon title="Platform settings coming next" />
+      <SectionHeading title="Platform Settings" description="Everything on the public Click & Co site — edit here, it's live immediately." />
+      <SettingsClient />
     </div>
   );
 }

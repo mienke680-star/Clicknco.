@@ -11,11 +11,11 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Click & Co — Your business. One powerful platform.",
+    default: "Click & Co — Custom Business Systems, Built For You",
     template: "%s · Click & Co",
   },
   description:
-    "Click & Co brings your website, funnels, customers, marketing, payments, products and automation together in one beautifully simple workspace.",
+    "Click & Co designs and builds tailored CRM, pipeline, forms and automation systems for companies — a managed platform, not a DIY builder.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
