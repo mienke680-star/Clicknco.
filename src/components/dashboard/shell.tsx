@@ -14,6 +14,11 @@ export interface DashboardShellProps {
   navItems: NavItem[];
   brandName: string;
   brandLogoUrl?: string | null;
+  /** Company white-label colors — override the default coral/aqua brand tokens for this
+   * subtree only (CSS custom properties cascade), so every existing bg-coral-500 /
+   * bg-aqua-400 utility across the portal repaints without per-component changes. */
+  brandPrimaryColor?: string | null;
+  brandAccentColor?: string | null;
   homeHref: string;
   userName: string;
   userEmail: string;
@@ -30,6 +35,8 @@ export function DashboardShell({
   navItems,
   brandName,
   brandLogoUrl,
+  brandPrimaryColor,
+  brandAccentColor,
   homeHref,
   userName,
   userEmail,
@@ -42,6 +49,22 @@ export function DashboardShell({
   children,
 }: DashboardShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const brandVars = {
+    ...(brandPrimaryColor
+      ? {
+          "--color-coral-500": brandPrimaryColor,
+          "--color-coral-600": `color-mix(in srgb, ${brandPrimaryColor} 85%, black)`,
+          "--color-coral-700": `color-mix(in srgb, ${brandPrimaryColor} 70%, black)`,
+        }
+      : {}),
+    ...(brandAccentColor
+      ? {
+          "--color-aqua-400": brandAccentColor,
+          "--color-aqua-500": `color-mix(in srgb, ${brandAccentColor} 85%, black)`,
+        }
+      : {}),
+  } as React.CSSProperties;
 
   const brandBlock = (
     <Link href={homeHref} className="flex items-center gap-2 px-4 py-4">
@@ -58,7 +81,7 @@ export function DashboardShell({
   );
 
   return (
-    <div className="flex min-h-screen bg-cream">
+    <div className="flex min-h-screen bg-cream" style={brandVars}>
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 flex-col bg-navy-900 lg:flex">
         {brandBlock}

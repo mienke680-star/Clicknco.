@@ -12,6 +12,8 @@ export default async function PortalLayout({ children }: { children: React.React
       navItems={navItems}
       brandName={ctx.company.portalName || ctx.company.name}
       brandLogoUrl={ctx.company.logoUrl}
+      brandPrimaryColor={ctx.company.brandPrimaryColor}
+      brandAccentColor={ctx.company.brandAccentColor}
       homeHref="/portal"
       userName={ctx.user.name}
       userEmail={ctx.user.email}

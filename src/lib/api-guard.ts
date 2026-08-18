@@ -1,7 +1,7 @@
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { loadCompanyContext, type PermissionAction, type CompanyContext } from "@/lib/auth/rbac";
-import { verifyCsrf } from "@/lib/auth/session";
+import { getSessionContext, verifyCsrf, type SessionWithUser } from "@/lib/auth/session";
 import { rateLimit, RATE_LIMITS, clientIp } from "@/lib/rate-limit";
 
 export type CompanyApiContext = CompanyContext & {
@@ -55,6 +55,36 @@ export async function requireApiCompanyContext(
 
 export function isApiError(value: unknown): value is NextResponse {
   return value instanceof NextResponse;
+}
+
+/**
+ * Guard for platform-level Super-Admin-only API routes that aren't scoped to
+ * the caller's *active* company (e.g. /api/admin/companies — the Super Admin
+ * manages a company there without needing to have entered it first).
+ */
+export async function requireApiSuperAdmin(
+  req: NextRequest,
+  opts: { mutate?: boolean } = {},
+): Promise<NonNullable<SessionWithUser> | NextResponse> {
+  const mutate = opts.mutate ?? req.method !== "GET";
+
+  const session = await getSessionContext();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (session.user.platformRole !== "SUPER_ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const rl = rateLimit(`api:${session.user.id}`, RATE_LIMITS.api.limit, RATE_LIMITS.api.windowMs);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
+  if (mutate) {
+    const csrfHeader = req.headers.get("x-csrf-token");
+    if (!(await verifyCsrf(csrfHeader))) {
+      return NextResponse.json({ error: "Invalid or missing CSRF token" }, { status: 403 });
+    }
+  }
+
+  return session as NonNullable<SessionWithUser>;
 }
 
 /** Rate limit helper for unauthenticated public endpoints (public form submissions, tracking). */
