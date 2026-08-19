@@ -16,11 +16,28 @@ function resolveConnectionString(): string {
 
 function createPrismaClient() {
   const adapter = new PrismaPg({ connectionString: resolveConnectionString() });
-  return new PrismaClient({ adapter });
+  const client = new PrismaClient({ adapter });
+  if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = client;
+  }
+  return client;
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+let lazyClient: PrismaClient | undefined;
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+/** Resolving a real connection can throw when neither DATABASE_URL nor the
+ * Netlify DB binding is available -- e.g. while Next.js statically imports
+ * every route module during `next build`, well before any request actually
+ * needs a database. Defer client construction to first real use instead of
+ * crashing the build just for importing this module. */
+function getPrisma(): PrismaClient {
+  return (lazyClient ??= globalForPrisma.prisma ?? createPrismaClient());
 }
+
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    const client = getPrisma();
+    const value = Reflect.get(client as object, prop);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});
