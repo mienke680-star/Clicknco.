@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import { SectionHeading, ComingSoon } from "@/components/ui/misc";
+import { requireCompanyContext } from "@/lib/auth/rbac";
+import { SettingsClient } from "./settings-client";
 
 export const metadata: Metadata = { title: "Settings" };
 
-export default function PortalSettingsPage() {
+export default async function PortalSettingsPage() {
+  const ctx = await requireCompanyContext();
+
   return (
-    <div>
-      <SectionHeading title="Settings" description="Your profile, notifications and security." />
-      <ComingSoon title="Settings coming next" />
-    </div>
+    <SettingsClient
+      name={ctx.user.name}
+      email={ctx.user.email}
+      twoFactorEnabled={ctx.user.twoFactorEnabled}
+      twoFactorMethod={ctx.user.twoFactorMethod}
+    />
   );
 }

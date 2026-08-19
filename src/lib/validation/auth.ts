@@ -23,6 +23,10 @@ export const twoFactorVerifySchema = z.object({
   code: z.string().trim().min(6).max(8),
 });
 
+export const updateProfileSchema = z.object({
+  name: z.string().trim().min(1, "Enter your name").max(120),
+});
+
 /** Used when a user accepts an invite (their User + Membership were already created by
  * a Super Admin/Company Admin) — this only ever sets a password, it never creates a company. */
 export const acceptInviteSchema = z.object({
