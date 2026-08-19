@@ -320,7 +320,12 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             <div className="col-span-2">
               <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-coral-500 text-xs font-bold text-white">{brand.name.slice(0, 1)}</div>
+                {brand.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={brand.logoUrl} alt={brand.name} className="h-7 w-7 rounded-lg object-cover" />
+                ) : (
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-coral-500 text-xs font-bold text-white">{brand.name.slice(0, 1)}</div>
+                )}
                 <span className="font-bold text-navy-900">{brand.name}</span>
               </div>
               <p className="mt-3 max-w-xs text-sm text-navy-400">{footer?.text ?? brand.tagline}</p>
