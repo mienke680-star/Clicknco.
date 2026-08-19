@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
-import { SectionHeading, ComingSoon } from "@/components/ui/misc";
+import { SectionHeading } from "@/components/ui/misc";
+import { requireSuperAdmin } from "@/lib/auth/rbac";
+import { prisma } from "@/lib/db";
+import { DomainsClient } from "./domains-client";
 
 export const metadata: Metadata = { title: "Domains" };
 
-export default function AdminDomainsPage() {
+export default async function AdminDomainsPage() {
+  await requireSuperAdmin();
+
+  const companies = await prisma.company.findMany({
+    orderBy: { name: "asc" },
+    select: { id: true, name: true },
+  });
+
   return (
     <div>
       <SectionHeading title="Domains" description="Every custom domain and subdomain connected across all companies." />
-      <ComingSoon title="Domains list coming next" />
+      <DomainsClient companies={companies} />
     </div>
   );
 }
