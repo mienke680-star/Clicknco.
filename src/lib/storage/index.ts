@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 import sharp from "sharp";
+import { getStore } from "@netlify/blobs";
 
 export interface StoredFile {
   url: string;
@@ -46,10 +47,11 @@ export class UnsupportedFileTypeError extends Error {
 
 /**
  * Storage abstraction. STORAGE_DRIVER=local (default) writes to /public/uploads
- * and is what runs in this environment. Swapping in an S3-compatible driver
- * for production only requires implementing this same saveFile() signature
- * against S3_* env vars and pointing STORAGE_DRIVER=s3 — nothing else in the
- * app (media library, block image props, course video uploads) needs to change.
+ * and is what runs in local dev. STORAGE_DRIVER=netlify-blobs is what runs in
+ * production on Netlify, where serverless functions have no persistent local
+ * disk — files are served back through /api/files/[...path]. Swapping in an
+ * S3-compatible driver only requires implementing this same saveFile()
+ * signature against S3_* env vars and pointing STORAGE_DRIVER=s3.
  */
 export async function saveFile(orgId: string, fileName: string, buffer: Buffer, mimeType: string): Promise<StoredFile> {
   if (!(mimeType in ALLOWED_UPLOAD_TYPES)) {
@@ -61,46 +63,69 @@ export async function saveFile(orgId: string, fileName: string, buffer: Buffer, 
       "STORAGE_DRIVER=s3 is not wired up in this environment. Fill in S3_* env vars and implement the S3 branch of saveFile() (see src/lib/storage/index.ts) before enabling it.",
     );
   }
+  if (driver === "netlify-blobs") {
+    return saveFileNetlifyBlobs(orgId, fileName, buffer, mimeType);
+  }
   return saveFileLocal(orgId, fileName, buffer, mimeType);
+}
+
+async function optimizeIfImage(buffer: Buffer, mimeType: string): Promise<{ buffer: Buffer; width?: number; height?: number }> {
+  if (!mimeType.startsWith("image/") || mimeType === "image/svg+xml") return { buffer };
+  try {
+    const image = sharp(buffer).rotate();
+    const metadata = await image.metadata();
+    if (metadata.width && metadata.width > MAX_IMAGE_DIMENSION) {
+      image.resize({ width: MAX_IMAGE_DIMENSION });
+    }
+    const optimized = await image.jpeg({ quality: 82, mozjpeg: true }).toBuffer().catch(async () => {
+      // Non-JPEG-friendly formats (e.g. PNG with transparency) — optimize in place instead.
+      return image.toBuffer();
+    });
+    const finalMeta = await sharp(optimized).metadata();
+    return { buffer: optimized, width: finalMeta.width, height: finalMeta.height };
+  } catch {
+    // If sharp can't process it for any reason, fall back to storing the original bytes untouched.
+    return { buffer };
+  }
+}
+
+function generateSafeName(mimeType: string): string {
+  const unique = crypto.randomBytes(8).toString("hex");
+  const ext = ALLOWED_UPLOAD_TYPES[mimeType] ?? "";
+  return `${Date.now()}-${unique}${ext}`;
 }
 
 async function saveFileLocal(orgId: string, fileName: string, buffer: Buffer, mimeType: string): Promise<StoredFile> {
   const dir = path.join(UPLOAD_ROOT, orgId);
   await mkdir(dir, { recursive: true });
 
-  const unique = crypto.randomBytes(8).toString("hex");
-  const ext = ALLOWED_UPLOAD_TYPES[mimeType] ?? "";
-  const safeName = `${Date.now()}-${unique}${ext}`;
+  const safeName = generateSafeName(mimeType);
   const fullPath = path.join(dir, safeName);
-
-  let finalBuffer = buffer;
-  let width: number | undefined;
-  let height: number | undefined;
-
-  if (mimeType.startsWith("image/") && mimeType !== "image/svg+xml") {
-    try {
-      const image = sharp(buffer).rotate();
-      const metadata = await image.metadata();
-      if (metadata.width && metadata.width > MAX_IMAGE_DIMENSION) {
-        image.resize({ width: MAX_IMAGE_DIMENSION });
-      }
-      finalBuffer = await image.jpeg({ quality: 82, mozjpeg: true }).toBuffer().catch(async () => {
-        // Non-JPEG-friendly formats (e.g. PNG with transparency) — optimize in place instead.
-        return image.toBuffer();
-      });
-      const finalMeta = await sharp(finalBuffer).metadata();
-      width = finalMeta.width;
-      height = finalMeta.height;
-    } catch {
-      // If sharp can't process it for any reason, fall back to storing the original bytes untouched.
-      finalBuffer = buffer;
-    }
-  }
+  const { buffer: finalBuffer, width, height } = await optimizeIfImage(buffer, mimeType);
 
   await writeFile(fullPath, finalBuffer);
 
   return {
     url: `/uploads/${orgId}/${safeName}`,
+    fileName,
+    mimeType,
+    sizeBytes: finalBuffer.byteLength,
+    width,
+    height,
+  };
+}
+
+async function saveFileNetlifyBlobs(orgId: string, fileName: string, buffer: Buffer, mimeType: string): Promise<StoredFile> {
+  const safeName = generateSafeName(mimeType);
+  const key = `${orgId}/${safeName}`;
+  const { buffer: finalBuffer, width, height } = await optimizeIfImage(buffer, mimeType);
+
+  const store = getStore("uploads");
+  const arrayBuffer = finalBuffer.buffer.slice(finalBuffer.byteOffset, finalBuffer.byteOffset + finalBuffer.byteLength) as ArrayBuffer;
+  await store.set(key, arrayBuffer, { metadata: { mimeType } });
+
+  return {
+    url: `/api/files/${key}`,
     fileName,
     mimeType,
     sizeBytes: finalBuffer.byteLength,
