@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { SESSION_COOKIE } from "@/lib/auth/session";
+import { SESSION_COOKIE } from "@/lib/auth/cookie-names";
 
 // Lightweight, cookie-presence-only checks (per Next.js guidance, Proxy should
 // not do DB lookups). Real session validation + RBAC happens in
