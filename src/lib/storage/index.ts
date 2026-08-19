@@ -16,9 +16,32 @@ export interface StoredFile {
 const UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads");
 const MAX_IMAGE_DIMENSION = 2400;
 
-function safeExt(fileName: string) {
-  const ext = path.extname(fileName).toLowerCase().replace(/[^a-z0-9.]/g, "");
-  return ext || "";
+/**
+ * The stored file's extension is derived from this allowlist, NEVER from the
+ * client-supplied filename — an uploaded file is served back statically from
+ * /public/uploads with a content-type inferred from its extension, so letting
+ * a caller pick an arbitrary extension (e.g. .html/.svg/.js) would let them
+ * store and serve same-origin, browser-executable script. Deliberately excludes
+ * image/svg+xml and any text/html-adjacent type for the same reason.
+ */
+const ALLOWED_UPLOAD_TYPES: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "image/gif": ".gif",
+  "image/webp": ".webp",
+  "application/pdf": ".pdf",
+  "text/csv": ".csv",
+  "application/vnd.ms-excel": ".xls",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+  "application/msword": ".doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+  "application/zip": ".zip",
+};
+
+export class UnsupportedFileTypeError extends Error {
+  constructor(mimeType: string) {
+    super(`Unsupported file type: ${mimeType}`);
+  }
 }
 
 /**
@@ -29,6 +52,9 @@ function safeExt(fileName: string) {
  * app (media library, block image props, course video uploads) needs to change.
  */
 export async function saveFile(orgId: string, fileName: string, buffer: Buffer, mimeType: string): Promise<StoredFile> {
+  if (!(mimeType in ALLOWED_UPLOAD_TYPES)) {
+    throw new UnsupportedFileTypeError(mimeType);
+  }
   const driver = process.env.STORAGE_DRIVER || "local";
   if (driver === "s3") {
     throw new Error(
@@ -43,7 +69,7 @@ async function saveFileLocal(orgId: string, fileName: string, buffer: Buffer, mi
   await mkdir(dir, { recursive: true });
 
   const unique = crypto.randomBytes(8).toString("hex");
-  const ext = safeExt(fileName);
+  const ext = ALLOWED_UPLOAD_TYPES[mimeType] ?? "";
   const safeName = `${Date.now()}-${unique}${ext}`;
   const fullPath = path.join(dir, safeName);
 

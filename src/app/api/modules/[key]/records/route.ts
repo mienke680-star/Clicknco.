@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
 import { moduleRecordSchema } from "@/lib/validation/modules";
 import { findMissingRequiredField, pickKnownFields } from "@/lib/modules/validate-record";
+import { assertContactInCompany, assertUserInCompany } from "@/lib/tenant-refs";
 import { writeAuditLog, requestMeta } from "@/lib/audit";
 import { runAutomationTrigger } from "@/lib/automation/engine";
 import { notify } from "@/lib/notify";
@@ -60,6 +61,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ key
   const data = pickKnownFields(companyModule.fields, parsed.data.data);
   const missing = findMissingRequiredField(companyModule.fields, data);
   if (missing) return NextResponse.json({ error: `"${missing}" is required.` }, { status: 400 });
+
+  const refError =
+    (await assertContactInCompany(ctx.company.id, parsed.data.relatedContactId)) ??
+    (await assertUserInCompany(ctx.company.id, parsed.data.assignedUserId));
+  if (refError) return NextResponse.json({ error: refError }, { status: 400 });
 
   const record = await prisma.moduleRecord.create({
     data: {

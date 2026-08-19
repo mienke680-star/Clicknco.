@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
 
+/** Neutralizes CSV/formula injection (CWE-1236): a leading =, +, -, or @ is
+ * how Excel/Sheets/LibreOffice decide a cell is a formula, so a contact field
+ * like "=HYPERLINK(...)" would otherwise execute when a teammate opens the
+ * exported file. Prefixing with a single quote forces it to be read as text. */
 function csvEscape(value: string) {
-  if (/[",\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
-  return value;
+  const v = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  if (/[",\n]/.test(v)) return `"${v.replace(/"/g, '""')}"`;
+  return v;
 }
 
 export async function GET(req: NextRequest) {

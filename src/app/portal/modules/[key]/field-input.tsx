@@ -29,9 +29,10 @@ interface Props {
   onChange: (value: unknown) => void;
   users: { id: string; name: string }[];
   relationshipOptions: { id: string; label: string }[];
+  moduleKey: string;
 }
 
-export function DynamicFieldInput({ field, value, onChange, users, relationshipOptions }: Props) {
+export function DynamicFieldInput({ field, value, onChange, users, relationshipOptions, moduleKey }: Props) {
   switch (field.type) {
     case "TEXT":
     case "EMAIL":
@@ -115,13 +116,30 @@ export function DynamicFieldInput({ field, value, onChange, users, relationshipO
       );
     case "FILE":
     case "IMAGE":
-      return <FileFieldInput value={value as FileValue | null} onChange={onChange} accept={field.type === "IMAGE" ? "image/*" : undefined} />;
+      return (
+        <FileFieldInput
+          value={value as FileValue | null}
+          onChange={onChange}
+          accept={field.type === "IMAGE" ? "image/*" : undefined}
+          moduleKey={moduleKey}
+        />
+      );
     default:
       return <Input value={(value as string) ?? ""} onChange={(e) => onChange(e.target.value)} />;
   }
 }
 
-function FileFieldInput({ value, onChange, accept }: { value: FileValue | null; onChange: (v: FileValue | null) => void; accept?: string }) {
+function FileFieldInput({
+  value,
+  onChange,
+  accept,
+  moduleKey,
+}: {
+  value: FileValue | null;
+  onChange: (v: FileValue | null) => void;
+  accept?: string;
+  moduleKey: string;
+}) {
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -131,6 +149,7 @@ function FileFieldInput({ value, onChange, accept }: { value: FileValue | null; 
     try {
       const form = new FormData();
       form.append("file", file);
+      form.append("moduleKey", moduleKey);
       const res = await apiFetch<{ file: FileValue }>("/api/uploads", { method: "POST", body: form });
       onChange(res.file);
     } catch (err) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
 import { taskSchema } from "@/lib/validation/tasks";
+import { assertContactInCompany, assertUserInCompany } from "@/lib/tenant-refs";
 import { writeAuditLog, requestMeta } from "@/lib/audit";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -35,6 +36,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const parsed = taskSchema.partial().safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, { status: 400 });
   const data = parsed.data;
+
+  const refError =
+    (await assertUserInCompany(ctx.company.id, data.assignedUserId)) ??
+    (await assertContactInCompany(ctx.company.id, data.relatedContactId));
+  if (refError) return NextResponse.json({ error: refError }, { status: 400 });
 
   const task = await prisma.task.update({
     where: { id },

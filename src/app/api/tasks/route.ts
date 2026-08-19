@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
 import { taskSchema } from "@/lib/validation/tasks";
+import { assertContactInCompany, assertUserInCompany } from "@/lib/tenant-refs";
 import { writeAuditLog, requestMeta } from "@/lib/audit";
 import { notify } from "@/lib/notify";
 import { runAutomationTrigger } from "@/lib/automation/engine";
@@ -43,6 +44,11 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   const parsed = taskSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, { status: 400 });
+
+  const refError =
+    (await assertUserInCompany(ctx.company.id, parsed.data.assignedUserId)) ??
+    (await assertContactInCompany(ctx.company.id, parsed.data.relatedContactId));
+  if (refError) return NextResponse.json({ error: refError }, { status: 400 });
 
   const task = await prisma.task.create({
     data: {

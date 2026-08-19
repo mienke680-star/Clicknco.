@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
 import { pipelineCardSchema, moveCardSchema } from "@/lib/validation/pipelines";
+import { assertContactInCompany, assertStageInCompany, assertUserInCompany } from "@/lib/tenant-refs";
 import { writeAuditLog, requestMeta } from "@/lib/audit";
 import { runAutomationTrigger } from "@/lib/automation/engine";
 
@@ -40,6 +41,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
   }
+
+  const refError =
+    (await assertStageInCompany(ctx.company.id, data.stageId as string | undefined)) ??
+    (await assertContactInCompany(ctx.company.id, data.contactId as string | undefined)) ??
+    (await assertUserInCompany(ctx.company.id, data.assignedUserId as string | undefined));
+  if (refError) return NextResponse.json({ error: refError }, { status: 400 });
 
   const card = await prisma.pipelineCard.update({
     where: { id },

@@ -341,6 +341,7 @@ function RecordDialog({
               onChange={(v) => setFieldValue(f.key, v)}
               users={users}
               relationshipOptions={f.type === "RELATIONSHIP" ? relationshipOptionsFor(f) : []}
+              moduleKey={moduleKey}
             />
           </div>
         ))}

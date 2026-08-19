@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
 import { contactSchema } from "@/lib/validation/contacts";
+import { assertUserInCompany } from "@/lib/tenant-refs";
 import { writeAuditLog, requestMeta } from "@/lib/audit";
 
 async function loadContact(companyId: string, id: string) {
@@ -52,6 +53,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, { status: 400 });
   }
   const { tagIds, ...data } = parsed.data;
+
+  if (data.assignedUserId !== undefined) {
+    const refError = await assertUserInCompany(ctx.company.id, data.assignedUserId);
+    if (refError) return NextResponse.json({ error: refError }, { status: 400 });
+  }
 
   const contact = await prisma.contact.update({
     where: { id },

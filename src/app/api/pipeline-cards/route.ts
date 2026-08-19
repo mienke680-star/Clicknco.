@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
 import { pipelineCardSchema } from "@/lib/validation/pipelines";
+import { assertContactInCompany, assertUserInCompany } from "@/lib/tenant-refs";
 import { writeAuditLog, requestMeta } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
@@ -16,6 +17,11 @@ export async function POST(req: NextRequest) {
     where: { id: parsed.data.stageId, pipeline: { id: parsed.data.pipelineId, companyId: ctx.company.id } },
   });
   if (!stage) return NextResponse.json({ error: "Invalid stage" }, { status: 400 });
+
+  const refError =
+    (await assertContactInCompany(ctx.company.id, parsed.data.contactId)) ??
+    (await assertUserInCompany(ctx.company.id, parsed.data.assignedUserId));
+  if (refError) return NextResponse.json({ error: refError }, { status: 400 });
 
   const maxSort = await prisma.pipelineCard.aggregate({ where: { stageId: stage.id }, _max: { sortOrder: true } });
 
