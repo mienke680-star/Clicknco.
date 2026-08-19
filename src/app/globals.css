@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/*
+ * Click & Co brand tokens.
+ * Every color utility below (bg-navy-900, text-coral-500, border-aqua-400, ...)
+ * is generated automatically by Tailwind v4 from these CSS variables.
+ */
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Deep navy — headings, dashboard nav, dark surfaces */
+  --color-navy-50: #eef2f6;
+  --color-navy-100: #dce3ec;
+  --color-navy-200: #b4c2d3;
+  --color-navy-300: #8ca1bb;
+  --color-navy-400: #5d7594;
+  --color-navy-500: #3d5670;
+  --color-navy-600: #2a3f55;
+  --color-navy-700: #1e2e42;
+  --color-navy-800: #172538;
+  --color-navy-900: #132238;
+  --color-navy-950: #0b141f;
+
+  /* Warm coral — primary CTA color */
+  --color-coral-50: #fff3f0;
+  --color-coral-100: #ffe4dc;
+  --color-coral-200: #ffc7b6;
+  --color-coral-300: #ffa98d;
+  --color-coral-400: #ff8f72;
+  --color-coral-500: #ff7657;
+  --color-coral-600: #f2593a;
+  --color-coral-700: #d0432a;
+  --color-coral-800: #a83522;
+  --color-coral-900: #7e281a;
+
+  /* Aqua accent — secondary accents, graphs, success indicators */
+  --color-aqua-50: #eefbfa;
+  --color-aqua-100: #d3f5f3;
+  --color-aqua-200: #a8eae6;
+  --color-aqua-300: #7edfda;
+  --color-aqua-400: #64cfc8;
+  --color-aqua-500: #3fb9b1;
+  --color-aqua-600: #2e9b94;
+  --color-aqua-700: #237972;
+  --color-aqua-800: #1b5d58;
+  --color-aqua-900: #154742;
+
+  /* Flat brand tones */
+  --color-cream: #faf9f6;
+  --color-peach: #ffe7de;
+  --color-peach-dark: #ffcfc0;
+  --color-charcoal: #252525;
+
+  /* Semantic aliases reused across dashboards/charts */
+  --color-success: #2e9b94;
+  --color-warning: #f2a93a;
+  --color-danger: #e0492f;
+
+  --shadow-soft: 0 1px 2px rgba(19, 34, 56, 0.04), 0 8px 24px rgba(19, 34, 56, 0.06);
+  --shadow-card: 0 1px 2px rgba(19, 34, 56, 0.05), 0 2px 12px rgba(19, 34, 56, 0.08);
+  --shadow-pop: 0 12px 32px rgba(19, 34, 56, 0.16);
+}
+
+:root {
+  --background: var(--color-cream);
+  --foreground: var(--color-charcoal);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Utility for line-clamped text in tables/cards */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Scrollbar polish for builder canvases */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-navy-200);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
