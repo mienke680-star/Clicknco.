@@ -2,9 +2,9 @@ import "server-only";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
 import { generateToken, hashToken } from "@/lib/crypto";
+import { SESSION_COOKIE, CSRF_COOKIE } from "@/lib/auth/cookie-names";
 
-export const SESSION_COOKIE = "cco_session";
-export const CSRF_COOKIE = "cco_csrf";
+export { SESSION_COOKIE, CSRF_COOKIE };
 const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const RENEW_THRESHOLD_MS = 15 * 24 * 60 * 60 * 1000; // renew once under 15 days left
 
