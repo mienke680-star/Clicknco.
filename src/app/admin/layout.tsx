@@ -1,6 +1,11 @@
 import { requireSuperAdmin } from "@/lib/auth/rbac";
+import { prisma } from "@/lib/db";
 import { DashboardShell } from "@/components/dashboard/shell";
 import type { NavItem } from "@/components/dashboard/nav-types";
+
+interface Brand {
+  logoUrl?: string | null;
+}
 
 const ADMIN_NAV: NavItem[] = [
   { key: "overview", label: "Overview", href: "/admin", icon: "LayoutDashboard" },
@@ -16,11 +21,14 @@ const ADMIN_NAV: NavItem[] = [
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await requireSuperAdmin();
+  const settings = await prisma.siteSettings.findUnique({ where: { id: "singleton" }, select: { brand: true } });
+  const brand = settings?.brand as unknown as Brand | undefined;
 
   return (
     <DashboardShell
       navItems={ADMIN_NAV}
       brandName="Click & Co"
+      brandLogoUrl={brand?.logoUrl}
       homeHref="/admin"
       userName={session.user.name}
       userEmail={session.user.email}
