@@ -1,5 +1,6 @@
 [build]
   command = "npx prisma migrate deploy && npx tsx prisma/seed.ts && npm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
