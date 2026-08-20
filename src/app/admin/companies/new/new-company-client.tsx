@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronLeft, ChevronRight, Building2, Palette, CreditCard, ClipboardCheck } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Building2, Palette, CreditCard, ClipboardCheck, Upload } from "lucide-react";
 import { Button, LinkButton } from "@/components/ui/button";
 import { Input, Label, Select, Textarea, FieldHint } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -10,6 +10,10 @@ import { Alert } from "@/components/ui/misc";
 import { useToast } from "@/components/ui/toast";
 import { apiFetch, ApiError } from "@/lib/api-client";
 import { slugify, isValidEmail, cn } from "@/lib/utils";
+
+interface UploadedFile {
+  url: string;
+}
 
 const FALLBACK_TIMEZONES = [
   "UTC", "Africa/Johannesburg", "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles",
@@ -104,10 +108,28 @@ export function NewCompanyWizard() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const faviconInputRef = useRef<HTMLInputElement>(null);
   const timezones = useMemo(() => timezoneOptions(), []);
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  async function uploadImage(field: "logoUrl" | "faviconUrl", file: File, setUploading: (v: boolean) => void) {
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await apiFetch<{ file: UploadedFile }>("/api/admin/uploads", { method: "POST", body });
+      set(field, res.file.url);
+    } catch (err) {
+      toast({ title: "Upload failed", description: err instanceof ApiError ? err.message : undefined, variant: "error" });
+    } finally {
+      setUploading(false);
+    }
   }
 
   function onNameChange(value: string) {
@@ -270,12 +292,44 @@ export function NewCompanyWizard() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_280px]">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
-                <Label>Logo URL</Label>
-                <Input value={form.logoUrl} onChange={(e) => set("logoUrl", e.target.value)} placeholder="https://…/logo.png" />
+                <Label>Logo</Label>
+                <div className="flex gap-2">
+                  <Input value={form.logoUrl} onChange={(e) => set("logoUrl", e.target.value)} placeholder="https://…/logo.png" />
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/gif,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) uploadImage("logoUrl", file, setUploadingLogo);
+                      e.target.value = "";
+                    }}
+                  />
+                  <Button type="button" variant="outline" onClick={() => logoInputRef.current?.click()} loading={uploadingLogo}>
+                    <Upload className="h-4 w-4" /> Upload
+                  </Button>
+                </div>
               </div>
               <div>
-                <Label>Favicon URL</Label>
-                <Input value={form.faviconUrl} onChange={(e) => set("faviconUrl", e.target.value)} placeholder="https://…/favicon.png" />
+                <Label>Favicon</Label>
+                <div className="flex gap-2">
+                  <Input value={form.faviconUrl} onChange={(e) => set("faviconUrl", e.target.value)} placeholder="https://…/favicon.png" />
+                  <input
+                    ref={faviconInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/gif,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) uploadImage("faviconUrl", file, setUploadingFavicon);
+                      e.target.value = "";
+                    }}
+                  />
+                  <Button type="button" variant="outline" onClick={() => faviconInputRef.current?.click()} loading={uploadingFavicon}>
+                    <Upload className="h-4 w-4" /> Upload
+                  </Button>
+                </div>
               </div>
               <ColorField label="Primary color" value={form.brandPrimaryColor} onChange={(v) => set("brandPrimaryColor", v)} />
               <ColorField label="Accent color" value={form.brandAccentColor} onChange={(v) => set("brandAccentColor", v)} />
