@@ -233,6 +233,16 @@ nav.main-links a:hover::after{right:0}
 .photo-frame .cap{position:absolute;left:14px;bottom:14px;z-index:3;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:rgba(1,15,34,.55);padding:6px 12px;border-radius:100px;backdrop-filter:blur(6px);opacity:0;transition:opacity .4s}
 .photo-frame.ph-loaded .cap{opacity:1}
 
+/* full-bleed faded photo background behind a section (replaces boxed photo cards) */
+.section-photo{position:relative;overflow:hidden}
+.section-photo > .photo-frame{position:absolute;inset:0;border-radius:0;z-index:0}
+.section-photo > .photo-frame img{opacity:0}
+.section-photo > .photo-frame.ph-loaded img{opacity:.62}
+.section-photo::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(115deg,rgba(1,15,34,.94) 0%,rgba(1,15,34,.72) 32%,rgba(1,15,34,.4) 58%,rgba(1,15,34,.18) 100%)}
+.section-photo.overlay-flat::after{background:rgba(1,15,34,.55)}
+.section-photo > .container{position:relative;z-index:2}
+
 /* browser-style frame (graphic language: frames) */
 .frame-browser{border-radius:var(--radius-m);overflow:hidden;background:var(--ink-elev);border:1px solid var(--line-dark-soft);box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
 .frame-browser .fb-top{display:flex;align-items:center;gap:6px;padding:11px 14px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line-dark-soft)}
@@ -240,8 +250,8 @@ nav.main-links a:hover::after{right:0}
 
 /* ============ HERO ============ */
 .hero{min-height:100svh;display:flex;align-items:center;padding-top:120px;overflow:hidden}
-.hero-inner{position:relative;z-index:2;display:grid;gap:52px;grid-template-columns:1fr}
-@media(min-width:1020px){.hero-inner{grid-template-columns:1fr .95fr;align-items:center}}
+.hero-inner{position:relative;z-index:2}
+.hero-copy{max-width:640px}
 .hero-copy .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid var(--line-dark);font-size:12px;color:var(--text-dim);margin-bottom:24px}
 .hero-copy .badge i{width:6px;height:6px;border-radius:50%;background:var(--electric)}
 .hero h1{margin-bottom:22px}
@@ -249,9 +259,6 @@ nav.main-links a:hover::after{right:0}
 .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:18px 26px;margin-bottom:30px}
 .hero-line{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--clear-skies);font-weight:600}
 .hero-line i{width:3px;height:3px;border-radius:50%;background:var(--clear-skies)}
-.hero-stage{position:relative}
-.hero-stage .photo-frame{aspect-ratio:4/5;box-shadow:0 40px 90px -30px rgba(0,0,0,.7)}
-@media(min-width:640px){.hero-stage .photo-frame{aspect-ratio:5/4}}
 
 /* ============ WAVE MARQUEE (curves) ============ */
 .marquee-strip{border-top:1px solid var(--line-dark-soft);border-bottom:1px solid var(--line-dark-soft);padding:18px 0;background:var(--ink-elev)}
@@ -282,22 +289,15 @@ nav.main-links a:hover::after{right:0}
 .svc-row h3{font-size:clamp(1.2rem,2.4vw,1.55rem);margin-bottom:8px}
 .svc-row p{font-size:14.5px;color:var(--text-dim);max-width:560px;line-height:1.6}
 @media(min-width:720px){.svc-row{grid-template-columns:60px 1fr}.svc-row.offset{padding-left:60px}}
-.svc-support{margin-top:54px;display:grid;grid-template-columns:1fr;gap:18px}
-@media(min-width:760px){.svc-support{grid-template-columns:1.3fr 1fr}}
-.svc-support .photo-frame{aspect-ratio:16/10}
-.svc-support .photo-frame.tall{aspect-ratio:3/4}
-.svc-support-pair{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 
 /* ============ MARKETING CONSULTING ============ */
-.mkt-grid{display:grid;grid-template-columns:1fr;gap:48px;margin-top:48px}
-@media(min-width:960px){.mkt-grid{grid-template-columns:.9fr 1.1fr}}
+.mkt-grid{margin-top:48px;max-width:640px}
 .mkt-list{display:flex;flex-direction:column;gap:0}
 .mkt-item{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-dark-soft)}
 .mkt-item:first-child{padding-top:0}
 .mkt-item svg{width:18px;height:18px;color:var(--electric);flex:none;margin-top:2px}
 .mkt-item h4{font-size:15px;margin-bottom:4px;font-weight:700}
 .mkt-item p{font-size:13px;color:var(--text-dim)}
-.mkt-photo .photo-frame{aspect-ratio:4/5}
 
 /* ============ PACKAGES ============ */
 .pkg-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:52px}
@@ -316,17 +316,12 @@ nav.main-links a:hover::after{right:0}
 .pkg-card.feat .tag{color:var(--clear-skies)}
 
 /* ============ BUSINESS DESIGNS ============ */
-.des-wrap{margin-top:52px;display:grid;grid-template-columns:1fr;gap:40px}
-@media(min-width:1020px){.des-wrap{grid-template-columns:.85fr 1.15fr}}
+.des-wrap{margin-top:52px;max-width:640px}
 .des-list{columns:1;column-gap:32px}
-@media(min-width:640px){.des-list{columns:2}}
+@media(min-width:560px){.des-list{columns:2}}
 .des-item{break-inside:avoid;display:flex;align-items:baseline;gap:10px;padding:12px 0;border-bottom:1px solid var(--line-dark-soft)}
 .des-item .n{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;color:var(--electric)}
 .des-item span{font-size:14.5px}
-.des-gallery{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
-.des-gallery .photo-frame:first-child{grid-row:span 2;aspect-ratio:3/4}
-.des-gallery .photo-frame{aspect-ratio:16/11}
-@media(max-width:640px){.des-gallery{grid-template-columns:1fr}.des-gallery .photo-frame:first-child{grid-row:auto;aspect-ratio:4/3}}
 
 /* ============ DIVIDER (aerial ocean) ============ */
 .ocean-divider{height:56vh;min-height:400px;position:relative;overflow:hidden}
@@ -335,26 +330,6 @@ nav.main-links a:hover::after{right:0}
 .ocean-divider .od-inner p{font-size:clamp(1.5rem,3.6vw,2.6rem);max-width:820px;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.5)}
 .ocean-divider::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(1,15,34,.55),rgba(1,15,34,.25) 40%,rgba(1,15,34,.6));z-index:3;pointer-events:none}
 
-/* ============ GALLERY ============ */
-.gallery-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:52px;grid-auto-rows:120px}
-.gallery-grid .photo-frame{grid-column:span 6}
-.g-a{grid-row:span 3}
-.g-b{grid-row:span 2}
-.g-c{grid-row:span 2}
-@media(min-width:640px){
-  .gallery-grid{grid-auto-rows:110px}
-  .g-a{grid-column:span 4;grid-row:span 3}
-  .g-b{grid-column:span 2;grid-row:span 2}
-  .g-c{grid-column:span 2;grid-row:span 2}
-  .g-d{grid-column:span 3;grid-row:span 2}
-  .g-e{grid-column:span 3;grid-row:span 2}
-  .g-f{grid-column:span 2;grid-row:span 2}
-  .g-g{grid-column:span 2;grid-row:span 2}
-  .g-h{grid-column:span 2;grid-row:span 2}
-  .g-i{grid-column:span 6;grid-row:span 2}
-}
-.gallery-grid .photo-frame{transition:transform .5s var(--ease-out)}
-.gallery-grid .photo-frame:hover{transform:translateY(-4px)}
 
 /* ============ PROCESS ============ */
 .process-desktop{display:none}
@@ -383,8 +358,10 @@ nav.main-links a:hover::after{right:0}
 .opt-grid2{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-light);border:1px solid var(--line-light);border-radius:var(--radius-m);overflow:hidden;margin-top:52px}
 @media(min-width:720px){.opt-grid2{grid-template-columns:repeat(3,1fr)}}
 .opt-cell{background:var(--paper-elev);padding:30px 26px;display:flex;flex-direction:column;gap:14px}
-.opt-cell h4{font-size:16.5px}
+.opt-cell h4{font-size:16.5px;color:var(--text-ink)}
 .opt-cell p{font-size:12.8px;color:var(--text-ink-dim);line-height:1.55;flex:1}
+.opt-cell .btn-ghost{color:var(--text-ink);border-color:var(--line-light)}
+.opt-cell .btn-ghost:hover{border-color:var(--electric);color:var(--text-ink)}
 
 /* ============ FAQ ============ */
 .faq-list{margin-top:48px;max-width:820px}
@@ -518,7 +495,14 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 <main id="top">
 
 <!-- ============ HERO ============ -->
-<section class="section-dark hero" id="home">
+<section class="section-dark hero section-photo" id="home">
+  <div class="photo-frame" data-caption="Hero">
+    <img src="assets/photos/laptop.jpg" alt="Laptop displaying a CLICK&amp;CO website design, set against underwater electric-blue light" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
+    <div class="ph-placeholder">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M2 19h20l-1.5-3h-17z"/></svg>
+      <span>Photo pending &middot; Laptop, website design</span>
+    </div>
+  </div>
   <div class="container hero-inner">
     <div class="hero-copy">
       <span class="badge"><i></i>CLICKANDCO (PTY) LTD</span>
@@ -529,17 +513,6 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <a href="#websites" class="btn btn-ghost magnetic" data-cursor="hover">Explore Our Services</a>
       </div>
       <span class="hero-line"><i></i>Websites<i></i>Solutions<i></i>Results</span>
-    </div>
-
-    <div class="hero-stage reveal scale">
-      <div class="photo-frame" data-caption="Hero">
-        <img src="assets/photos/laptop.jpg" alt="Laptop displaying a CLICK&amp;CO website design, set against underwater electric-blue light" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M2 19h20l-1.5-3h-17z"/></svg>
-          <span>Photo pending &middot; Laptop, website design</span>
-        </div>
-        <span class="cap">Websites, designed with intent</span>
-      </div>
     </div>
   </div>
 </section>
@@ -603,29 +576,15 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
       <div class="svc-row offset reveal up"><div class="num">08</div><div><h3>Website redesigns</h3><p>Transform an outdated website into a modern, mobile-friendly, professional experience.</p></div></div>
       <div class="svc-row reveal up"><div class="num">09</div><div><h3>Custom web systems</h3><p>More advanced dashboards, ordering systems, customer portals and internal business tools.</p></div></div>
     </div>
-
-    <div class="svc-support">
-      <div class="photo-frame reveal up" data-caption="Development">
-        <img src="assets/photos/keyboard.jpg" alt="Keyboard used for website development" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg><span>Photo pending &middot; Keyboard, development</span></div>
-        <span class="cap">Built properly, not just prettily</span>
-      </div>
-      <div class="svc-support-pair">
-        <div class="photo-frame reveal up" data-caption="Responsive">
-          <img src="assets/photos/smartphone.jpg" alt="Smartphone showing a responsive CLICK&amp;CO website" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-          <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="2" width="10" height="20" rx="2.4"/></svg><span>Photo pending &middot; Smartphone</span></div>
-        </div>
-        <div class="photo-frame reveal up" data-caption="Redesigns">
-          <img src="assets/photos/desktop-monitor.jpg" alt="Desktop monitor used for website design and redesigns" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-          <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg><span>Photo pending &middot; Monitor</span></div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
 <!-- ============ MARKETING CONSULTING ============ -->
-<section class="section-dark pad" id="marketing">
+<section class="section-dark pad section-photo" id="marketing">
+  <div class="photo-frame" data-caption="Perspective">
+    <img src="assets/photos/drone.jpg" alt="Drone used for marketing perspective and strategic overview" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
+    <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 8l3 3M16 8l-3 3M8 16l3-3M16 16l-3-3"/><rect x="10" y="10" width="4" height="4" rx="1"/></svg><span>Photo pending &middot; Drone, strategy &amp; perspective</span></div>
+  </div>
   <div class="container">
     <div class="head-block reveal up">
       <span class="eyebrow">Marketing consulting</span>
@@ -643,14 +602,6 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg><div><h4>Website &amp; customer-journey advice</h4><p>Making sure your website supports the way people actually buy.</p></div></div>
         <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg><div><h4>Monthly marketing consulting</h4><p>Ongoing guidance instead of a once-off recommendation.</p></div></div>
         <div class="mkt-item reveal up" style="border-bottom:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><div><h4>Practical growth recommendations</h4><p>Realistic next steps, not vague advice.</p></div></div>
-      </div>
-
-      <div class="mkt-photo reveal up" data-caption="Perspective">
-        <div class="photo-frame">
-          <img src="assets/photos/drone.jpg" alt="Drone used for marketing perspective and strategic overview" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-          <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 8l3 3M16 8l-3 3M8 16l3-3M16 16l-3-3"/><rect x="10" y="10" width="4" height="4" rx="1"/></svg><span>Photo pending &middot; Drone, strategy &amp; perspective</span></div>
-          <span class="cap">A clearer view of the whole picture</span>
-        </div>
       </div>
     </div>
   </div>
@@ -740,7 +691,11 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 </section>
 
 <!-- ============ BUSINESS DESIGNS ============ -->
-<section class="section-dark pad" id="designs">
+<section class="section-dark pad section-photo" id="designs">
+  <div class="photo-frame" data-caption="Content">
+    <img src="assets/photos/camera.jpg" alt="Camera used for content design and visual marketing" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
+    <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M9 7l1.5-3h3L15 7"/></svg><span>Photo pending &middot; Camera, content design</span></div>
+  </div>
   <div class="container">
     <div class="head-block reveal up">
       <span class="eyebrow">Business designs</span>
@@ -760,22 +715,6 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <div class="des-item"><span class="n">08</span><span>Website graphics</span></div>
         <div class="des-item" style="border-bottom:none"><span class="n">09</span><span>Custom marketing material</span></div>
       </div>
-
-      <div class="des-gallery reveal up">
-        <div class="photo-frame" data-caption="Content">
-          <img src="assets/photos/camera.jpg" alt="Camera used for content design and visual marketing" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-          <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M9 7l1.5-3h3L15 7"/></svg><span>Photo pending &middot; Camera, content design</span></div>
-          <span class="cap">Content that looks intentional</span>
-        </div>
-        <div class="photo-frame" data-caption="Digital">
-          <img src="assets/photos/tablet.jpg" alt="Tablet used for digital solutions and business designs" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-          <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M11 18h2"/></svg><span>Photo pending &middot; Tablet</span></div>
-        </div>
-        <div class="photo-frame" data-caption="Interactive">
-          <img src="assets/photos/controller.jpg" alt="Game controller representing interactive digital experiences" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-          <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="8" width="20" height="9" rx="4"/><path d="M7 10.5v4M5 12.5h4M16 11h.01M18.5 13h.01"/></svg><span>Photo pending &middot; Controller</span></div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -791,54 +730,6 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
   </div>
 </section>
 
-<!-- ============ CREATIVE OCEAN GALLERY ============ -->
-<section class="section-dark pad">
-  <div class="container">
-    <div class="head-block center reveal up">
-      <span class="eyebrow">Creative ocean gallery</span>
-      <h2 class="h-lg">Where the ocean meets the electric edge of digital.</h2>
-    </div>
-
-    <div class="gallery-grid">
-      <div class="photo-frame g-a reveal up" data-caption="Underwater sunlight">
-        <img src="assets/photos/underwater-sunlight.jpg" alt="Underwater sunlight" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg><span>Photo pending &middot; Underwater sunlight</span></div>
-      </div>
-      <div class="photo-frame g-b reveal up" data-caption="Headphones">
-        <img src="assets/photos/headphones.jpg" alt="Headphones representing brand voice and audience engagement" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13a9 9 0 0118 0"/><rect x="2" y="13" width="5" height="7" rx="1.5"/><rect x="17" y="13" width="5" height="7" rx="1.5"/></svg><span>Photo pending &middot; Headphones</span></div>
-      </div>
-      <div class="photo-frame g-c reveal up" data-caption="Smartwatch">
-        <img src="assets/photos/smartwatch.jpg" alt="Smartwatch representing bookings and interaction" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3h6M9 21h6M12 10v2l1.5 1"/></svg><span>Photo pending &middot; Smartwatch</span></div>
-      </div>
-      <div class="photo-frame g-d reveal up" data-caption="Circuit board">
-        <img src="assets/photos/circuit-board.jpg" alt="Circuit board representing custom web systems and technology" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg><span>Photo pending &middot; Circuit board</span></div>
-      </div>
-      <div class="photo-frame g-e reveal up" data-caption="Storage">
-        <img src="assets/photos/storage-device.jpg" alt="Storage device representing reliability and digital infrastructure" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 14h18M7 18h.01M11 18h.01"/></svg><span>Photo pending &middot; Storage device</span></div>
-      </div>
-      <div class="photo-frame g-f reveal up" data-caption="Tablet">
-        <img src="assets/photos/tablet-2.jpg" alt="Tablet showing responsive websites" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/></svg><span>Photo pending &middot; Tablet</span></div>
-      </div>
-      <div class="photo-frame g-g reveal up" data-caption="Camera">
-        <img src="assets/photos/camera-2.jpg" alt="Camera for content design" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="14" r="4"/></svg><span>Photo pending &middot; Camera</span></div>
-      </div>
-      <div class="photo-frame g-h reveal up" data-caption="Keyboard">
-        <img src="assets/photos/keyboard-2.jpg" alt="Keyboard for development" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="6" width="20" height="12" rx="2"/></svg><span>Photo pending &middot; Keyboard</span></div>
-      </div>
-      <div class="photo-frame g-i reveal up" data-caption="Drone">
-        <img src="assets/photos/drone-2.jpg" alt="Aerial drone shot representing marketing perspective" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><rect x="10" y="10" width="4" height="4" rx="1"/></svg><span>Photo pending &middot; Drone, wide perspective</span></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============ OUR PROCESS ============ -->
 <section class="section-light pad" id="process">
