@@ -92,6 +92,8 @@ h1,h2,h3,h4{font-family:'Montserrat',sans-serif;font-weight:800;line-height:1.08
 section{position:relative}
 :focus-visible{outline:2px solid var(--electric);outline-offset:3px;border-radius:4px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:fixed;top:-60px;left:16px;z-index:9999;background:var(--electric);color:#000;font-weight:700;font-size:14px;padding:12px 20px;border-radius:100px;transition:top .25s var(--ease-out)}
+.skip-link:focus{top:16px}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
@@ -103,9 +105,11 @@ svg.icon{width:20px;height:20px;flex:none;display:block}
 /* ============ TYPE HELPERS ============ */
 .eyebrow{
   font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
-  color:var(--electric);display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;
+  color:var(--clear-skies);display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;
 }
-.eyebrow::before{content:'';width:22px;height:1px;background:var(--electric)}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--clear-skies)}
+.section-light .eyebrow{color:var(--blueberry)}
+.section-light .eyebrow::before{background:var(--blueberry)}
 .h-xl{font-size:clamp(2.4rem,6.4vw,5rem)}
 .h-lg{font-size:clamp(2rem,4.6vw,3.2rem)}
 .h-md{font-size:clamp(1.5rem,3vw,2.1rem)}
@@ -120,8 +124,8 @@ svg.icon{width:20px;height:20px;flex:none;display:block}
   will-change:transform;
 }
 .btn:active{transform:scale(.96)}
-.btn-primary{background:var(--electric);color:#fff;box-shadow:0 10px 26px -10px rgba(8,123,255,.55)}
-.btn-primary:hover{background:#1e8bff;box-shadow:0 14px 32px -8px rgba(8,123,255,.7)}
+.btn-primary{background:var(--electric);color:#000;box-shadow:0 10px 26px -10px rgba(8,123,255,.55)}
+.btn-primary:hover{background:#3d9bff;box-shadow:0 14px 32px -8px rgba(8,123,255,.7)}
 .btn-ghost{background:transparent;color:var(--text-hi);border:1.4px solid var(--line-dark)}
 .btn-ghost:hover{border-color:var(--electric);color:#fff}
 .section-light .btn-ghost{color:var(--text-ink);border-color:var(--line-light)}
@@ -169,6 +173,8 @@ nav.main-links a{font-size:13px;font-weight:600;color:var(--text-dim);position:r
 nav.main-links a::after{content:'';position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--electric);transition:right .35s var(--ease-out)}
 nav.main-links a:hover{color:#fff}
 nav.main-links a:hover::after{right:0}
+nav.main-links a.active{color:#fff}
+nav.main-links a.active::after{right:0}
 .nav-actions{display:flex;align-items:center;gap:14px}
 .hamburger{display:flex;flex-direction:column;gap:5px;width:24px;padding:8px 0}
 @media(min-width:1180px){.hamburger{display:none}}
@@ -277,7 +283,7 @@ nav.main-links a:hover::after{right:0}
 .section-light .founders-card{background:var(--paper-elev);border-color:var(--line-light)}
 .founders-card .photo-frame{aspect-ratio:16/11;border-radius:0}
 .founders-card .fc-body{padding:22px 24px}
-.founders-card h4{font-size:16px;margin-bottom:6px}
+.founders-card h3{font-size:16px;margin-bottom:6px}
 .founders-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
 .section-light .founders-card p{color:var(--text-ink-dim)}
 
@@ -285,7 +291,7 @@ nav.main-links a:hover::after{right:0}
 .svc-list{margin-top:56px;border-top:1px solid var(--line-dark-soft)}
 .svc-row{display:grid;grid-template-columns:auto 1fr;gap:20px 28px;padding:34px 0;border-bottom:1px solid var(--line-dark-soft);align-items:start;transition:padding-left .4s var(--ease-out)}
 .svc-row:hover{padding-left:10px}
-.svc-row .num{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:var(--electric);padding-top:4px}
+.svc-row .num{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:var(--blueberry);padding-top:4px}
 .svc-row h3{font-size:clamp(1.2rem,2.4vw,1.55rem);margin-bottom:8px}
 .svc-row p{font-size:14.5px;color:var(--text-dim);max-width:560px;line-height:1.6}
 @media(min-width:720px){.svc-row{grid-template-columns:60px 1fr}.svc-row.offset{padding-left:60px}}
@@ -296,8 +302,8 @@ nav.main-links a:hover::after{right:0}
 .mkt-item{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-dark-soft)}
 .mkt-item:first-child{padding-top:0}
 .mkt-item svg{width:18px;height:18px;color:var(--electric);flex:none;margin-top:2px}
-.mkt-item h4{font-size:15px;margin-bottom:4px;font-weight:700}
-.mkt-item p{font-size:13px;color:var(--text-dim)}
+.mkt-item h3{font-size:15px;margin-bottom:4px;font-weight:700}
+.mkt-item p{font-size:13px;color:var(--text-dim);line-height:1.5}
 
 /* ============ PACKAGES ============ */
 .pkg-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:52px}
@@ -305,7 +311,7 @@ nav.main-links a:hover::after{right:0}
 @media(min-width:1180px){.pkg-grid{grid-template-columns:repeat(3,1fr)}}
 .pkg-card{border:1px solid var(--line-light);border-radius:var(--radius-m);padding:30px 26px;background:var(--paper-elev);display:flex;flex-direction:column;transition:border-color .3s,transform .3s var(--ease-out)}
 .pkg-card:hover{transform:translateY(-6px);border-color:var(--electric)}
-.pkg-card .tag{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--electric);margin-bottom:14px}
+.pkg-card .tag{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--blueberry);margin-bottom:14px}
 .pkg-card h3{font-size:20px;margin-bottom:10px}
 .pkg-card p{font-size:13.5px;color:var(--text-ink-dim);line-height:1.6;margin-bottom:18px}
 .pkg-card ul{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;flex:1}
@@ -320,7 +326,7 @@ nav.main-links a:hover::after{right:0}
 .des-list{columns:1;column-gap:32px}
 @media(min-width:560px){.des-list{columns:2}}
 .des-item{break-inside:avoid;display:flex;align-items:baseline;gap:10px;padding:12px 0;border-bottom:1px solid var(--line-dark-soft)}
-.des-item .n{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;color:var(--electric)}
+.des-item .n{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;color:var(--clear-skies)}
 .des-item span{font-size:14.5px}
 
 /* ============ DIVIDER (aerial ocean) ============ */
@@ -343,7 +349,7 @@ nav.main-links a:hover::after{right:0}
   .p-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 10px}
   .p-dot{width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--line-dark);margin-bottom:20px;transition:all .5s var(--ease-spring)}
   .p-step.in .p-dot{background:var(--electric);border-color:var(--electric);box-shadow:0 0 0 6px rgba(8,123,255,.15)}
-  .p-step h4{font-size:15px;margin-bottom:8px}
+  .p-step h3{font-size:15px;margin-bottom:8px}
   .p-step p{font-size:12.5px;color:var(--text-dim);line-height:1.5}
 }
 .process-mobile{margin-top:56px;max-width:560px}
@@ -351,14 +357,14 @@ nav.main-links a:hover::after{right:0}
 .pm-item{position:relative;padding-left:46px;padding-bottom:40px;border-left:2px solid var(--line-dark-soft);margin-left:8px}
 .pm-item:last-child{padding-bottom:0;border-color:transparent}
 .pm-item::before{content:'';position:absolute;left:-8px;top:0;width:14px;height:14px;border-radius:50%;background:var(--electric)}
-.pm-item h4{font-size:16px;margin-bottom:6px}
+.pm-item h3{font-size:16px;margin-bottom:6px}
 .pm-item p{font-size:13.5px;color:var(--text-dim);line-height:1.6}
 
 /* ============ OPTIONS ============ */
 .opt-grid2{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-light);border:1px solid var(--line-light);border-radius:var(--radius-m);overflow:hidden;margin-top:52px}
 @media(min-width:720px){.opt-grid2{grid-template-columns:repeat(3,1fr)}}
 .opt-cell{background:var(--paper-elev);padding:30px 26px;display:flex;flex-direction:column;gap:14px}
-.opt-cell h4{font-size:16.5px;color:var(--text-ink)}
+.opt-cell h3{font-size:16.5px;color:var(--text-ink)}
 .opt-cell p{font-size:12.8px;color:var(--text-ink-dim);line-height:1.55;flex:1}
 .opt-cell .btn-ghost{color:var(--text-ink);border-color:var(--line-light)}
 .opt-cell .btn-ghost:hover{border-color:var(--electric);color:var(--text-ink)}
@@ -390,10 +396,10 @@ nav.main-links a:hover::after{right:0}
 .contact-line:last-child{border-bottom:1px solid var(--line-dark-soft)}
 .contact-line svg{width:18px;height:18px;color:var(--electric);flex:none}
 .contact-line a{font-size:14.5px;font-weight:600}
-.contact-line a:hover{color:var(--electric)}
+.contact-line a:hover{color:var(--clear-skies)}
 .field{margin-bottom:18px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
-.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-dark);border-radius:12px;padding:14px 15px;color:#fff;font-size:14.5px;transition:border-color .25s,box-shadow .25s}
+.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-dark);border-radius:12px;padding:14px 15px;color:#fff;font-size:16px;transition:border-color .25s,box-shadow .25s}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--electric);box-shadow:0 0 0 3px rgba(8,123,255,.2);outline:none}
 .field textarea{min-height:110px;resize:vertical}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238CC1E9' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:16px}
@@ -440,9 +446,11 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 </head>
 <body>
 
+<a href="#top" class="skip-link">Skip to main content</a>
+
 <!-- ============ LOADER ============ -->
 <div id="loader" aria-hidden="true">
-  <svg class="loader-wave" viewBox="0 0 320 60" preserveAspectRatio="none"><path d="M4 44 C 60 20, 100 56, 160 34 S 260 8, 316 24"/></svg>
+  <svg aria-hidden="true" class="loader-wave" viewBox="0 0 320 60" preserveAspectRatio="none"><path d="M4 44 C 60 20, 100 56, 160 34 S 260 8, 316 24"/></svg>
   <div class="loader-mark"><img src="assets/logo-dark.jpg" alt="CLICK&amp;CO"></div>
   <div class="loader-tag">Websites &middot; Solutions &middot; Results</div>
 </div>
@@ -497,9 +505,9 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 <!-- ============ HERO ============ -->
 <section class="section-dark hero section-photo" id="home">
   <div class="photo-frame" data-caption="Hero">
-    <img src="assets/photos/laptop.jpg" alt="Laptop displaying a CLICK&amp;CO website design, set against underwater electric-blue light" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
+    <img src="assets/photos/laptop.jpg" alt="Laptop displaying a CLICK&amp;CO website design, set against underwater electric-blue light" loading="eager" fetchpriority="high" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
     <div class="ph-placeholder">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M2 19h20l-1.5-3h-17z"/></svg>
+      <svg aria-hidden="true" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M2 19h20l-1.5-3h-17z"/></svg>
       <span>Photo pending &middot; Laptop, website design</span>
     </div>
   </div>
@@ -542,12 +550,12 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
           <div class="photo-frame" data-caption="Founders">
             <img src="assets/photos/founders.jpg" alt="The two co-founders of CLICKANDCO" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
             <div class="ph-placeholder">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6M14.5 20c.2-2.7 1.6-4.7 3.5-5.6"/></svg>
+              <svg aria-hidden="true" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6M14.5 20c.2-2.7 1.6-4.7 3.5-5.6"/></svg>
               <span>Photo of the founders — coming soon</span>
             </div>
           </div>
           <div class="fc-body">
-            <h4>Meet the founders</h4>
+            <h3>Meet the founders</h3>
             <p>CLICKANDCO is run by two founders who believe a business's digital presence should feel as considered as the business itself. Photo landing here soon.</p>
           </div>
         </div>
@@ -583,7 +591,7 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 <section class="section-dark pad section-photo" id="marketing">
   <div class="photo-frame" data-caption="Perspective">
     <img src="assets/photos/drone.jpg" alt="Drone used for marketing perspective and strategic overview" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-    <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 8l3 3M16 8l-3 3M8 16l3-3M16 16l-3-3"/><rect x="10" y="10" width="4" height="4" rx="1"/></svg><span>Photo pending &middot; Drone, strategy &amp; perspective</span></div>
+    <div class="ph-placeholder"><svg aria-hidden="true" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 8l3 3M16 8l-3 3M8 16l3-3M16 16l-3-3"/><rect x="10" y="10" width="4" height="4" rx="1"/></svg><span>Photo pending &middot; Drone, strategy &amp; perspective</span></div>
   </div>
   <div class="container">
     <div class="head-block reveal up">
@@ -594,14 +602,14 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 
     <div class="mkt-grid">
       <div class="mkt-list">
-        <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg><div><h4>Marketing strategy and direction</h4><p>A clear plan for where to focus your time and budget.</p></div></div>
-        <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><div><h4>Brand positioning</h4><p>Defining how your business should be seen and understood.</p></div></div>
-        <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div><h4>Marketing audits</h4><p>An honest look at what's working and what isn't yet.</p></div></div>
-        <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><div><h4>Campaign planning</h4><p>Structured plans for launches, promotions and pushes.</p></div></div>
-        <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h13"/></svg><div><h4>Content direction</h4><p>What to say, where to say it, and why it matters.</p></div></div>
-        <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg><div><h4>Website &amp; customer-journey advice</h4><p>Making sure your website supports the way people actually buy.</p></div></div>
-        <div class="mkt-item reveal up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg><div><h4>Monthly marketing consulting</h4><p>Ongoing guidance instead of a once-off recommendation.</p></div></div>
-        <div class="mkt-item reveal up" style="border-bottom:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><div><h4>Practical growth recommendations</h4><p>Realistic next steps, not vague advice.</p></div></div>
+        <div class="mkt-item reveal up"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg><div><h3>Marketing strategy and direction</h3><p>A clear plan for where to focus your time and budget.</p></div></div>
+        <div class="mkt-item reveal up"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><div><h3>Brand positioning</h3><p>Defining how your business should be seen and understood.</p></div></div>
+        <div class="mkt-item reveal up"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div><h3>Marketing audits</h3><p>An honest look at what's working and what isn't yet.</p></div></div>
+        <div class="mkt-item reveal up"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><div><h3>Campaign planning</h3><p>Structured plans for launches, promotions and pushes.</p></div></div>
+        <div class="mkt-item reveal up"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h13"/></svg><div><h3>Content direction</h3><p>What to say, where to say it, and why it matters.</p></div></div>
+        <div class="mkt-item reveal up"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg><div><h3>Website &amp; customer-journey advice</h3><p>Making sure your website supports the way people actually buy.</p></div></div>
+        <div class="mkt-item reveal up"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg><div><h3>Monthly marketing consulting</h3><p>Ongoing guidance instead of a once-off recommendation.</p></div></div>
+        <div class="mkt-item reveal up" style="border-bottom:none"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><div><h3>Practical growth recommendations</h3><p>Realistic next steps, not vague advice.</p></div></div>
       </div>
     </div>
   </div>
@@ -622,9 +630,9 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <h3>Business Starter Package</h3>
         <p>For new businesses that need a professional foundation to launch from.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Website design</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Logo &amp; brand identity</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Digital setup &amp; support</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Website design</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Logo &amp; brand identity</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Digital setup &amp; support</li>
         </ul>
         <a href="#contact" class="btn btn-ghost magnetic" data-cursor="hover" style="width:100%">Request a Custom Quote</a>
       </div>
@@ -634,10 +642,10 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <h3>Brand and Website Package</h3>
         <p>A consistent identity and a website that actually reflect each other.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Website design</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Logo &amp; brand identity</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Business stationery</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Social-media designs</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Website design</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Logo &amp; brand identity</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Business stationery</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Social-media designs</li>
         </ul>
         <a href="#contact" class="btn btn-primary magnetic" data-cursor="hover" style="width:100%">Request a Custom Quote</a>
       </div>
@@ -647,10 +655,10 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <h3>Marketing Growth Package</h3>
         <p>For businesses with a website already, ready to grow their reach.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Marketing consulting</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Content direction</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Social-media designs</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Advertising designs</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Marketing consulting</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Content direction</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Social-media designs</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Advertising designs</li>
         </ul>
         <a href="#contact" class="btn btn-ghost magnetic" data-cursor="hover" style="width:100%">Request a Custom Quote</a>
       </div>
@@ -660,10 +668,10 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <h3>Complete Digital Presence Package</h3>
         <p>Website, brand and marketing support working as one system.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Website design</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Logo &amp; brand identity</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Marketing consulting</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Digital setup &amp; support</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Website design</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Logo &amp; brand identity</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Marketing consulting</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Digital setup &amp; support</li>
         </ul>
         <a href="#contact" class="btn btn-ghost magnetic" data-cursor="hover" style="width:100%">Request a Custom Quote</a>
       </div>
@@ -673,9 +681,9 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
         <h3>Custom Business Package</h3>
         <p>Any combination of website, marketing and design services, scoped to your specific goals.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Chosen together with you</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Scoped to your budget</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Built to expand later</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Chosen together with you</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Scoped to your budget</li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Built to expand later</li>
         </ul>
         <a href="#contact" class="btn btn-ghost magnetic" data-cursor="hover" style="width:100%">Request a Custom Quote</a>
       </div>
@@ -694,7 +702,7 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 <section class="section-dark pad section-photo" id="designs">
   <div class="photo-frame" data-caption="Content">
     <img src="assets/photos/camera.jpg" alt="Camera used for content design and visual marketing" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-    <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M9 7l1.5-3h3L15 7"/></svg><span>Photo pending &middot; Camera, content design</span></div>
+    <div class="ph-placeholder"><svg aria-hidden="true" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M9 7l1.5-3h3L15 7"/></svg><span>Photo pending &middot; Camera, content design</span></div>
   </div>
   <div class="container">
     <div class="head-block reveal up">
@@ -723,7 +731,7 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 <section class="ocean-divider">
   <div class="photo-frame" data-caption="Brand story">
     <img src="assets/photos/aerial-ocean.jpg" alt="Aerial view of the ocean, representing CLICKANDCO's brand story" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-    <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12c2 2 4 2 6 0s4-2 6 0 4 2 6 0M2 17c2 2 4 2 6 0s4-2 6 0 4 2 6 0M2 7c2 2 4 2 6 0s4-2 6 0 4 2 6 0"/></svg><span>Photo pending &middot; Aerial ocean</span></div>
+    <div class="ph-placeholder"><svg aria-hidden="true" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12c2 2 4 2 6 0s4-2 6 0 4 2 6 0M2 17c2 2 4 2 6 0s4-2 6 0 4 2 6 0M2 7c2 2 4 2 6 0s4-2 6 0 4 2 6 0"/></svg><span>Photo pending &middot; Aerial ocean</span></div>
   </div>
   <div class="od-inner">
     <p class="accent-serif reveal up">Ideas become clickable results.</p>
@@ -741,28 +749,28 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 
     <div class="process-desktop" id="process-desktop">
       <div class="process-path">
-        <svg viewBox="0 0 1200 140" preserveAspectRatio="none">
+        <svg aria-hidden="true" viewBox="0 0 1200 140" preserveAspectRatio="none">
           <path d="M20 60 C 220 10, 320 120, 500 70 S 780 20, 980 80 S 1120 60, 1180 40"/>
           <path class="fill" id="process-fill" d="M20 60 C 220 10, 320 120, 500 70 S 780 20, 980 80 S 1120 60, 1180 40"/>
         </svg>
       </div>
       <div class="process-steps-row" id="process-steps">
-        <div class="p-step"><div class="p-dot"></div><h4>Discover</h4><p>We learn about your business, audience and goals.</p></div>
-        <div class="p-step"><div class="p-dot"></div><h4>Define</h4><p>We agree on scope, pages, features and direction.</p></div>
-        <div class="p-step"><div class="p-dot"></div><h4>Design</h4><p>We design around your brand, not a template.</p></div>
-        <div class="p-step"><div class="p-dot"></div><h4>Build</h4><p>We develop the website or system properly.</p></div>
-        <div class="p-step"><div class="p-dot"></div><h4>Refine</h4><p>You review it and we adjust until it's right.</p></div>
-        <div class="p-step"><div class="p-dot"></div><h4>Launch &amp; grow</h4><p>Your project goes live, with room to expand later.</p></div>
+        <div class="p-step"><div class="p-dot"></div><h3>Discover</h3><p>We learn about your business, audience and goals.</p></div>
+        <div class="p-step"><div class="p-dot"></div><h3>Define</h3><p>We agree on scope, pages, features and direction.</p></div>
+        <div class="p-step"><div class="p-dot"></div><h3>Design</h3><p>We design around your brand, not a template.</p></div>
+        <div class="p-step"><div class="p-dot"></div><h3>Build</h3><p>We develop the website or system properly.</p></div>
+        <div class="p-step"><div class="p-dot"></div><h3>Refine</h3><p>You review it and we adjust until it's right.</p></div>
+        <div class="p-step"><div class="p-dot"></div><h3>Launch &amp; grow</h3><p>Your project goes live, with room to expand later.</p></div>
       </div>
     </div>
 
     <div class="process-mobile">
-      <div class="pm-item"><h4>Discover</h4><p>We learn about your business, audience and goals.</p></div>
-      <div class="pm-item"><h4>Define</h4><p>We agree on scope, pages, features and direction.</p></div>
-      <div class="pm-item"><h4>Design</h4><p>We design around your brand, not a template.</p></div>
-      <div class="pm-item"><h4>Build</h4><p>We develop the website or system properly.</p></div>
-      <div class="pm-item"><h4>Refine</h4><p>You review it and we adjust until it's right.</p></div>
-      <div class="pm-item"><h4>Launch &amp; grow</h4><p>Your project goes live, with room to expand later.</p></div>
+      <div class="pm-item"><h3>Discover</h3><p>We learn about your business, audience and goals.</p></div>
+      <div class="pm-item"><h3>Define</h3><p>We agree on scope, pages, features and direction.</p></div>
+      <div class="pm-item"><h3>Design</h3><p>We design around your brand, not a template.</p></div>
+      <div class="pm-item"><h3>Build</h3><p>We develop the website or system properly.</p></div>
+      <div class="pm-item"><h3>Refine</h3><p>You review it and we adjust until it's right.</p></div>
+      <div class="pm-item"><h3>Launch &amp; grow</h3><p>Your project goes live, with room to expand later.</p></div>
     </div>
   </div>
 </section>
@@ -777,12 +785,12 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
     </div>
 
     <div class="opt-grid2">
-      <div class="opt-cell reveal up"><h4>Starter</h4><p>A first professional website for a new or small business.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
-      <div class="opt-cell reveal up"><h4>Business</h4><p>A complete website for an established company.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
-      <div class="opt-cell reveal up"><h4>E-commerce</h4><p>A full online store built to sell.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
-      <div class="opt-cell reveal up"><h4>Marketing Consulting</h4><p>Ongoing or once-off marketing guidance.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
-      <div class="opt-cell reveal up"><h4>Business Design Package</h4><p>Brand, social and marketing materials.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
-      <div class="opt-cell reveal up"><h4>Complete Custom Package</h4><p>Website, design and marketing, built together.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
+      <div class="opt-cell reveal up"><h3>Starter</h3><p>A first professional website for a new or small business.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
+      <div class="opt-cell reveal up"><h3>Business</h3><p>A complete website for an established company.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
+      <div class="opt-cell reveal up"><h3>E-commerce</h3><p>A full online store built to sell.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
+      <div class="opt-cell reveal up"><h3>Marketing Consulting</h3><p>Ongoing or once-off marketing guidance.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
+      <div class="opt-cell reveal up"><h3>Business Design Package</h3><p>Brand, social and marketing materials.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
+      <div class="opt-cell reveal up"><h3>Complete Custom Package</h3><p>Website, design and marketing, built together.</p><a href="#contact" class="btn btn-ghost btn-sm magnetic" data-cursor="hover">Request a Quote</a></div>
     </div>
   </div>
 </section>
@@ -821,26 +829,26 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
     <div class="contact-wrap reveal up">
       <div class="photo-frame" data-caption="Contact">
         <img src="assets/photos/underwater-sunlight-2.jpg" alt="Underwater sunlight" loading="lazy" onload="this.parentElement.classList.add('ph-loaded')" onerror="this.parentElement.classList.add('ph-fallback')">
-        <div class="ph-placeholder"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg><span>Photo pending</span></div>
+        <div class="ph-placeholder"><svg aria-hidden="true" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg><span>Photo pending</span></div>
       </div>
       <div class="contact-inner">
         <div class="contact-grid">
           <div class="contact-info">
             <h3>Direct contact</h3>
             <p>Prefer to speak directly? Reach us on WhatsApp, call, or send an email — whichever is easiest for you.</p>
-            <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg><a href="https://wa.me/27690522875" target="_blank" rel="noopener">WhatsApp: 069 052 2875</a></div>
-            <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg><a href="tel:+27690522875">Call: 069 052 2875</a></div>
-            <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><a href="mailto:clickandcocmpny@outlook.com">clickandcocmpny@outlook.com</a></div>
+            <div class="contact-line"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg><a href="https://wa.me/27690522875" target="_blank" rel="noopener">WhatsApp: 069 052 2875</a></div>
+            <div class="contact-line"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg><a href="tel:+27690522875">Call: 069 052 2875</a></div>
+            <div class="contact-line"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><a href="mailto:clickandcocmpny@outlook.com">clickandcocmpny@outlook.com</a></div>
           </div>
 
           <div>
             <form id="contact-form">
               <div class="field-row">
-                <div class="field"><label for="f-name">Name</label><input type="text" id="f-name" placeholder="Your full name"></div>
-                <div class="field"><label for="f-business">Business name</label><input type="text" id="f-business" placeholder="Your business name"></div>
+                <div class="field"><label for="f-name">Name <span aria-hidden="true">*</span></label><input type="text" id="f-name" placeholder="Your full name" autocomplete="name" required></div>
+                <div class="field"><label for="f-business">Business name</label><input type="text" id="f-business" placeholder="Your business name" autocomplete="organization"></div>
               </div>
               <div class="field-row">
-                <div class="field"><label for="f-contact">Contact details</label><input type="text" id="f-contact" placeholder="Phone or email"></div>
+                <div class="field"><label for="f-contact">Contact details <span aria-hidden="true">*</span></label><input type="text" id="f-contact" placeholder="Phone or email" required></div>
                 <div class="field"><label for="f-service">Required service</label>
                   <select id="f-service">
                     <option value="">Select a service</option>
@@ -866,7 +874,7 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
                 </select>
               </div>
               <div class="field"><label for="f-desc">Project description</label><textarea id="f-desc" placeholder="Tell us a bit about your business and what you need"></textarea></div>
-              <div class="form-error" id="f-error">Please add your name and either a phone number or email so we can reach you.</div>
+              <div class="form-error" id="f-error" role="alert" aria-live="polite">Please add your name and either a phone number or email so we can reach you.</div>
               <button type="button" id="f-submit" class="btn btn-primary magnetic" data-cursor="hover" style="width:100%">Send Enquiry via WhatsApp</button>
             </form>
           </div>
@@ -945,13 +953,13 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
 </footer>
 
 <a href="https://wa.me/27690522875?text=Hi%20CLICK%26CO!%20I%20would%20like%20to%20enquire%20about%20your%20services." target="_blank" rel="noopener" id="wa-float" data-cursor="hover" aria-label="Chat with CLICK&amp;CO on WhatsApp">
-  <svg viewBox="0 0 32 32" fill="#fff"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.31.653 4.469 1.789 6.309L4 29l7.887-1.741A11.94 11.94 0 0016 27c6.627 0 12-5.373 12-12S22.628 3 16.001 3zm0 21.6c-1.94 0-3.75-.55-5.293-1.503l-.38-.226-4.68 1.033 1.05-4.56-.248-.398A9.57 9.57 0 016.4 15c0-5.302 4.298-9.6 9.6-9.6 5.302 0 9.6 4.298 9.6 9.6 0 5.302-4.298 9.6-9.6 9.6zm5.264-7.19c-.288-.144-1.706-.842-1.97-.938-.264-.096-.457-.144-.649.144-.192.288-.744.938-.913 1.13-.168.192-.336.216-.624.072-.288-.144-1.216-.448-2.317-1.43-.856-.763-1.434-1.706-1.602-1.994-.168-.288-.018-.443.126-.586.13-.129.288-.336.432-.504.144-.168.192-.288.288-.48.096-.192.048-.36-.024-.504-.072-.144-.649-1.566-.889-2.145-.234-.563-.472-.487-.649-.496l-.553-.01c-.192 0-.504.072-.768.36-.264.288-1.008.985-1.008 2.402 0 1.417 1.032 2.786 1.176 2.978.144.192 2.03 3.1 4.918 4.347.687.297 1.223.474 1.641.607.689.219 1.316.188 1.812.114.553-.083 1.706-.697 1.946-1.37.24-.673.24-1.25.168-1.37-.072-.12-.264-.192-.552-.336z"/></svg>
+  <svg aria-hidden="true" viewBox="0 0 32 32" fill="#fff"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.31.653 4.469 1.789 6.309L4 29l7.887-1.741A11.94 11.94 0 0016 27c6.627 0 12-5.373 12-12S22.628 3 16.001 3zm0 21.6c-1.94 0-3.75-.55-5.293-1.503l-.38-.226-4.68 1.033 1.05-4.56-.248-.398A9.57 9.57 0 016.4 15c0-5.302 4.298-9.6 9.6-9.6 5.302 0 9.6 4.298 9.6 9.6 0 5.302-4.298 9.6-9.6 9.6zm5.264-7.19c-.288-.144-1.706-.842-1.97-.938-.264-.096-.457-.144-.649.144-.192.288-.744.938-.913 1.13-.168.192-.336.216-.624.072-.288-.144-1.216-.448-2.317-1.43-.856-.763-1.434-1.706-1.602-1.994-.168-.288-.018-.443.126-.586.13-.129.288-.336.432-.504.144-.168.192-.288.288-.48.096-.192.048-.36-.024-.504-.072-.144-.649-1.566-.889-2.145-.234-.563-.472-.487-.649-.496l-.553-.01c-.192 0-.504.072-.768.36-.264.288-1.008.985-1.008 2.402 0 1.417 1.032 2.786 1.176 2.978.144.192 2.03 3.1 4.918 4.347.687.297 1.223.474 1.641.607.689.219 1.316.188 1.812.114.553-.083 1.706-.697 1.946-1.37.24-.673.24-1.25.168-1.37-.072-.12-.264-.192-.552-.336z"/></svg>
   <span class="wlabel">Chat With CLICK&amp;CO</span>
 </a>
 
 <div id="mobile-cta">
   <a href="#contact" class="btn btn-primary">Start a Project</a>
-  <a href="tel:+27690522875" class="btn btn-ghost" style="flex:0 0 auto;padding:14px 18px"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" width="20" height="20"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></a>
+  <a href="tel:+27690522875" class="btn btn-ghost" style="flex:0 0 auto;padding:14px 18px"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" width="20" height="20"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -994,7 +1002,7 @@ onScroll();
 
 /* ---------- CUSTOM CURSOR ---------- */
 var fineHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-if(!fineHover){ document.body.classList.add('no-fine'); }
+if(!fineHover || reduceMotion){ document.body.classList.add('no-fine'); }
 else {
   var dot = document.getElementById('cursor-dot');
   var ring = document.getElementById('cursor-ring');
@@ -1015,7 +1023,7 @@ else {
 }
 
 /* ---------- MAGNETIC BUTTONS ---------- */
-if(fineHover){
+if(fineHover && !reduceMotion){
   document.querySelectorAll('.magnetic').forEach(function(btn){
     btn.addEventListener('mousemove', function(e){
       var r = btn.getBoundingClientRect();
@@ -1065,6 +1073,30 @@ revealEls.forEach(function(el, idx){
   el.dataset.i = idx % 6;
   io.observe(el);
 });
+
+/* ---------- NAV SCROLL-SPY ---------- */
+(function(){
+  var navLinks = document.querySelectorAll('nav.main-links a[href^="#"]');
+  if(!navLinks.length) return;
+  var linkMap = {};
+  navLinks.forEach(function(a){ linkMap[a.getAttribute('href').slice(1)] = a; });
+  var sections = Array.prototype.filter.call(
+    document.querySelectorAll('section[id]'),
+    function(s){ return linkMap[s.id]; }
+  );
+  if(!sections.length) return;
+  var navIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      var link = linkMap[entry.target.id];
+      if(!link) return;
+      if(entry.isIntersecting){
+        navLinks.forEach(function(a){ a.classList.remove('active'); });
+        link.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-45% 0px -45% 0px', threshold:0});
+  sections.forEach(function(s){ navIo.observe(s); });
+})();
 
 /* ---------- MARQUEE OVERFLOW SAFETY ---------- */
 document.querySelectorAll('.marquee').forEach(function(m){ m.style.overflow = 'hidden'; });
