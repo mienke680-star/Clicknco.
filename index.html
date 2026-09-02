@@ -272,6 +272,30 @@ nav.main-links a.active::after{right:0}
 @media (prefers-reduced-motion: reduce){
   .hero-3d{display:none}
 }
+
+/* ============ CLICK MASCOT — persistent foreground layer ============ */
+#click-layer{position:fixed;inset:0;z-index:750;pointer-events:none}
+#click-layer canvas{display:block;width:100%;height:100%}
+#click-speech{position:fixed;top:0;left:0;z-index:751;pointer-events:none;transform:translate(-9999px,-9999px);
+  background:var(--paper-elev);color:var(--text-ink);font-family:'Inter',sans-serif;font-weight:600;font-size:14px;
+  padding:10px 16px;border-radius:100px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);opacity:0;transition:opacity .35s var(--ease-out)}
+#click-speech.show{opacity:1}
+#click-speech::after{content:'';position:absolute;left:-6px;bottom:14px;width:12px;height:12px;background:var(--paper-elev);transform:rotate(45deg);border-radius:2px}
+
+/* ============ ENTRANCE GATE ============ */
+#entrance-gate{position:fixed;inset:0;z-index:9500;background:var(--abyss);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s var(--ease-out),visibility .8s}
+#entrance-gate.leaving{opacity:0;visibility:hidden;pointer-events:none}
+#entrance-canvas{position:absolute;inset:0}
+#entrance-canvas canvas{display:block;width:100%;height:100%}
+#enter-btn{position:relative;z-index:2;background:var(--electric);color:#000;font-family:'Montserrat',sans-serif;font-weight:800;font-size:16px;letter-spacing:.02em;
+  padding:20px 44px;border-radius:100px;border:none;cursor:pointer;box-shadow:0 16px 40px -10px rgba(8,123,255,.7);transition:transform .3s var(--ease-spring),box-shadow .3s;
+  margin-top:38vh}
+#enter-btn:hover{transform:translateY(-2px)}
+#enter-btn.pressed{transform:scale(.92) translateY(2px)}
+#entrance-gate .eg-tag{position:relative;z-index:2;margin-top:16px;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim)}
+@media (prefers-reduced-motion: reduce){
+  #entrance-gate{display:none}
+}
 .hero-copy{max-width:640px}
 .hero-copy .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid var(--line-dark);font-size:12px;color:var(--text-dim);margin-bottom:24px}
 .hero-copy .badge i{width:6px;height:6px;border-radius:50%;background:var(--electric)}
@@ -465,6 +489,17 @@ footer{background:var(--abyss);border-top:1px solid var(--line-dark-soft);paddin
   <div class="loader-mark"><img src="assets/logo-dark.jpg" alt="CLICK&amp;CO"></div>
   <div class="loader-tag">Websites &middot; Solutions &middot; Results</div>
 </div>
+
+<!-- ============ ENTRANCE GATE (Click walks in and opens the site) ============ -->
+<div id="entrance-gate">
+  <div id="entrance-canvas" aria-hidden="true"></div>
+  <button type="button" id="enter-btn">Enter Website</button>
+  <span class="eg-tag">Click here, or wait for Click</span>
+</div>
+
+<!-- ============ CLICK MASCOT (persistent foreground layer) ============ -->
+<div id="click-layer" aria-hidden="true"></div>
+<div id="click-speech" role="status" aria-live="polite"></div>
 
 <div id="progress"></div>
 <div id="cursor-ring"></div>
@@ -1356,85 +1391,6 @@ rayConfigs.forEach(function(cfg){
   rayGroup.add(mesh);
 });
 
-/* ---------- MASCOT (built from primitives — no facial features, ever) ---------- */
-var mascot = new THREE.Group();
-mascot.position.set(-2.1, -0.6, 0.6);
-scene.add(mascot);
-
-var suitMat = new THREE.MeshStandardMaterial({ color: COLORS.suit, roughness: 0.55, metalness: 0.15 });
-var pearlMat = new THREE.MeshStandardMaterial({ color: COLORS.pearl, roughness: 0.35, metalness: 0.05 });
-var tieMat = new THREE.MeshStandardMaterial({ color: COLORS.electric, roughness: 0.4, metalness: 0.2 });
-
-// torso
-var torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.42, 0.7, 6, 12), suitMat);
-torso.position.y = 0.55;
-mascot.add(torso);
-
-// tie
-var tie = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.5, 0.03), tieMat);
-tie.position.set(0, 0.62, 0.42);
-mascot.add(tie);
-
-// head (perfectly smooth sphere — the ONLY marking allowed is the brand logo, never a face)
-var headGroup = new THREE.Group();
-headGroup.position.y = 1.28;
-mascot.add(headGroup);
-var head = new THREE.Mesh(new THREE.SphereGeometry(0.4, 24, 24), pearlMat);
-headGroup.add(head);
-var logoTex = new THREE.TextureLoader().load('assets/logo-icon.jpg');
-var logoMat = new THREE.MeshBasicMaterial({ map: logoTex, transparent: true, toneMapped: false });
-var logoPlane = new THREE.Mesh(new THREE.CircleGeometry(0.22, 32), logoMat);
-logoPlane.position.set(0, 0.02, 0.385);
-headGroup.add(logoPlane);
-
-// arms (pivoted at shoulder for gestures)
-function buildArm(side){
-  var pivot = new THREE.Group();
-  pivot.position.set(0.42 * side, 0.85, 0);
-  var upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.11, 0.42, 4, 8), suitMat);
-  upper.position.set(0, -0.24, 0);
-  pivot.add(upper);
-  var hand = new THREE.Mesh(new THREE.SphereGeometry(0.13, 12, 12), pearlMat);
-  hand.position.set(0, -0.5, 0);
-  pivot.add(hand);
-  pivot.userData.restRotation = { x: 0, z: 0.18 * side };
-  pivot.rotation.z = pivot.userData.restRotation.z;
-  mascot.add(pivot);
-  return pivot;
-}
-var armL = buildArm(-1);
-var armR = buildArm(1);
-
-// legs
-function buildLeg(side){
-  var pivot = new THREE.Group();
-  pivot.position.set(0.16 * side, 0.18, 0);
-  var upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.13, 0.4, 4, 8), suitMat);
-  upper.position.set(0, -0.22, 0);
-  pivot.add(upper);
-  var shoe = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.1, 0.28), pearlMat);
-  shoe.position.set(0, -0.46, 0.05);
-  pivot.add(shoe);
-  mascot.add(pivot);
-  return pivot;
-}
-var legL = buildLeg(-1);
-var legR = buildLeg(1);
-
-mascot.scale.setScalar(0.85);
-
-/* entrance */
-if(typeof gsap !== 'undefined'){
-  gsap.from(mascot.position, { y: mascot.position.y - 1.2, duration: 1.8, ease: 'power2.out', delay: 0.3 });
-  mascot.traverse(function(o){ if(o.material) o.material.transparent = true; });
-  /* several meshes share the same material instance (suitMat, pearlMat) — dedupe
-     so each unique material is only faded once, otherwise a later mesh reading an
-     already-zeroed opacity as its "original" value would leave it stuck invisible */
-  var fadeTargets = [];
-  mascot.traverse(function(o){ if(o.material && o !== logoPlane && fadeTargets.indexOf(o.material) === -1) fadeTargets.push(o.material); });
-  fadeTargets.forEach(function(m){ var orig = m.opacity !== undefined ? m.opacity : 1; m.opacity = 0; gsap.to(m, { opacity: orig, duration: 1.6, delay: 0.5 }); });
-}
-
 /* ---------- POINTER PARALLAX ---------- */
 var pointer = { x: 0, y: 0 };
 var pointerTarget = { x: 0, y: 0 };
@@ -1444,51 +1400,13 @@ heroSection.addEventListener('pointermove', function(e){
   pointerTarget.y = ((e.clientY - r.top) / r.height) * 2 - 1;
 });
 
-/* ---------- CTA HOVER / CLICK INTERACTION ---------- */
-var ctaBtn = document.getElementById('hero-cta-primary');
-var pointingAtCTA = false;
-if(ctaBtn){
-  ctaBtn.addEventListener('mouseenter', function(){
-    pointingAtCTA = true;
-    ctaBtn.classList.add('electrified');
-    if(typeof gsap !== 'undefined'){
-      gsap.to(armR.rotation, { z: -0.9, x: -0.3, duration: 0.5, ease: 'back.out(1.6)' });
-      gsap.to(headGroup.rotation, { y: -0.35, duration: 0.5, ease: 'power2.out' });
-    }
-  });
-  ctaBtn.addEventListener('mouseleave', function(){
-    pointingAtCTA = false;
-    if(typeof gsap !== 'undefined'){
-      gsap.to(armR.rotation, { z: armR.userData.restRotation.z, x: 0, duration: 0.6, ease: 'power2.inOut' });
-      gsap.to(headGroup.rotation, { y: 0, duration: 0.6, ease: 'power2.inOut' });
-    }
-  });
-  ctaBtn.addEventListener('click', function(ev){
-    if(ctaBtn.dataset.pressed === '1') return;
-    ev.preventDefault();
-    ctaBtn.dataset.pressed = '1';
-    ctaBtn.classList.add('electrified');
-    var targetHref = ctaBtn.getAttribute('href');
-    if(typeof gsap !== 'undefined'){
-      gsap.to(armR.rotation, { z: -1.1, x: -0.5, duration: 0.16, ease: 'power1.in', onComplete: function(){
-        var target = document.querySelector(targetHref);
-        if(target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-      }});
-    } else {
-      var target = document.querySelector(targetHref);
-      if(target) target.scrollIntoView();
-    }
-  });
-}
-
-/* ---------- SCROLL-LINKED CAMERA + MASCOT (GSAP ScrollTrigger) ---------- */
+/* ---------- SCROLL-LINKED CAMERA (GSAP ScrollTrigger) ---------- */
 if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
   gsap.timeline({
     scrollTrigger: { trigger: heroSection, start: 'top top', end: 'bottom top', scrub: 0.6 }
   })
   .to(camera.position, { z: 5.5, y: -0.4, x: 0.6, ease: 'none' }, 0)
-  .to(techGroup.rotation, { y: 1.4, ease: 'none' }, 0)
-  .to(mascot.position, { x: -0.8, z: 1.4, ease: 'none' }, 0);
+  .to(techGroup.rotation, { y: 1.4, ease: 'none' }, 0);
 }
 
 /* ---------- RESIZE ---------- */
@@ -1530,17 +1448,6 @@ function animate(){
   bubbles.instanceMatrix.needsUpdate = true;
   particles.rotation.y += dt * 0.01;
 
-  // mascot idle bob + walk-in-place leg sway
-  mascot.position.y += Math.sin(t*1.1)*0.0009;
-  torso.rotation.z = Math.sin(t*0.9)*0.03;
-  headGroup.rotation.x = Math.sin(t*0.7)*0.02;
-  if(!pointingAtCTA){
-    armL.rotation.x = Math.sin(t*1.2)*0.08;
-    armR.rotation.x = Math.sin(t*1.2 + Math.PI)*0.08;
-  }
-  legL.rotation.x = Math.sin(t*0.8)*0.05;
-  legR.rotation.x = Math.sin(t*0.8 + Math.PI)*0.05;
-
   // pointer parallax
   pointer.x += (pointerTarget.x - pointer.x) * 0.04;
   pointer.y += (pointerTarget.y - pointer.y) * 0.04;
@@ -1552,6 +1459,424 @@ function animate(){
 
 mount.classList.add('ready');
 heroSection.classList.add('has-3d');
+animate();
+
+}());
+</script>
+
+<!-- ============ CLICK — persistent foreground mascot controller ============ -->
+<script>
+(function(){
+"use strict";
+
+var gateEl = document.getElementById('entrance-gate');
+var enterBtn = document.getElementById('enter-btn');
+var layerMount = document.getElementById('click-layer');
+var speechEl = document.getElementById('click-speech');
+if(!gateEl || !enterBtn || !layerMount || !speechEl) return;
+
+var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var isTouch = !window.matchMedia('(pointer: fine)').matches;
+var isSmall = window.innerWidth < 720;
+
+function hasWebGL(){
+  try{
+    var c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+  }catch(e){ return false; }
+}
+
+if(!hasWebGL() || typeof THREE === 'undefined'){
+  gateEl.remove(); // no WebGL: don't gate real access behind an animation that can't run
+  return;
+}
+
+if(reduceMotion){
+  // simplified, motion-safe path: no gate, no walking mascot layer at all
+  gateEl.remove();
+  return;
+}
+
+var COLORS = { suit: 0x0A2D57, pearl: 0xF3F6FA, electric: 0x087BFF, clearSkies: 0x8CC1E9 };
+var MASCOT_SCALE = isSmall ? 0.4 : 0.52;
+
+/* ---------- SHARED RENDERER / SCENE / CAMERA (used for gate + persistent layer) ---------- */
+var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSmall ? 1.5 : 2));
+layerMount.appendChild(renderer.domElement);
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 60);
+camera.position.set(0, 1.15, 6.4);
+camera.lookAt(0, 0.55, 0);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+var key = new THREE.DirectionalLight(0xcfe8ff, 0.85);
+key.position.set(3, 5, 4);
+scene.add(key);
+var rim = new THREE.PointLight(COLORS.electric, 2.4, 12);
+rim.position.set(-2, 1.4, 3);
+scene.add(rim);
+
+function resizeLayer(){
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+}
+resizeLayer();
+
+/* ---------- SCREEN <-> WORLD MAPPING ----------
+   A true perspective-camera raycast onto the ground plane only produces sane,
+   nearby results for screen points below the camera's horizon line — targets
+   higher on screen (like the entrance button, or a hero heading) either miss
+   the plane entirely or land absurdly far away. Since Click only ever needs a
+   walkable (x, z) on a fixed ground height, a direct proportional mapping from
+   normalized screen position is simpler and valid for every screen position. */
+var groundY = 0;
+
+function worldForScreenPoint(clientX, clientY){
+  var nx = clientX / window.innerWidth;
+  var ny = Math.max(0, Math.min(1, clientY / window.innerHeight));
+  var x = (nx - 0.5) * 9;
+  var z = THREE.MathUtils.lerp(-2.6, 2.1, ny); // top of screen -> far, bottom -> near
+  return new THREE.Vector3(x, groundY, z);
+}
+function worldForElement(el, edgeOffsetPx){
+  var r = el.getBoundingClientRect();
+  var x = r.left + r.width / 2;
+  var y = r.bottom + (edgeOffsetPx || -8); // stand just in front of the element's bottom edge
+  return worldForScreenPoint(Math.max(24, Math.min(window.innerWidth - 24, x)), y);
+}
+
+/* ---------- BUILD CLICK (primitives only — head is never given a face) ---------- */
+function buildMascot(){
+  var group = new THREE.Group();
+
+  var suitMat = new THREE.MeshStandardMaterial({ color: COLORS.suit, roughness: 0.55, metalness: 0.15 });
+  var pearlMat = new THREE.MeshStandardMaterial({ color: COLORS.pearl, roughness: 0.35, metalness: 0.05 });
+  var tieMat = new THREE.MeshStandardMaterial({ color: COLORS.electric, roughness: 0.4, metalness: 0.2 });
+
+  var torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.42, 0.7, 6, 12), suitMat);
+  torso.position.y = 0.55;
+  group.add(torso);
+
+  var tie = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.5, 0.03), tieMat);
+  tie.position.set(0, 0.62, 0.42);
+  group.add(tie);
+
+  var headGroup = new THREE.Group();
+  headGroup.position.y = 1.28;
+  group.add(headGroup);
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.4, 24, 24), pearlMat);
+  headGroup.add(head);
+  var logoTex = new THREE.TextureLoader().load('assets/logo-icon.jpg');
+  var logoMat = new THREE.MeshBasicMaterial({ map: logoTex, transparent: true, toneMapped: false });
+  var logoPlane = new THREE.Mesh(new THREE.CircleGeometry(0.22, 32), logoMat);
+  logoPlane.position.set(0, 0.02, 0.385);
+  headGroup.add(logoPlane);
+
+  function buildArm(side){
+    var pivot = new THREE.Group();
+    pivot.position.set(0.42 * side, 0.85, 0);
+    var upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.11, 0.42, 4, 8), suitMat);
+    upper.position.set(0, -0.24, 0);
+    pivot.add(upper);
+    var hand = new THREE.Mesh(new THREE.SphereGeometry(0.13, 12, 12), pearlMat);
+    hand.position.set(0, -0.5, 0);
+    pivot.add(hand);
+    pivot.userData.rest = { x: 0, y: 0, z: 0.18 * side };
+    pivot.rotation.z = pivot.userData.rest.z;
+    group.add(pivot);
+    return pivot;
+  }
+  var armL = buildArm(-1);
+  var armR = buildArm(1);
+
+  function buildLeg(side){
+    var pivot = new THREE.Group();
+    pivot.position.set(0.16 * side, 0.18, 0);
+    var upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.13, 0.4, 4, 8), suitMat);
+    upper.position.set(0, -0.22, 0);
+    pivot.add(upper);
+    var shoe = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.1, 0.28), pearlMat);
+    shoe.position.set(0, -0.46, 0.05);
+    pivot.add(shoe);
+    group.add(pivot);
+    return pivot;
+  }
+  var legL = buildLeg(-1);
+  var legR = buildLeg(1);
+
+  var shadow = new THREE.Mesh(
+    new THREE.CircleGeometry(0.48, 24),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.22 })
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.y = -0.68;
+  group.add(shadow);
+
+  return { group: group, headGroup: headGroup, torso: torso, armL: armL, armR: armR, legL: legL, legR: legR, shadow: shadow };
+}
+
+var click = buildMascot();
+click.group.scale.setScalar(MASCOT_SCALE);
+scene.add(click.group);
+
+/* ---------- STATE MACHINE ---------- */
+var STATE = { ENTRANCE: 'entrance', WALK: 'walk', IDLE: 'idle', GESTURE: 'gesture' };
+var state = STATE.ENTRANCE;
+var facing = 0;              // current yaw, radians
+var walkTarget = null;       // THREE.Vector3
+var walkOnArrive = null;
+var WALK_SPEED = 3.1;        // world units / second
+var gestureName = null;
+var gestureUntil = 0;
+var gestureThen = null;
+var idleAnchor = new THREE.Vector3(-2.6, groundY, 1.2);
+var facingProxy = { v: 0 }; // reused so a leftover "turn to face camera" tween can be killed if a new walk starts before it finishes
+
+function restPose(duration){
+  var d = duration || 0.5;
+  gsap.to(click.armL.rotation, { x: 0, y: 0, z: click.armL.userData.rest.z, duration: d, ease: 'power2.inOut' });
+  gsap.to(click.armR.rotation, { x: 0, y: 0, z: click.armR.userData.rest.z, duration: d, ease: 'power2.inOut' });
+  gsap.to(click.headGroup.rotation, { x: 0, y: 0, duration: d, ease: 'power2.inOut' });
+}
+
+function walkTo(target, onArrive, opts){
+  opts = opts || {};
+  gsap.killTweensOf(facingProxy); // a new walk owns facing now — don't let a leftover arrival-turn tween fight it
+  walkTarget = target.clone();
+  walkOnArrive = onArrive || null;
+  gestureName = null;
+  state = STATE.WALK;
+}
+
+function playGesture(name, holdMs, then){
+  state = STATE.GESTURE;
+  gestureName = name;
+  gestureUntil = performance.now() + (holdMs || 900);
+  gestureThen = then || null;
+
+  if(name === 'point'){
+    gsap.to(click.armR.rotation, { z: -0.95, x: -0.25, duration: 0.45, ease: 'back.out(1.6)' });
+    gsap.to(click.headGroup.rotation, { y: -0.3, duration: 0.45, ease: 'power2.out' });
+  } else if(name === 'present'){
+    gsap.to(click.armR.rotation, { z: -0.6, x: -0.55, duration: 0.5, ease: 'back.out(1.4)' });
+    gsap.to(click.armL.rotation, { z: click.armL.userData.rest.z + 0.3, x: -0.4, duration: 0.5, ease: 'back.out(1.4)' });
+  } else if(name === 'press'){
+    gsap.to(click.armR.rotation, { z: -1.15, x: -0.55, duration: 0.22, ease: 'power1.in' });
+  } else if(name === 'wave'){
+    gsap.to(click.armR.rotation, { z: -1.5, x: 0, duration: 0.3, ease: 'back.out(1.6)' });
+  } else if(name === 'lean'){
+    gsap.to(click.torso.rotation, { z: 0.14, duration: 0.5, ease: 'power2.out' });
+    gsap.to(click.headGroup.rotation, { y: -0.2, duration: 0.5, ease: 'power2.out' });
+  }
+}
+
+function endGesture(){
+  gestureName = null;
+  restPose(0.5);
+  gsap.to(click.torso.rotation, { z: 0, duration: 0.5, ease: 'power2.inOut' });
+  state = STATE.IDLE;
+  if(gestureThen){ var fn = gestureThen; gestureThen = null; fn(); }
+}
+
+/* ---------- SPEECH BUBBLE ---------- */
+var speechVisible = false;
+var speechTimer = null;
+function showSpeech(text, durationMs, then){
+  speechEl.textContent = text;
+  speechEl.classList.add('show');
+  speechVisible = true;
+  clearTimeout(speechTimer);
+  speechTimer = setTimeout(function(){
+    speechEl.classList.remove('show');
+    speechVisible = false;
+    if(then) setTimeout(then, 350);
+  }, durationMs);
+}
+function updateSpeechPosition(){
+  if(!speechVisible) return;
+  var wp = new THREE.Vector3();
+  click.headGroup.getWorldPosition(wp);
+  var p = wp.clone().project(camera);
+  var x = (p.x * 0.5 + 0.5) * window.innerWidth;
+  var y = (-p.y * 0.5 + 0.5) * window.innerHeight;
+  speechEl.style.transform = 'translate(' + Math.round(x + 34) + 'px,' + Math.round(y - 70) + 'px)';
+}
+
+/* ---------- ENTRANCE SEQUENCE ---------- */
+var entered = false;
+function pressButtonVisually(){
+  enterBtn.classList.add('pressed');
+  setTimeout(function(){ enterBtn.classList.remove('pressed'); }, 220);
+}
+function enterSite(){
+  if(entered) return;
+  entered = true;
+  gateEl.classList.add('leaving');
+  setTimeout(function(){
+    gateEl.style.display = 'none';
+    walkTo(new THREE.Vector3(-2.4, groundY, 1.1), function(){
+      playGesture('present', 900, function(){
+        showSpeech('Hi, I’m Click.', 2000, function(){
+          showSpeech('I’ll show you around.', 2600);
+        });
+      });
+    });
+  }, 750);
+}
+function doEnter(){
+  if(entered) return;
+  playGesture('press', 260, function(){
+    pressButtonVisually();
+    enterSite();
+  });
+}
+enterBtn.addEventListener('click', doEnter);
+
+function playEntrance(){
+  click.group.position.set(-7, groundY, 1.6);
+  facing = 0;
+  var btnTarget = worldForElement(enterBtn, -20);
+  walkTo(btnTarget, function(){
+    if(entered) return;
+    doEnter();
+  });
+}
+playEntrance();
+
+/* ---------- INTERACTIVE DOM WIRING (hover walks over + gestures; click presses then navigates) ---------- */
+function wireInteractive(el, gesture){
+  if(!el || isTouch) return;
+  el.addEventListener('mouseenter', function(){
+    if(!entered || state === STATE.ENTRANCE) return;
+    el.classList.add('electrified');
+    setTimeout(function(){ el.classList.remove('electrified'); }, 550);
+    walkTo(worldForElement(el), function(){ playGesture(gesture, 1100); });
+  });
+
+  var href = el.tagName === 'A' ? el.getAttribute('href') : null;
+  if(href && href.charAt(0) === '#'){
+    el.addEventListener('click', function(ev){
+      if(el.dataset.clickPressed === '1') return;
+      ev.preventDefault();
+      el.dataset.clickPressed = '1';
+      el.classList.add('electrified');
+      walkTo(worldForElement(el), function(){
+        playGesture('press', 260, function(){
+          var target = document.querySelector(href);
+          if(target) target.scrollIntoView({ behavior: 'smooth' });
+          setTimeout(function(){ el.dataset.clickPressed = ''; }, 500);
+        });
+      });
+    });
+  }
+}
+wireInteractive(document.getElementById('hero-cta-primary'), 'point');
+wireInteractive(document.querySelector('.nav-actions .btn-primary'), 'point');
+wireInteractive(document.getElementById('f-submit'), 'present');
+wireInteractive(document.getElementById('wa-float'), 'wave');
+var finalCtaBtn = document.querySelector('.final-cta-actions .btn-primary');
+wireInteractive(finalCtaBtn, 'point');
+
+/* ---------- SCROLL-LINKED RESTING SPOTS PER SECTION ---------- */
+if(typeof ScrollTrigger !== 'undefined'){
+  var landmarks = [
+    { id: 'websites', side: 1, gesture: 'point' },
+    { id: 'marketing', side: -1, gesture: 'lean' },
+    { id: 'packages', side: 1, gesture: 'present' },
+    { id: 'designs', side: -1, gesture: 'point' },
+    { id: 'process', side: 1, gesture: null },
+    { id: 'faq', side: -1, gesture: null },
+    { id: 'contact', side: 1, gesture: 'present' }
+  ];
+  landmarks.forEach(function(lm){
+    var sectionEl = document.getElementById(lm.id);
+    if(!sectionEl) return;
+    ScrollTrigger.create({
+      trigger: sectionEl,
+      start: 'top 60%',
+      onEnter: function(){
+        if(!entered) return;
+        var r = sectionEl.getBoundingClientRect();
+        var x = lm.side > 0 ? Math.min(window.innerWidth - 60, r.right - 60) : Math.max(60, r.left + 60);
+        var y = Math.min(window.innerHeight - 80, Math.max(160, r.top + 140));
+        var target = worldForScreenPoint(x, y);
+        walkTo(target, lm.gesture ? function(){ playGesture(lm.gesture, 1000); } : null);
+      }
+    });
+  });
+
+  var footerEl = document.querySelector('footer');
+  if(footerEl){
+    ScrollTrigger.create({
+      trigger: footerEl,
+      start: 'top 75%',
+      onEnter: function(){
+        if(!entered) return;
+        var r = footerEl.getBoundingClientRect();
+        var target = worldForScreenPoint(Math.min(window.innerWidth - 60, r.left + 90), Math.min(window.innerHeight - 90, r.top + 90));
+        walkTo(target, function(){ playGesture('wave', 1300); });
+      }
+    });
+  }
+}
+
+/* ---------- RESIZE ---------- */
+window.addEventListener('resize', function(){
+  resizeLayer();
+});
+
+/* ---------- RENDER LOOP ---------- */
+var clock = new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  var dt = Math.min(clock.getDelta(), 0.05);
+  var t = clock.elapsedTime;
+
+  if(state === STATE.WALK && walkTarget){
+    var pos = click.group.position;
+    var dx = walkTarget.x - pos.x, dz = walkTarget.z - pos.z;
+    var dist = Math.sqrt(dx*dx + dz*dz);
+    if(dist > 0.06){
+      var targetYaw = Math.atan2(dx, dz);
+      var yawDiff = Math.atan2(Math.sin(targetYaw - facing), Math.cos(targetYaw - facing));
+      facing += yawDiff * Math.min(1, dt * 6);
+      var step = Math.min(dist, WALK_SPEED * dt);
+      pos.x += Math.sin(facing) * step;
+      pos.z += Math.cos(facing) * step;
+      var swing = Math.sin(t * 9) * 0.5;
+      click.legL.rotation.x = swing;
+      click.legR.rotation.x = -swing;
+      click.armL.rotation.x = -swing * 0.6;
+      click.armR.rotation.x = swing * 0.6;
+      pos.y = groundY + Math.abs(Math.sin(t * 9)) * 0.03;
+    } else {
+      pos.x = walkTarget.x; pos.z = walkTarget.z; pos.y = groundY;
+      click.legL.rotation.x = 0; click.legR.rotation.x = 0;
+      var cb = walkOnArrive; walkOnArrive = null; walkTarget = null;
+      state = STATE.IDLE;
+      /* turn to face the visitor once he arrives and settles, rather than
+         keeping whatever direction he happened to be walking in */
+      facingProxy.v = facing;
+      gsap.to(facingProxy, { v: 0, duration: 0.6, ease: 'power2.inOut', onUpdate: function(){ facing = facingProxy.v; } });
+      if(cb) cb();
+    }
+  } else if(state === STATE.GESTURE){
+    if(performance.now() >= gestureUntil){ endGesture(); }
+  } else if(state === STATE.IDLE){
+    click.group.position.y = groundY + Math.sin(t * 1.1) * 0.012;
+    click.torso.rotation.z = Math.sin(t * 0.8) * 0.025;
+    click.headGroup.rotation.x = Math.sin(t * 0.6) * 0.02;
+    click.armL.rotation.x = Math.sin(t * 1.1) * 0.06;
+    click.armR.rotation.x = Math.sin(t * 1.1 + Math.PI) * 0.06;
+  }
+
+  click.group.rotation.y = facing;
+  updateSpeechPosition();
+  renderer.render(scene, camera);
+}
 animate();
 
 }());
