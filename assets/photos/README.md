@@ -8,28 +8,34 @@ changes needed.
 | Filename | Photo | Used in |
 |---|---|---|
 | `laptop.jpg` | Laptop | Hero section |
-| `founders.jpg` | The two co-founders | About section |
-| `keyboard.jpg` | Keyboard | Websites section (development) |
-| `smartphone.jpg` | Smartphone | Websites section (responsive design) |
-| `desktop-monitor.jpg` | Desktop monitor | Websites section (redesigns) |
+| `keyboard.jpg` | Keyboard | Websites section |
+| `smartphone.jpg` | Smartphone | Not currently used — free for a future slot |
+| `desktop-monitor.jpg` | Desktop monitor | Not currently used — free for a future slot |
 | `drone.jpg` | Drone | Marketing Consulting section |
+| `headphones.jpg` | Headphones / speaker | Business Packages section |
 | `camera.jpg` | Camera | Business Designs section |
-| `tablet.jpg` | Tablet | Business Designs section |
-| `controller.jpg` | Game controller | Business Designs section |
+| `tablet.jpg` | Tablet | Not currently used — free for a future slot |
+| `controller.jpg` | Game controller | Not currently used — free for a future slot |
 | `aerial-ocean.jpg` | Aerial ocean shot | Full-bleed divider after Business Designs |
-| `underwater-sunlight.jpg` | Underwater sunlight | Creative Ocean Gallery (large feature tile) |
-| `headphones.jpg` | Headphones / speaker | Creative Ocean Gallery |
-| `smartwatch.jpg` | Smartwatch | Creative Ocean Gallery |
-| `circuit-board.jpg` | Circuit board | Creative Ocean Gallery |
-| `storage-device.jpg` | Storage device | Creative Ocean Gallery |
-| `tablet-2.jpg` | Tablet (second shot, if you have one — otherwise reuse `tablet.jpg`'s content under this name) | Creative Ocean Gallery |
-| `camera-2.jpg` | Camera (second shot) | Creative Ocean Gallery |
-| `keyboard-2.jpg` | Keyboard (second shot) | Creative Ocean Gallery |
-| `drone-2.jpg` | Drone (second shot) | Creative Ocean Gallery |
+| `underwater-sunlight.jpg` | Underwater sunlight | Our Process section |
+| `circuit-board.jpg` | Circuit board | Ways-to-work-with-us (options) section |
+| `storage-device.jpg` | Storage device | FAQ section |
+| `smartwatch.jpg` | Smartwatch | Not currently used — free for a future slot |
+| `tablet-2.jpg` | Tablet (second shot) | Not currently used — free for a future slot |
+| `camera-2.jpg` | Camera (second shot) | Not currently used — free for a future slot |
+| `keyboard-2.jpg` | Keyboard (second shot) | Not currently used — free for a future slot |
+| `drone-2.jpg` | Drone (second shot) | Not currently used — free for a future slot |
 | `underwater-sunlight-2.jpg` | Underwater sunlight (second shot) | Contact section background |
+
+Note: the About/founders section has been removed from the site for now (no founders
+photo exists yet). Add it back with a `founders.jpg` slot whenever there's a photo to use.
+
+Every content section on the site now has a full-bleed background photo — nothing left
+as a plain flat-color section — so if you swap in a new photo anywhere, expect it to
+show at full width behind that section's content with a soft parallax drift and a dark
+gradient overlay for text legibility.
 
 Tips:
 - JPG or PNG both work.
-- Landscape orientation works best for most slots; the founders photo works best landscape too (crops to a wide card).
+- Landscape orientation works best for full-bleed section backgrounds.
 - Keep each file under ~500KB where possible (export at ~1600px on the long edge) so the site stays fast to load.
-- If you only have one shot of a subject that's used twice (e.g. one tablet photo), just save it under **both** filenames listed for it.
