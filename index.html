@@ -1427,8 +1427,11 @@ mascot.scale.setScalar(0.85);
 if(typeof gsap !== 'undefined'){
   gsap.from(mascot.position, { y: mascot.position.y - 1.2, duration: 1.8, ease: 'power2.out', delay: 0.3 });
   mascot.traverse(function(o){ if(o.material) o.material.transparent = true; });
+  /* several meshes share the same material instance (suitMat, pearlMat) — dedupe
+     so each unique material is only faded once, otherwise a later mesh reading an
+     already-zeroed opacity as its "original" value would leave it stuck invisible */
   var fadeTargets = [];
-  mascot.traverse(function(o){ if(o.material && o !== logoPlane) fadeTargets.push(o.material); });
+  mascot.traverse(function(o){ if(o.material && o !== logoPlane && fadeTargets.indexOf(o.material) === -1) fadeTargets.push(o.material); });
   fadeTargets.forEach(function(m){ var orig = m.opacity !== undefined ? m.opacity : 1; m.opacity = 0; gsap.to(m, { opacity: orig, duration: 1.6, delay: 0.5 }); });
 }
 
