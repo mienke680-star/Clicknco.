@@ -1,6 +1,8 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect, useState } from 'react'
+import DevGuides from './DevGuides'
 import OceanScene from './OceanScene'
+import SkillHub from './SkillHub'
 
 const NAV_LINKS = [
   { label: 'Dev Guides', href: '#dev-guides' },
@@ -81,42 +83,44 @@ export default function OceanHero() {
         </nav>
       </header>
 
-      <main
-        id="top"
-        className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center"
-      >
-        <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-400/5 px-4 py-1.5 text-xs font-medium tracking-wide text-cyan-200 backdrop-blur-sm">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_6px_2px_rgba(94,230,255,0.9)]" />
-          Signal acquired from the deep
-        </span>
-
-        <h1 className="max-w-3xl text-balance text-5xl font-semibold tracking-tight text-white drop-shadow-[0_0_35px_rgba(56,189,248,0.35)] sm:text-7xl">
-          Engineering, powered
-          <span className="bg-gradient-to-r from-cyan-300 via-sky-300 to-blue-400 bg-clip-text text-transparent">
-            {' '}
-            from the depths
+      <main id="top">
+        <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-400/5 px-4 py-1.5 text-xs font-medium tracking-wide text-cyan-200 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_6px_2px_rgba(94,230,255,0.9)]" />
+            Signal acquired from the deep
           </span>
-        </h1>
 
-        <p className="mt-6 max-w-xl text-balance text-lg text-slate-300">
-          Dev Guides and a living Skill Hub, built around a core that never
-          stops charging. Dive in and build something that moves.
-        </p>
+          <h1 className="max-w-3xl text-balance text-5xl font-semibold tracking-tight text-white drop-shadow-[0_0_35px_rgba(56,189,248,0.35)] sm:text-7xl">
+            Engineering, powered
+            <span className="bg-gradient-to-r from-cyan-300 via-sky-300 to-blue-400 bg-clip-text text-transparent">
+              {' '}
+              from the depths
+            </span>
+          </h1>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a
-            href="#skill-hub"
-            className="rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-[#031224] shadow-[0_0_30px_-4px_rgba(94,230,255,0.8)] transition-transform hover:-translate-y-0.5"
-          >
-            Explore Skill Hub
-          </a>
-          <a
-            href="#dev-guides"
-            className="rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/5"
-          >
-            Read the Docs
-          </a>
-        </div>
+          <p className="mt-6 max-w-xl text-balance text-lg text-slate-300">
+            Dev Guides and a living Skill Hub, built around a core that never
+            stops charging. Dive in and build something that moves.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="#skill-hub"
+              className="rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-[#031224] shadow-[0_0_30px_-4px_rgba(94,230,255,0.8)] transition-transform hover:-translate-y-0.5"
+            >
+              Explore Skill Hub
+            </a>
+            <a
+              href="#dev-guides"
+              className="rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/5"
+            >
+              Read the Docs
+            </a>
+          </div>
+        </section>
+
+        <DevGuides />
+        <SkillHub />
       </main>
     </div>
   )

@@ -4,10 +4,20 @@
   color-scheme: dark;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
@@ -17,5 +27,10 @@ body {
   font-family: -apple-system, 'Segoe UI', Inter, Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* Explicit on both axes: overflow-x alone would make the browser compute
+     overflow-y as auto too (CSS overflow pairing rule), turning body into
+     its own scroll container instead of the page — breaking position:fixed
+     children and window.scrollTo/scrollIntoView. */
+  overflow-x: clip;
+  overflow-y: visible;
 }
