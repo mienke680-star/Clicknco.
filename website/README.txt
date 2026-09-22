@@ -11,14 +11,15 @@ index.html
 assets/clickandco-logo-transparent.png
 assets/clickandco-3d-cursor.png
 assets/clickandco-campaign-advert.jpeg
-assets/founders-photo.jpg   (both founders together — used by the Team section)
-assets/mienke-founder.jpg   (unused — kept from an earlier split-photo layout)
-assets/luvhan-founder.jpg   (unused — kept from an earlier split-photo layout)
+assets/founders.jpg         (office photo of both founders — used by the Team section)
+assets/founders-photo.jpg   (unused — kept from an earlier Team section design)
+assets/mienke-founder.jpg   (unused — kept from an earlier Team section design)
+assets/luvhan-founder.jpg   (unused — kept from an earlier Team section design)
 
 SECTIONS
 
-Home, Services, Our Work, About, Team ("Meet Our Founders" luxury
-editorial spread), Process, Contact.
+Home, Services, Our Work, About, Team ("Meet Our Founders"), Process,
+Contact.
 
 CLICKANDCO (PTY) LTD
 WhatsApp / Call: 069 052 2875

@@ -165,62 +165,71 @@
     .mini-rings::after{inset:36%;border-color:rgba(255,20,147,.3)}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ============ MEET OUR FOUNDERS — luxury editorial spread ============ */
-    .founders-lux{
-      --lux-bg:#f6f3ec;--lux-ink:#121110;--lux-line:rgba(18,17,16,.13);
-      background:var(--lux-bg);color:var(--lux-ink);overflow:hidden;padding:clamp(70px,10vw,140px) 0 0;
+    /* ============ MEET OUR FOUNDERS ============ */
+    .founders{
+      --cc-ink:#060817;--cc-navy:#0b1030;--cc-pink:#ff2a92;--cc-cyan:#4de4ff;--cc-white:#f8f8fb;--cc-muted:#aeb3c8;--cc-line:rgba(255,255,255,.12);
+      position:relative;isolation:isolate;overflow:hidden;min-height:760px;
+      padding:clamp(70px,9vw,128px) clamp(22px,5vw,72px);
+      font-family:"Gill Sans","Avenir Next",Avenir,Montserrat,Arial,sans-serif;color:var(--cc-white);
+      background:
+        radial-gradient(circle at 7% 12%,rgba(77,228,255,.13),transparent 25rem),
+        radial-gradient(circle at 89% 90%,rgba(255,42,146,.16),transparent 30rem),
+        linear-gradient(135deg,#050714 0%,#0a0d25 54%,#090617 100%);
     }
-    .lux-label{display:flex;align-items:center;gap:12px;color:var(--pink);font-size:.72rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;margin-bottom:22px;
-      opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-    .lux-label::before{content:"";width:28px;height:2px;background:var(--pink)}
-    .lux-headline{position:relative;z-index:3;margin-bottom:clamp(-64px,-6vw,-18px);line-height:.86}
-    .lux-h1,.lux-h2{display:block;font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.045em;margin:0}
-    .lux-h1{font-size:clamp(3rem,8.4vw,7.2rem);color:var(--lux-ink);
-      opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
-    .lux-h2{font-size:clamp(4rem,13.5vw,11.5rem);color:transparent;-webkit-text-stroke:1.5px var(--lux-ink);
-      opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease) .16s,transform .9s var(--ease) .16s}
-    .founders-lux.lux-in .lux-label,.founders-lux.lux-in .lux-h1,.founders-lux.lux-in .lux-h2{opacity:1;transform:none}
-
-    .lux-stage{position:relative;z-index:2;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:clamp(14px,3vw,40px)}
-    .lux-name{display:flex;flex-direction:column;align-items:center;gap:16px;min-width:64px}
-    .lux-name-left{opacity:0;transform:translateX(-34px);transition:opacity .9s var(--ease) .32s,transform .9s var(--ease) .32s}
-    .lux-name-right{opacity:0;transform:translateX(34px);transition:opacity .9s var(--ease) .32s,transform .9s var(--ease) .32s}
-    .founders-lux.lux-in .lux-name-left,.founders-lux.lux-in .lux-name-right{opacity:1;transform:none}
-    .name-text{writing-mode:vertical-rl;transform:rotate(180deg);font:900 clamp(1.5rem,3.2vw,3.1rem)/1 Montserrat,sans-serif;letter-spacing:.03em;white-space:nowrap}
-    .name-text.solid{color:var(--pink)}
-    .name-text.outline{color:transparent;-webkit-text-stroke:1.3px var(--lux-ink)}
-    .name-meta{writing-mode:vertical-rl;transform:rotate(180deg);display:flex;flex-direction:column;gap:8px;font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(18,17,16,.55);white-space:nowrap}
-    .name-line{width:2px;height:38px;background:var(--pink)}
-
-    .lux-photo-wrap{position:relative;aspect-ratio:4/5;max-height:min(78vh,900px);margin-inline:auto;overflow:hidden;
-      opacity:0;clip-path:inset(100% 0 0 0);transition:opacity 1.1s var(--ease) .1s,clip-path 1.2s var(--ease) .1s}
-    .founders-lux.lux-in .lux-photo-wrap{opacity:1;clip-path:inset(0 0 0 0)}
-    .lux-photo{width:100%;height:100%;object-fit:cover;object-position:center 15%;filter:contrast(1.04);
-      transition:filter .6s var(--ease),transform .5s var(--ease);transform:translate3d(0,var(--lux-py,0),0) scale(1.06)}
-    .lux-photo-wrap:hover .lux-photo{filter:contrast(1.12) brightness(1.02);transform:translate3d(0,var(--lux-py,0),0) scale(1.08)}
-    .lux-photo-fallback{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:#e8e3d8;border:1px dashed rgba(18,17,16,.3)}
-    .lux-photo-fallback span{font-size:.7rem;font-weight:800;letter-spacing:.24em;color:rgba(18,17,16,.45)}
-    .lux-photo-missing .lux-photo{display:none}
-    .lux-photo-missing .lux-photo-fallback{display:flex}
-
-    .lux-center-detail{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);width:min(86%,360px);text-align:center;
-      background:rgba(10,9,8,.5);backdrop-filter:blur(8px);padding:22px 26px;color:#fbf9f4}
-    .lux-vision{margin:0;font:800 clamp(.95rem,1.6vw,1.28rem)/1.28 Montserrat,sans-serif;letter-spacing:-.01em;color:#fbf9f4}
-    .lux-vision-line{display:block;width:34px;height:2px;background:var(--pink);margin:14px auto}
-    .lux-cofounders{margin:0;font-size:.66rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,249,244,.75)}
-
-    .lux-bar{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:clamp(40px,6vw,70px);
-      opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease) .5s,transform .9s var(--ease) .5s}
-    .founders-lux.lux-in .lux-bar{opacity:1;transform:none}
-    .lux-col{padding:34px 24px;text-align:center;border-left:1px solid var(--lux-line)}
-    .lux-col:first-child{border-left:none}
-    .lux-num{display:block;color:var(--pink);font:800 .8rem/1 Montserrat,sans-serif;letter-spacing:.16em;margin-bottom:14px}
-    .lux-col h4{margin:0 0 8px;font:800 1.02rem/1.2 Montserrat,sans-serif;letter-spacing:-.01em;color:var(--lux-ink)}
-    .lux-col p{margin:0;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(18,17,16,.55)}
-    .lux-wordmark{font:900 1.5rem/1 Montserrat,sans-serif;letter-spacing:-.02em}
-    .lux-wordmark span{color:var(--pink)}
-    @media(prefers-reduced-motion:reduce){
-      .lux-label,.lux-h1,.lux-h2,.lux-name-left,.lux-name-right,.lux-photo-wrap,.lux-bar{opacity:1!important;transform:none!important;clip-path:none!important;transition:none!important}
+    .founders::before{content:"";position:absolute;inset:0;z-index:-2;opacity:.22;
+      background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);
+      background-size:68px 68px;mask-image:linear-gradient(to right,black,transparent 70%)}
+    .founders::after{content:"";position:absolute;width:420px;aspect-ratio:1;right:-210px;top:54px;z-index:-1;
+      border:1px solid rgba(255,42,146,.35);border-radius:50%;box-shadow:0 0 80px rgba(255,42,146,.08),inset 0 0 80px rgba(77,228,255,.05)}
+    .founders__shell{width:min(100%,var(--max));margin-inline:auto;display:grid;
+      grid-template-columns:minmax(330px,.92fr) minmax(420px,1.08fr);gap:clamp(52px,8vw,116px);align-items:center}
+    .founders__visual{position:relative;min-width:0}
+    .founders__photo-frame{position:relative;padding:10px;border:1px solid rgba(255,255,255,.17);
+      background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.015));box-shadow:0 32px 90px rgba(0,0,0,.46)}
+    .founders__photo-frame::before{content:"";position:absolute;width:54%;height:5px;left:-1px;top:-1px;background:linear-gradient(90deg,var(--cc-cyan),var(--cc-pink))}
+    .founders__photo{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 38%;filter:saturate(.92) contrast(1.03)}
+    .founders__index{position:absolute;right:-20px;bottom:34px;min-width:154px;padding:17px 20px;border:1px solid rgba(255,255,255,.16);
+      background:rgba(7,9,25,.86);box-shadow:0 18px 42px rgba(0,0,0,.36);backdrop-filter:blur(16px)}
+    .founders__index strong,.founders__index span{display:block}
+    .founders__index strong{color:var(--cc-pink);font-size:12px;letter-spacing:.19em;text-transform:uppercase}
+    .founders__index span{margin-top:7px;font-size:13px;letter-spacing:.08em;color:#d9dbea}
+    .founders__copy{min-width:0}
+    .founders__eyebrow{display:flex;align-items:center;gap:14px;margin:0 0 24px;color:var(--cc-cyan);font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+    .founders__eyebrow::before{content:"";width:42px;height:1px;background:linear-gradient(90deg,var(--cc-cyan),var(--cc-pink))}
+    .founders__title{max-width:780px;margin:0;font-size:clamp(52px,7.3vw,98px);line-height:.88;letter-spacing:-.055em;text-transform:uppercase;font-weight:700}
+    .founders__title em{display:block;padding-left:clamp(28px,5vw,74px);color:var(--cc-pink);font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em;text-transform:none;font-style:normal}
+    .founders__lead{max-width:630px;margin:36px 0 0;color:#d6d8e4;font-size:clamp(17px,1.6vw,21px);line-height:1.65}
+    .founders__lead strong{color:#fff;font-weight:600}
+    .founders__people{margin-top:40px;border-top:1px solid var(--cc-line)}
+    .founders__person{display:grid;grid-template-columns:minmax(155px,.72fr) minmax(210px,1fr);gap:26px;align-items:start;
+      padding:24px 0;border-bottom:1px solid var(--cc-line);transition:padding-left .3s ease,border-color .3s ease}
+    .founders__person:hover{padding-left:10px;border-color:rgba(255,42,146,.55)}
+    .founders__name{margin:0;color:#fff;font-size:18px;letter-spacing:.02em}
+    .founders__role{display:block;margin-top:6px;color:var(--cc-pink);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+    .founders__focus{margin:2px 0 0;color:var(--cc-muted);font-size:14px;line-height:1.6}
+    .founders__signature{display:flex;align-items:center;gap:14px;margin-top:30px;color:rgba(255,255,255,.66);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+    .founders__click{position:relative;width:28px;height:28px;border:1px solid rgba(255,42,146,.65);border-radius:50%;box-shadow:0 0 24px rgba(255,42,146,.25)}
+    .founders__click::before,.founders__click::after{content:"";position:absolute;inset:6px;border:1px solid rgba(77,228,255,.65);border-radius:50%}
+    .founders__click::after{inset:11px;border:0;background:var(--cc-pink)}
+    @media(max-width:900px){
+      .founders__shell{grid-template-columns:1fr;gap:54px}
+      .founders__visual{width:min(100%,560px);margin-inline:auto}
+      .founders__copy{order:-1}
+      .founders__title{max-width:680px}
+    }
+    @media(max-width:560px){
+      .founders{padding:64px 20px 72px}
+      .founders__title{font-size:clamp(47px,15vw,72px)}
+      .founders__title em{padding-left:22px}
+      .founders__lead{margin-top:28px;font-size:17px}
+      .founders__person{grid-template-columns:1fr;gap:10px}
+      .founders__index{right:-8px;bottom:22px;min-width:138px}
+    }
+    @media(prefers-reduced-motion:no-preference){
+      .founders__photo-frame{animation:founder-reveal .9s cubic-bezier(.2,.72,.2,1) both}
+      .founders__copy{animation:copy-reveal .85s .15s cubic-bezier(.2,.72,.2,1) both}
+      @keyframes founder-reveal{from{opacity:0;transform:translateY(22px)}}
+      @keyframes copy-reveal{from{opacity:0;transform:translateX(22px)}}
     }
 
     .process{background:#020e21}
@@ -270,13 +279,6 @@
       .section-head,.about-grid,.contact-grid{grid-template-columns:1fr;gap:25px}
       .project-layout{grid-template-columns:1fr 1fr}.project.secondary{margin-top:70px}
       .footer-top{grid-template-columns:1fr}
-      .lux-stage{grid-template-columns:1fr;gap:22px}
-      .lux-name{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px 16px}
-      .name-text,.name-meta{writing-mode:horizontal-tb;transform:none}
-      .name-meta{flex-direction:row;flex-wrap:wrap;justify-content:center}
-      .lux-name-left{order:1}.lux-photo-wrap{order:2;max-height:74vh}.lux-name-right{order:3}
-      .name-line{width:36px;height:2px}
-      .lux-headline{margin-bottom:16px}
     }
     @media(max-width:720px){
       .wrap{width:min(calc(100% - 30px),var(--max))}
@@ -298,12 +300,6 @@
       .fields{grid-template-columns:1fr}.contact{padding:95px 0 65px}.contact-form{padding:22px}.contact-cursor{width:82px;right:-13px;top:-56px}
       .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:30px}.footer-bottom{display:grid}.footer-logo{max-width:240px}
       .custom-cursor,.cursor-ring{display:none!important}
-      .founders-lux{padding:56px 0 0}
-      .lux-photo-wrap{max-height:64vh}
-      .lux-center-detail{padding:14px 18px;bottom:0}
-      .lux-bar{grid-template-columns:1fr;margin-top:34px}
-      .lux-col{border-left:none;border-top:1px solid var(--lux-line);padding:24px 16px}
-      .lux-col:first-child{border-top:none}
     }
     @media(pointer:coarse){.custom-cursor,.cursor-ring{display:none!important}}
     @media(pointer:fine){body{cursor:none}a,button,input,select,textarea{cursor:none}}
@@ -398,52 +394,50 @@
       </div>
     </section>
 
-    <section class="section founders-lux" id="founders">
-      <div class="wrap">
-        <span class="lux-label">The people behind the brand</span>
-        <div class="lux-headline">
-          <span class="lux-h1">MEET OUR</span>
-          <span class="lux-h2">FOUNDERS</span>
-        </div>
-
-        <div class="lux-stage">
-          <div class="lux-name lux-name-left">
-            <span class="name-text solid">MIENKE</span>
-            <div class="name-meta"><span>Creative Direction</span><span>Branding</span><span>Design</span></div>
-            <i class="name-line" aria-hidden="true"></i>
+    <section class="founders" id="founders" aria-labelledby="founders-title">
+      <div class="founders__shell">
+        <div class="founders__visual">
+          <div class="founders__photo-frame">
+            <img class="founders__photo" src="assets/founders.jpg" alt="CLICK &amp; CO co-founders Mienke and Luvhan Botha" loading="lazy">
           </div>
-
-          <div class="lux-photo-wrap" id="luxPhotoWrap">
-            <img src="assets/founders-photo.jpg" alt="Mienke Botha and Luvhan Botha, Co-Founders of Click &amp; Co" class="lux-photo" id="luxPhoto" loading="lazy" onerror="this.parentElement.classList.add('lux-photo-missing')">
-            <div class="lux-photo-fallback" aria-hidden="true"><span>Founder photo</span></div>
-            <div class="lux-center-detail">
-              <p class="lux-vision">TWO PERSPECTIVES.<br>ONE VISION.</p>
-              <i class="lux-vision-line" aria-hidden="true"></i>
-              <p class="lux-cofounders">Co-Founders<br>Click &amp; Co.</p>
-            </div>
-          </div>
-
-          <div class="lux-name lux-name-right">
-            <span class="name-text outline">LUVHAN</span>
-            <div class="name-meta"><span>Strategy</span><span>Development</span><span>Digital</span><span>Solutions</span></div>
-            <i class="name-line" aria-hidden="true"></i>
+          <div class="founders__index" aria-hidden="true">
+            <strong>Est. together</strong>
+            <span>Ballito &middot; South Africa</span>
           </div>
         </div>
 
-        <div class="lux-bar">
-          <div class="lux-col">
-            <span class="lux-num">01</span>
-            <h4>MIENKE BOTHA</h4>
-            <p>Creative Direction &middot; Branding &middot; Design</p>
+        <div class="founders__copy">
+          <p class="founders__eyebrow">The people behind the pixels</p>
+          <h2 class="founders__title" id="founders-title">
+            Meet our
+            <em>founders.</em>
+          </h2>
+
+          <p class="founders__lead">
+            We believe every business has the potential to grow with the right digital support. Together, Mienke and Luvhan help businesses strengthen their online presence through professional websites, creative branding and practical digital solutions designed to turn ideas into opportunities.
+          </p>
+
+          <div class="founders__people" aria-label="Founder details">
+            <article class="founders__person">
+              <div>
+                <h3 class="founders__name">Mienke Botha</h3>
+                <span class="founders__role">Co-Founder</span>
+              </div>
+              <p class="founders__focus">Creative direction, visual identity and thoughtful digital experiences.</p>
+            </article>
+
+            <article class="founders__person">
+              <div>
+                <h3 class="founders__name">Luvhan Botha</h3>
+                <span class="founders__role">Co-Founder</span>
+              </div>
+              <p class="founders__focus">Strategy, structure and the systems that turn ambitious ideas into real results.</p>
+            </article>
           </div>
-          <div class="lux-col lux-col-center">
-            <h4 class="lux-wordmark">CLICK <span>&amp;</span> CO.</h4>
-            <p>Ideas. Brands. Impact.</p>
-          </div>
-          <div class="lux-col">
-            <span class="lux-num">02</span>
-            <h4>LUVHAN BOTHA</h4>
-            <p>Strategy &middot; Development &middot; Digital</p>
+
+          <div class="founders__signature">
+            <span class="founders__click" aria-hidden="true"></span>
+            <span>Creative by instinct &middot; Strategic by design</span>
           </div>
         </div>
       </div>
@@ -505,28 +499,6 @@
     document.querySelector("#contactForm").addEventListener("submit",function(e){e.preventDefault();const name=document.querySelector("#name").value.trim();if(!name){document.querySelector("#name").focus();return}const business=document.querySelector("#business").value.trim(),service=document.querySelector("#service").value,message=document.querySelector("#message").value.trim();let text="Hi CLICK & CO. My name is "+name+(business?" from "+business:"")+". I am interested in "+service+"."+(message?" Project details: "+message:"");window.open("https://wa.me/27690522875?text="+encodeURIComponent(text),"_blank","noopener")});
     document.querySelector("#year").textContent=new Date().getFullYear();
     const siteUrl=document.querySelector("#siteUrl");siteUrl.textContent=location.hostname&&location.hostname!=="localhost"?location.hostname:"Your website";siteUrl.href=location.origin;
-
-    /* ---- MEET OUR FOUNDERS: staggered reveal + subtle photo parallax ---- */
-    const luxSection=document.querySelector(".founders-lux"),reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if(luxSection){
-      const luxObserver=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){luxSection.classList.add("lux-in");luxObserver.unobserve(entry.target)}})},{threshold:.18});
-      luxObserver.observe(luxSection);
-      if(!reducedMotion&&matchMedia("(pointer:fine)").matches){
-        const luxPhoto=document.querySelector("#luxPhoto");
-        if(luxPhoto){
-          let luxTicking=false;
-          function luxParallax(){
-            luxTicking=false;
-            const r=luxSection.getBoundingClientRect(),vh=innerHeight;
-            if(r.bottom<0||r.top>vh)return;
-            const phase=(r.top+r.height/2-vh/2)/vh;
-            luxPhoto.style.setProperty("--lux-py",(phase*-22)+"px");
-          }
-          addEventListener("scroll",function(){if(!luxTicking){luxTicking=true;requestAnimationFrame(luxParallax)}},{passive:true});
-          luxParallax();
-        }
-      }
-    }
   </script>
 </body>
 </html>
