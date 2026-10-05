@@ -9,12 +9,20 @@ Guests never need an account (no ChatGPT, Claude or Netlify login): they open th
 | Cloudflare | Netlify |
 | --- | --- |
 | Worker + `vinext` build | Standard Next.js 16 build, run by Netlify's Next.js runtime |
-| D1 database (`wedding`, `photos`, `login_attempts`) | Netlify Blobs store `wedding-data` (`wedding`, `photos`, `auth/…` keys) |
+| D1 database (`wedding`, `photos`, `login_attempts`) | Netlify Blobs store `wedding-data` (`wedding`, `rsvp/…`, `gallery/…`, `auth/…` keys) |
 | R2 bucket | Netlify Blobs store `wedding-media` (each file stored as 3 MB parts) |
 | `pnpm setup` / `pnpm secrets` in a terminal | Browser only: one-time `/setup` page with a `SETUP_CODE` |
 | `import-migration.mjs` via Wrangler | Browser only: **Transfer & backup** page (`/transfer`) |
 
-Data and media are kept in site-wide Netlify Blobs stores. They are permanent: they are not tied to a deploy and remain until deleted, so redeploying or changing the code never removes guest replies or uploads. Every save of the wedding uses an ETag check, so two guests replying at the same moment cannot overwrite each other.
+Data and media are kept in site-wide Netlify Blobs stores. They are permanent: they are not tied to a deploy and remain until deleted, so redeploying or changing the code never removes guest replies or uploads.
+
+Netlify Blobs cannot safely combine simultaneous writes to one record, so nothing a guest does rewrites a shared record:
+
+- each guest's RSVP is saved in its own `rsvp/<guest id>` record and merged into the dashboard when it loads;
+- each gallery photo has its own `gallery/<id>/…` index key;
+- each login attempt is its own key under `auth/attempts/`.
+
+If a guest replies while the dashboard is open, saving the dashboard keeps that reply. RSVP details you correct yourself in the dashboard (for example after a phone call) are saved as that guest's current reply. Saving from a dashboard opened before another dashboard save is refused with "Reload before saving".
 
 Netlify Functions accept requests of about 6 MB, so the browser uploads files in 3 MB parts, and video is served in byte ranges (what iPhones and other browsers request for playback and seeking). Limits are unchanged: guest photos up to 10 MB (JPEG, PNG, WebP; 500 photos), couple uploads up to 10 MB, invitation MP4 video up to 50 MB.
 
@@ -61,5 +69,7 @@ npm test             # API, login, export and transfer tests (in-memory Blobs)
 npm run build
 npm run test:http    # production build over HTTP against Netlify's local Blobs server
 ```
+
+`WEDDING_TEST_URL=https://<throwaway-site>.netlify.app WEDDING_TEST_SETUP_CODE=<its code> npm run test:http` runs the same checks against a real Netlify deploy, plus simultaneous RSVPs and uploads. Never point it at the real wedding: it creates test guests and files.
 
 For interactive local development with Blobs, use the Netlify CLI: `netlify dev` (it emulates Blobs and environment variables). A video must be encoded in a format the guest's browser supports (H.264 MP4 is safest); an `.mp4` extension alone does not fix an unsupported codec. Music attempts autoplay and starts on the guest's first tap if the phone blocks sound; guests can pause both video and music.

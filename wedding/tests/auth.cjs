@@ -30,6 +30,10 @@ const loginReq=(pass,ip='one',origin=site)=>req('/api/auth/login',{password:pass
  assert.equal((await login.POST(loginReq(password,'limited'))).status,429);
  assert.equal((await logout.POST(new Request(site+'/api/auth/logout',{method:'POST',headers:{origin:'https://evil.test'}}))).status,403);
  assert((await logout.POST(new Request(site+'/api/auth/logout',{method:'POST',headers:{origin:site}}))).headers.get('set-cookie').includes('Max-Age=0'));
+ // Behind Netlify's proxy the function sees an internal URL; the public Host decides the origin.
+ const proxied=(origin,host)=>new Request('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{origin,host,'x-forwarded-proto':'https','x-nf-client-connection-ip':'proxy','Content-Type':'application/json'},body:JSON.stringify({password})});
+ assert.equal((await login.POST(proxied(site,'wedding.test'))).status,200);
+ assert.equal((await login.POST(proxied('https://evil.test','wedding.test'))).status,403);
  // Changing the password needs the current one and signs out every old session.
  const sessionCookie=cookie.split(';')[0];
  assert.equal((await setup.POST(req('/api/auth/setup',{password:'A brand new couple password',currentPassword:'wrong'},{cookie:sessionCookie,ip:'two'}))).status,401);

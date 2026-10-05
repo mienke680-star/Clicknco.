@@ -1,6 +1,6 @@
 import {getCoupleUser} from '@/lib/auth';
-import {row,failure,checkOrigin,HttpError,type PhotoRecord} from '@/lib/server';
-import {dataStore,mutateJSON,ifUnchanged} from '@/lib/store';
+import {row,failure,checkOrigin,HttpError,clearRsvps,clearPhotos,addPhoto,type PhotoRecord} from '@/lib/server';
+import {dataStore,ifUnchanged} from '@/lib/store';
 import {readMeta} from '@/lib/media';
 async function couple(req:Request){if(!await getCoupleUser(req))throw new HttpError(401,'Please sign in to your wedding dashboard.');}
 // Lets the transfer page warn before replacing a wedding that already exists here.
@@ -19,6 +19,7 @@ export async function POST(req:Request){try{
  const value={owner:'couple',revision:(existing?.revision??-1)+1,w};
  const written=existing?await dataStore().setJSON('wedding',value,ifUnchanged(existing.etag)):await dataStore().setJSON('wedding',value,{onlyIfNew:true});
  if(!written.modified)throw new HttpError(409,'The wedding changed during the transfer. Please run it again.');
- await mutateJSON<PhotoRecord[]>('photos',list=>{const ids=new Set(records.map(r=>r.id));const kept=replace?[]:(list||[]).filter(p=>!ids.has(p.id));return {value:[...kept,...records]};});
+ // The imported replies are authoritative: clear per-guest replies, then index the gallery.
+ await clearRsvps();if(replace)await clearPhotos();for(const record of records)await addPhoto(record);
  return Response.json({imported:true,guests:w.guests.length,media:records.length});
 }catch(e){return failure(e);}}

@@ -1,9 +1,9 @@
-import {planner,guest,failure,HttpError,photoIndex} from '@/lib/server';
+import {planner,guest,failure,HttpError} from '@/lib/server';
 import {readMeta,readRange,CHUNK_SIZE} from '@/lib/media';
 type Context={params:Promise<{id:string}>};
 async function serve(req:Request,{params}:Context){try{
  const {id}=await params;const token=new URL(req.url).searchParams.get('token');let allowed=false;
- if(token){const {w}=await guest(token);const publicAsset=[w.settings.cover,w.settings.music,w.settings.video,...w.story.map(x=>x.image)].includes('/api/media/'+id);allowed=publicAsset||(!!w.settings.photoWall&&(await photoIndex()).some(p=>p.id===id&&p.kind==='photo'));}
+ if(token){const {w}=await guest(token);const publicAsset=[w.settings.cover,w.settings.music,w.settings.video,...w.story.map(x=>x.image)].includes('/api/media/'+id);if(publicAsset)allowed=true;else if(w.settings.photoWall){const meta=await readMeta(id);allowed=!!meta?.complete&&meta.kind==='photo';}}
  if(!allowed)await planner(req);
  const metadata=await readMeta(id);if(!metadata?.complete)throw new HttpError(404,'This file was not found.');
  const etag=`"${metadata.id}-${metadata.size}"`;
@@ -23,7 +23,10 @@ async function serve(req:Request,{params}:Context){try{
    headers.set('Content-Range',`bytes ${start}-${end}/${size}`);headers.set('Content-Length',String(end-start+1));
   }
  }
- return new Response(readRange(metadata,start,end),{status:partial?206:200,headers});
+ // Partial responses (at most one part) are sent whole so Netlify keeps an exact Content-Length,
+ // which iPhone video playback relies on; full downloads stream part by part.
+ if(partial)return new Response(await new Response(readRange(metadata,start,end)).arrayBuffer(),{status:206,headers});
+ return new Response(readRange(metadata,start,end),{status:200,headers});
 }catch(e){return failure(e);}}
 export const GET=serve;
 export const HEAD=serve;

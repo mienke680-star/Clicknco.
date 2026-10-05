@@ -60,6 +60,17 @@ const get=(id,{token,range,method='GET'}={})=>media[method](new Request(base+'/a
  response=await get(id,{token});assert.equal(response.status,200);assert.deepEqual(await bytes(response),video);
  response=await get(id,{token,method:'HEAD'});assert.equal(response.status,200);assert.equal(response.headers.get('content-length'),String(size));
  assert.equal((await get(id,{range:'bytes=0-1'})).status,401);
+ // A guest replies while the couple has the dashboard open: the couple's later save keeps the reply.
+ user=couple;let open=(await (await wedding.GET()).json());user=null;
+ assert.equal((await guest.POST(request('/api/guest',{token:token2,responses:{ceremony:'no',brunch:'yes'},meal:'Vegetarian',message:'See you at brunch'}))).status,200);
+ user=couple;open.w.settings.venue='A lovely new venue';assert.equal((await wedding.PUT(request('/api/wedding',{w:open.w,revision:open.revision},'PUT'))).status,200);
+ w=(await server.row()).w;assert.equal(w.settings.venue,'A lovely new venue');assert.deepEqual(w.guests[1].responses,{ceremony:'no',brunch:'yes'});assert.equal(w.guests[1].message,'See you at brunch');
+ // The couple corrects a reply themselves (e.g. a guest phoned): that edit is saved.
+ open=(await (await wedding.GET()).json());open.w.guests[1].meal='Vegan';open.w.guests[1].responses={ceremony:'yes',brunch:'yes'};
+ assert.equal((await wedding.PUT(request('/api/wedding',{w:open.w,revision:open.revision},'PUT'))).status,200);
+ w=(await server.row()).w;assert.equal(w.guests[1].meal,'Vegan');assert.equal(w.guests[1].responses.ceremony,'yes');assert.equal(w.guests[1].message,'See you at brunch');
+ assert(!JSON.stringify((await store('wedding-data').get('wedding',{type:'json'}))).includes('rsvpVersion'),'merge markers are not stored');
+ user=null;
  // Plus-one permission is controlled by the couple only.
  user=couple;r=await server.row();w=r.w;w.guests[0].plusOneAllowed=false;w.guests[0].plusOneName='Old companion';
  assert.equal((await wedding.PUT(request('/api/wedding',{w,revision:r.revision},'PUT'))).status,200);assert.equal((await server.row()).w.guests[0].plusOneName,'');
@@ -80,5 +91,5 @@ const get=(id,{token,range,method='GET'}={})=>media[method](new Request(base+'/a
  const list=(await (await photos.GET(new Request(base+'/api/photos?token='+'t'.repeat(40)))).json()).photos;assert.deepEqual(list.map(p=>p.id),[oldId]);
  user=null;assert.equal((await transfer.POST(request('/api/transfer',{w:imported,photos:[],replace:true}))).status,401);
  const zip=load('lib/zip.ts');assert.equal((await zip.zipFiles([{name:'photo.txt',bytes:new TextEncoder().encode('hello wedding')}]).arrayBuffer()).byteLength>0,true);
- console.log('PASS: private couple access, stale-save protection, simultaneous RSVPs, event visibility, RSVP + plus-one rules, email-free guests, catering, seating cleanup, multi-part uploads, upload ownership, private assets, video byte ranges, photo removal and transfer import.');
+ console.log('PASS: private couple access, stale-save protection, simultaneous RSVPs, replies kept while the couple edits, couple RSVP corrections, event visibility, RSVP + plus-one rules, email-free guests, catering, seating cleanup, multi-part uploads, upload ownership, private assets, video byte ranges, photo removal and transfer import.');
 })().catch(e=>{console.error(e);process.exitCode=1});

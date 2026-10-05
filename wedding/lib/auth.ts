@@ -1,5 +1,6 @@
 import {headers} from 'next/headers';
-import {dataStore,mutateJSON} from './store';
+import {dataStore} from './store';
+import {fromThisSite} from './origin';
 const encoder=new TextEncoder();
 export const SESSION_COOKIE='__Host-wedding-session';
 const lifetime=7*24*60*60;
@@ -51,12 +52,13 @@ export async function verifyPassword(password:string){try{
  const bits=new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:decode(salt),iterations:ROUNDS},key,256));
  const hash=decode(expected);let difference=bits.length^hash.length;for(let i=0;i<bits.length;i++)difference|=bits[i]^(hash[i]||0);return difference===0;
 }catch{return false;}}
-export function sameOrigin(req:Request){const origin=req.headers.get('origin');return origin===new URL(req.url).origin;}
+export function sameOrigin(req:Request){return fromThisSite(req,req.headers.get('origin'));}
 export function clientAddress(req:Request){return req.headers.get('x-nf-client-connection-ip')||req.headers.get('x-forwarded-for')?.split(',')[0].trim()||'local';}
-// At most ten attempts per client address per 15-minute window.
+// At most ten attempts per client address per 15-minute window. Each attempt is its own key
+// (simultaneous writes to one counter could be lost), counted with a single list call.
 export async function allowAttempt(req:Request,scope:string){
  const bytes=await crypto.subtle.digest('SHA-256',encoder.encode(clientAddress(req)));
- const key=`auth/attempts/${scope}/${Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('')}-${Math.floor(Date.now()/900000)}`;
- const count=await mutateJSON<{attempts:number},number>(key,current=>{const attempts=(current?.attempts||0)+1;return {value:{attempts},result:attempts};});
- return (count||0)<=10;
+ const prefix=`auth/attempts/${scope}/${Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('')}-${Math.floor(Date.now()/900000)}/`;
+ const store=dataStore();await store.set(prefix+crypto.randomUUID(),'1');
+ const {blobs}=await store.list({prefix});return blobs.length<=10;
 }
