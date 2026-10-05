@@ -1,0 +1,3 @@
+import { planner,update,failure,checkOrigin,validate,HttpError } from '@/lib/server';
+export async function GET(){try{const {r,w,owner}=await planner();return Response.json({w,revision:r.revision,owner});}catch(e){return failure(e);}}
+export async function PUT(req:Request){try{checkOrigin(req);const body=await req.text();if(body.length>2000000)throw new HttpError(413,'Wedding data is too large.');const input=JSON.parse(body);const {r}=await planner(req);if(input.revision!==r.revision)throw new HttpError(409,'Someone else updated the wedding. Reload before saving.');validate(input.w);return Response.json({revision:await update(r,input.w)});}catch(e){return failure(e);}}

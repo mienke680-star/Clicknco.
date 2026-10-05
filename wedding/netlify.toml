@@ -1,0 +1,12 @@
+# Netlify settings for the Mienke & Luvhan wedding website.
+# Netlify detects Next.js automatically and runs it with its Next.js runtime.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--no-audit --no-fund"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

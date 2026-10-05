@@ -1,0 +1,16 @@
+/node_modules
+/.next/
+/out/
+/build
+.netlify
+.DS_Store
+*.pem
+npm-debug.log*
+.env*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
+# Transfer ZIPs contain private guest details; never commit them.
+*.zip
+/migration-data/
+/backups/
