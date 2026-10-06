@@ -156,3 +156,9 @@ body{background:#f5f7fa;color:#18334d;font-family:Arial,Helvetica,sans-serif;fon
 
 /* Invitation media uploads: progress and confirmation */
 .media-field .media-progress{display:grid;gap:6px;font-weight:400}.media-field .media-progress small{color:#63778d}.media-status{font-weight:400;font-size:13px;line-height:1.4}.media-status.ok{color:#1f6b45}.media-status.error{color:#a33232}.invite-video-error{display:block;padding:10px 16px;font-size:13px;color:#a33232;background:#fff4f4}
+
+/* Personalised PDF invitations */
+.invite-actions{display:flex;flex-wrap:wrap;gap:6px;max-width:330px}.invite-actions button{white-space:nowrap}
+.pdf-dialog{max-width:min(720px,calc(100vw - 24px))!important;max-height:calc(100dvh - 24px);overflow:auto}.pdf-progress{display:grid;gap:8px}.pdf-progress small,.pdf-meta{color:#63778d}.pdf-error p{color:#a33232;margin-bottom:10px}
+.pdf-frame{width:100%;height:min(70dvh,640px);border:1px solid #d3e1ee;border-radius:10px;background:#f7f9fc}.pdf-message{display:grid;gap:6px}.pdf-message textarea{min-height:180px;font-size:14px;font-weight:400;line-height:1.45}
+.pdf-share{width:100%;justify-content:center;padding:12px}.pdf-fallback{border:1px solid #d3e1ee;background:#f7fbff;border-radius:12px;padding:14px}.pdf-fallback ol{display:grid;gap:10px;margin:10px 0 10px 20px;list-style:decimal}.pdf-note{color:#1f6b45}

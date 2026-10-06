@@ -38,6 +38,14 @@ The cover image, invitation video and music are saved to the invitation as soon 
 
 A random session-signing secret is created automatically and stored privately in Blobs. Optional overrides: `COUPLE_PASSWORD_HASH` (a `pbkdf2-sha256$100000$salt$hash` value) and `SESSION_SECRET` (32+ characters).
 
+## Personalised PDF invitations
+
+Saving a guest (or importing guests from CSV) automatically creates their own A5 PDF invitation: ivory paper, royal-blue Cormorant and Cinzel lettering (SIL Open Font License, `assets/invitation`), Greek key borders, olive sprigs, your cover artwork, “An invitation especially for [name]”, “A little piece of Greece. A lifetime together.”, the date, venue, address, their invited events, dress code and RSVP date, a clickable “Open your personal invitation & RSVP” button, the printed link and a QR code for paper copies. Guests allowed a plus one also see “You are welcome to bring a plus one. Please add their details when you RSVP.”
+
+Each guest row has **Preview PDF**, **Download PDF** and **Send via WhatsApp**. A PDF is stored privately in Blobs (`wedding-media` → `invitations/<guest id>`) with a fingerprint of everything printed on it, so it is generated once and reused, and regenerated only when the name, plus-one permission, wedding details, invited events or the site address change. Generating PDFs never changes invitation links. PDFs are only available to the signed-in couple; there is no listing route and guest links cannot fetch them. The guest link uses `SITE_URL` if set, otherwise Netlify's primary site address.
+
+**Send via WhatsApp** prepares the PDF and a warm message you can edit. Where the browser can share files (most phones), **Share PDF and message…** opens the system share sheet with the actual PDF attached; choose WhatsApp and the guest, review and send. Otherwise the dialog offers **Download invitation PDF** and **Open WhatsApp message** (a WhatsApp link can only fill in the text), with steps to attach the PDF yourself. Nothing is sent automatically and no email is used.
+
 ## Transfer your existing wedding and media
 
 1. On a laptop, open the OLD wedding site (for example `https://ever-after-wedding-studio.mienke680.chatgpt.site`, or the Cloudflare deployment) and sign in as the couple.

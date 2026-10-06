@@ -9,3 +9,9 @@ export function allowedOrigins(req:Request){
  return origins;
 }
 export const fromThisSite=(req:Request,origin:string|null)=>!!origin&&allowedOrigins(req).has(origin);
+// The address guests should use: SITE_URL if set, else Netlify's primary site URL (`URL`, which
+// follows a custom domain), else the address this request came in on.
+export function publicOrigin(req:Request){
+ for(const value of [process.env.SITE_URL,process.env.URL]){try{if(value){const u=new URL(value);if(/^https?:$/.test(u.protocol))return u.origin;}}catch{}}
+ const origins=[...allowedOrigins(req)];return origins[origins.length-1];
+}
