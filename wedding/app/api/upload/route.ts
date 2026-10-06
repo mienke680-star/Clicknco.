@@ -1,4 +1,5 @@
 import {planner,guest,failure,checkOrigin,HttpError,photoIndex,addPhoto} from '@/lib/server';
+import {logActivity} from '@/lib/hub-store';
 import {CHUNK_SIZE,MEDIA_TYPES,partCount,readMeta,writeMeta,putPart,hasAllParts,looksLikeMp4,type MediaMeta} from '@/lib/media';
 const GUEST_PHOTO_LIMIT=500;
 // Couple uploads use the signed-in session; guest uploads use their personal invitation token.
@@ -29,8 +30,11 @@ export async function POST(req:Request){try{
   if(!meta.complete){if(!await hasAllParts(meta))throw new HttpError(400,'The upload is incomplete. Please try again.');
    // Browsers only trust the declared type, so check the bytes: every MP4 starts with an `ftyp` box.
    if(meta.mime==='video/mp4'&&!await looksLikeMp4(meta.id))throw new HttpError(400,'This file is not a valid MP4 video. Please export it as an MP4 (H.264) and try again.');
+   // Guest photos wait for approval before anyone else can see them; the couple's own are official.
+   meta.moderation=meta.uploader==='couple'?'approved':'pending';meta.official=meta.uploader==='couple'&&meta.kind==='photo';
    meta.complete=true;await writeMeta(meta);}
-  await addPhoto({id:meta.id,guest:meta.guestId,name:meta.name,mime:meta.mime,kind:meta.kind,created:meta.created},meta.uploader==='couple'?undefined:GUEST_PHOTO_LIMIT);
+  await addPhoto({id:meta.id,guest:meta.guestId,name:meta.name,mime:meta.mime,kind:meta.kind,created:meta.created,status:meta.moderation||'approved',official:!!meta.official},meta.uploader==='couple'?undefined:GUEST_PHOTO_LIMIT);
+  if(meta.uploader!=='couple'&&meta.kind==='photo')await logActivity({actor:'guest',type:'photo',guestId:meta.guestId,guestName:meta.name,summary:`${meta.name} shared a photo for approval`,important:true}).catch(()=>{});
   return Response.json({id:meta.id,url:'/api/media/'+meta.id,name:meta.name});
  }
  throw new HttpError(400,'Unknown upload step.');

@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "check": "tsc --noEmit",
-    "test": "node tests/workflows.cjs && node tests/auth.cjs && node tests/export.cjs && node tests/transfer.cjs && node tests/invitation-pdf.cjs",
+    "test": "node tests/workflows.cjs && node tests/auth.cjs && node tests/export.cjs && node tests/transfer.cjs && node tests/invitation-pdf.cjs && node tests/hub.cjs",
     "test:http": "node scripts/test-local-http.mjs",
     "assets": "node scripts/build-invitation-assets.mjs",
     "prebuild": "npm run assets",

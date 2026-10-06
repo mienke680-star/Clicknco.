@@ -46,7 +46,7 @@ const get=(id,{token,range,method='GET'}={})=>media[method](new Request(base+'/a
  assert.equal((await get(started.id,{token})).status,401);user=couple;assert.equal((await get(started.id)).status,404);user=null;
  // Private couple assets stay private.
  user=couple;const asset=await send(new TextEncoder().encode('image'),'image/png',{kind:'asset'});assert.equal(asset.status,200);
- user=null;assert.equal((await get(asset.id,{token})).status,401);assert.equal((await (await photos.GET(new Request(base+'/api/photos?token='+token))).json()).photos.length,1);
+ user=null;assert.equal((await get(asset.id,{token})).status,401);{const wall=await (await photos.GET(new Request(base+'/api/photos?token='+token))).json();assert.equal(wall.photos.length,0,'guest photos wait for approval');assert.equal(wall.mine.length,1);}
  // Invitation video: multi-part storage, iPhone-style byte ranges, capped partial responses.
  user=couple;const size=CHUNK_SIZE*2+1000,video=new Uint8Array(size);for(let i=0;i<size;i++)video[i]=i%251;video.set([0,0,0,24,...new TextEncoder().encode('ftypisom')]);
  assert.equal((await send(new TextEncoder().encode('not really a video file'),'video/mp4',{kind:'asset'})).status,400,'non-MP4 bytes are refused');

@@ -1,9 +1,15 @@
 import {planner,guest,failure,HttpError} from '@/lib/server';
-import {readMeta,readRange,CHUNK_SIZE} from '@/lib/media';
+import {readMeta,readRange,CHUNK_SIZE,approved} from '@/lib/media';
+import {visibleEvents,visibleUpdates} from '@/lib/hub';
 type Context={params:Promise<{id:string}>};
 async function serve(req:Request,{params}:Context){try{
  const {id}=await params;const token=new URL(req.url).searchParams.get('token');let allowed=false;
- if(token){const {w}=await guest(token);const publicAsset=[w.settings.cover,w.settings.music,w.settings.video,...w.story.map(x=>x.image)].includes('/api/media/'+id);if(publicAsset)allowed=true;else if(w.settings.photoWall){const meta=await readMeta(id);allowed=!!meta?.complete&&meta.kind==='photo';}}
+ // A guest link opens only media that is part of that guest's own invitation, events and updates,
+ // approved gallery photos, and the photos they uploaded themselves.
+ if(token){const {w,g}=await guest(token);const url='/api/media/'+id;
+  const visible=[w.settings.cover,w.settings.music,w.settings.video,...w.story.map(x=>x.image),...visibleEvents(w,g).map(e=>e.image),...visibleUpdates(w,g).map(u=>u.media)];
+  if(visible.includes(url))allowed=true;
+  else{const meta=await readMeta(id);allowed=!!meta?.complete&&meta.kind==='photo'&&((meta.uploader!=='couple'&&meta.guestId===g.id)||(approved(meta)&&(!!w.settings.photoWall||!!meta.official)));}}
  if(!allowed)await planner(req);
  const metadata=await readMeta(id);if(!metadata?.complete)throw new HttpError(404,'This file was not found.');
  const etag=`"${metadata.id}-${metadata.size}"`;

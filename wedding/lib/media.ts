@@ -3,7 +3,9 @@ import {mediaStore} from './store';
 // 3 MB parts. Each response carries at most a few parts, which keeps video byte ranges fast.
 export const CHUNK_SIZE=3*1024*1024;
 export const MEDIA_TYPES=['image/jpeg','image/png','image/webp','audio/mpeg','audio/mp4','video/mp4'];
-export type MediaMeta={id:string;mime:string;size:number;chunkSize:number;parts:number;uploader:string;kind:'photo'|'asset';name:string;guestId:string;created:string;complete:boolean};
+export type MediaMeta={id:string;mime:string;size:number;chunkSize:number;parts:number;uploader:string;kind:'photo'|'asset';name:string;guestId:string;created:string;complete:boolean;moderation?:'pending'|'approved'|'rejected';official?:boolean};
+// Guest photos wait for the couple's approval; files without a moderation field predate it and count as approved.
+export const approved=(m:{moderation?:string}|null|undefined)=>!!m&&(m.moderation===undefined||m.moderation==='approved');
 export const partCount=(size:number,chunkSize=CHUNK_SIZE)=>Math.max(1,Math.ceil(size/chunkSize));
 export async function readMeta(id:string):Promise<MediaMeta|null>{if(!/^[a-zA-Z0-9-]{1,100}$/.test(id))return null;return await mediaStore().get(id+'/meta',{type:'json'});}
 export async function writeMeta(meta:MediaMeta,options?:{onlyIfNew:true}){return await mediaStore().setJSON(meta.id+'/meta',meta,options);}

@@ -56,14 +56,17 @@ try{
  response=await fetch(base+v,{headers:{Range:'bytes=5-'}});assert.equal(response.status,206);assert.equal(response.headers.get('content-range'),`bytes 5-${5+3*1024*1024-1}/${size}`);assert.equal((await response.arrayBuffer()).byteLength,3*1024*1024);
  response=await fetch(base+v);assert.equal(response.status,200);assert.deepEqual(new Uint8Array(await response.arrayBuffer()),video);
  response=await fetch(base+media.url);assert.equal(response.status,401);
- // Guest photo upload, then visible on the photo wall.
+ // Guest photo upload: waits for approval, then visible on the photo wall.
  const photo=await upload(new Uint8Array([137,80,78,71,13,10,26,10]),'image/png',{token:guestToken},{});
  // Several guests uploading at the same moment: every photo reaches the wall.
  const more=await Promise.all([1,2,3,4,5].map(i=>upload(new Uint8Array([137,80,78,71,i]),'image/png',{token:guestToken},{})));
+ response=await fetch(base+'/api/photos?token='+guestToken);let seen=await response.json();for(const m of [photo,...more]){assert(!seen.photos.some(p=>p.id===m.id),'unapproved photo shown on the wall');assert(seen.mine.some(p=>p.id===m.id),'uploader sees their photo waiting');}
+ // The couple approves them; only then do they reach the shared wall.
+ for(const m of [photo,...more]){response=await fetch(base+'/api/photos',json('PATCH',{id:m.id,status:'approved'},{cookie}));assert.equal(response.status,200);}
  response=await fetch(base+'/api/photos?token='+guestToken);const wall=new Set((await response.json()).photos.map(p=>p.id));for(const m of [photo,...more])assert(wall.has(m.id),'photo missing from the wall: '+m.id);
  // Data survives a server restart: everything lives in Blobs, not in memory.
  response=await fetch(base+'/api/wedding',{headers:{cookie}});const saved=(await response.json()).w;assert.equal(saved.guests[0].responses[w.events[0].id],'yes');assert.equal(saved.guests[0].plusOneName,'Companion');assert.equal(saved.guests[0].email,undefined);
  response=await fetch(base+'/api/auth/logout',{method:'POST',headers:{cookie,Origin:base}});assert.equal(response.status,200);assert(response.headers.get('set-cookie').includes('Max-Age=0'));
  if(!remote)assert(fs.readdirSync(dir,{recursive:true}).length>5,'data is written to the Blobs store');
- console.log('PASS: production build over HTTP with Netlify Blobs: one-time password setup, login, no-store headers, dashboard saves, account-free invitation, plus-one RSVP, 7 MB chunked video upload, byte-range playback, guest photo upload and private media access.');
+ console.log('PASS: production build over HTTP with Netlify Blobs: one-time password setup, login, no-store headers, dashboard saves, account-free invitation, plus-one RSVP, 7 MB chunked video upload, byte-range playback, guest photo upload with approval and private media access.');
 }finally{app.kill();if(!remote)await blobs.stop();fs.rmSync(dir,{recursive:true,force:true});}
