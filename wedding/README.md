@@ -26,6 +26,8 @@ If a guest replies while the dashboard is open, saving the dashboard keeps that 
 
 Netlify Functions accept requests of about 6 MB, so the browser uploads files in 3 MB parts, and video is served in byte ranges (what iPhones and other browsers request for playback and seeking). Limits are unchanged: guest photos up to 10 MB (JPEG, PNG, WebP; 500 photos), couple uploads up to 10 MB, invitation MP4 video up to 50 MB.
 
+The cover image, invitation video and music are saved to the invitation as soon as they finish uploading: the dashboard shows upload progress, checks the stored file's type and size, saves its link in the wedding settings, reads it back, and only then reports success. MP4 videos are checked to be real MP4 files. The video plays muted, looped and inline (iPhone-friendly) above the invitation artwork; the music plays separately and starts on the guest's first tap if the phone blocks autoplay.
+
 ## Deploy (browser only)
 
 1. Create the Netlify project from this folder (base directory `wedding`). `netlify.toml` sets the build command (`npm run build`), Node 22 and the Next.js runtime.

@@ -48,11 +48,12 @@ const get=(id,{token,range,method='GET'}={})=>media[method](new Request(base+'/a
  user=couple;const asset=await send(new TextEncoder().encode('image'),'image/png',{kind:'asset'});assert.equal(asset.status,200);
  user=null;assert.equal((await get(asset.id,{token})).status,401);assert.equal((await (await photos.GET(new Request(base+'/api/photos?token='+token))).json()).photos.length,1);
  // Invitation video: multi-part storage, iPhone-style byte ranges, capped partial responses.
- user=couple;const size=CHUNK_SIZE*2+1000,video=new Uint8Array(size);for(let i=0;i<size;i++)video[i]=i%251;
+ user=couple;const size=CHUNK_SIZE*2+1000,video=new Uint8Array(size);for(let i=0;i<size;i++)video[i]=i%251;video.set([0,0,0,24,...new TextEncoder().encode('ftypisom')]);
+ assert.equal((await send(new TextEncoder().encode('not really a video file'),'video/mp4',{kind:'asset'})).status,400,'non-MP4 bytes are refused');
  const uploaded=await send(video,'video/mp4',{kind:'asset'});assert.equal(uploaded.status,200);const id=uploaded.id;
  r=await server.row();w=r.w;w.settings.video='/api/media/'+id;assert.equal((await wedding.PUT(request('/api/wedding',{w,revision:r.revision},'PUT'))).status,200);
  user=null;const bytes=async res=>new Uint8Array(await res.arrayBuffer());
- response=await get(id,{token,range:'bytes=0-1'});assert.equal(response.status,206);assert.equal(response.headers.get('content-range'),`bytes 0-1/${size}`);assert.equal(response.headers.get('content-length'),'2');assert.deepEqual([...await bytes(response)],[0,1]);
+ response=await get(id,{token,range:'bytes=0-1'});assert.equal(response.status,206);assert.equal(response.headers.get('content-range'),`bytes 0-1/${size}`);assert.equal(response.headers.get('content-length'),'2');assert.deepEqual([...await bytes(response)],[...video.subarray(0,2)]);
  response=await get(id,{token,range:`bytes=${CHUNK_SIZE-2}-${CHUNK_SIZE+1}`});assert.equal(response.status,206);assert.deepEqual([...await bytes(response)],[...video.subarray(CHUNK_SIZE-2,CHUNK_SIZE+2)],'range across parts');
  response=await get(id,{token,range:'bytes=10-'});assert.equal(response.status,206);assert.equal(response.headers.get('content-range'),`bytes 10-${10+CHUNK_SIZE-1}/${size}`);assert.equal((await bytes(response)).length,CHUNK_SIZE);
  response=await get(id,{token,range:'bytes=-5'});assert.deepEqual([...await bytes(response)],[...video.subarray(size-5)]);
@@ -92,4 +93,4 @@ const get=(id,{token,range,method='GET'}={})=>media[method](new Request(base+'/a
  user=null;assert.equal((await transfer.POST(request('/api/transfer',{w:imported,photos:[],replace:true}))).status,401);
  const zip=load('lib/zip.ts');assert.equal((await zip.zipFiles([{name:'photo.txt',bytes:new TextEncoder().encode('hello wedding')}]).arrayBuffer()).byteLength>0,true);
  console.log('PASS: private couple access, stale-save protection, simultaneous RSVPs, replies kept while the couple edits, couple RSVP corrections, event visibility, RSVP + plus-one rules, email-free guests, catering, seating cleanup, multi-part uploads, upload ownership, private assets, video byte ranges, photo removal and transfer import.');
-})().catch(e=>{console.error(e);process.exitCode=1});
+})().catch(e=>{console.log(e);process.exitCode=1});

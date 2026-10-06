@@ -153,3 +153,6 @@ body{background:#f5f7fa;color:#18334d;font-family:Arial,Helvetica,sans-serif;fon
 
 /* Netlify edition: transfer & backup page */
 .transfer-page section{max-width:620px}.transfer-page h2{font-size:22px;margin-top:28px}.transfer-page code{font-size:13px;background:#edf5fe;padding:1px 5px;border-radius:5px}.transfer-page .transfer-check{flex-direction:row;align-items:center;gap:10px}.transfer-page .transfer-check input{flex:0 0 18px;width:18px;height:18px;margin:0}.transfer-page .transfer-check span{flex:1}.transfer-page input[type=file]{font-weight:400;padding:10px;border:1px dashed #b9cde0;border-radius:10px;background:#f7fbff}.transfer-link{display:block;padding:14px;margin:10px 0;background:#edf5fe;border-radius:8px}.transfer-page .transfer-error{color:#a33232}.couple-signout{display:block;text-decoration:none}
+
+/* Invitation media uploads: progress and confirmation */
+.media-field .media-progress{display:grid;gap:6px;font-weight:400}.media-field .media-progress small{color:#63778d}.media-status{font-weight:400;font-size:13px;line-height:1.4}.media-status.ok{color:#1f6b45}.media-status.error{color:#a33232}.invite-video-error{display:block;padding:10px 16px;font-size:13px;color:#a33232;background:#fff4f4}

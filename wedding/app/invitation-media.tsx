@@ -43,12 +43,33 @@ export function BackgroundMusic({src}:{src:string}){
   </>;
 }
 
-export function LoopingVideo({src}:{src:string}){
+export function LoopingVideo({src,showError=false}:{src:string;showError?:boolean}){
   const video=useRef<HTMLVideoElement>(null);
+  const pausedByGuest=useRef(false);
   const [playing,setPlaying]=useState(false);
-  function toggle(){const player=video.current;if(!player)return;if(player.paused)void player.play().catch(()=>{});else player.pause();}
+  const [failed,setFailed]=useState(false);
+  useEffect(()=>{
+    const player=video.current;
+    if(!player)return;
+    pausedByGuest.current=false;
+    setFailed(false);
+    // iPhones only autoplay inline video that is muted from the start; React sets `muted` only as a
+    // property, so also set the attribute and default before loading.
+    player.muted=true;player.defaultMuted=true;player.setAttribute('muted','');player.setAttribute('playsinline','');player.setAttribute('webkit-playsinline','');
+    const start=()=>{if(!pausedByGuest.current&&player.paused)void player.play().catch(()=>{});};
+    // Low Power Mode and some browsers block autoplay; start on the guest's first tap instead.
+    const firstInteraction=()=>start();
+    player.addEventListener('canplay',start);
+    document.addEventListener('pointerdown',firstInteraction);
+    document.addEventListener('keydown',firstInteraction);
+    player.load();start();
+    return ()=>{player.removeEventListener('canplay',start);document.removeEventListener('pointerdown',firstInteraction);document.removeEventListener('keydown',firstInteraction);player.pause();};
+  },[src]);
+  function toggle(){const player=video.current;if(!player)return;if(player.paused){pausedByGuest.current=false;void player.play().catch(()=>{});}else{pausedByGuest.current=true;player.pause();}}
+  if(failed&&!showError)return null;
   return <div className="invite-video-wrap">
-    <video ref={video} className="invite-video" src={src} autoPlay loop muted playsInline preload="auto" onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)}/>
-    <button type="button" className="invite-video-toggle" onClick={toggle} aria-label={playing?'Pause invitation video':'Play invitation video'}>{playing?<Pause size={18}/>:<Play size={18}/>}</button>
+    <video ref={video} className="invite-video" src={src} autoPlay loop muted playsInline preload="auto" onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)} onError={()=>setFailed(true)}/>
+    {failed?<small role="alert" className="invite-video-error">This video can’t be played in this browser. Please upload an MP4 encoded as H.264.</small>:
+    <button type="button" className="invite-video-toggle" onClick={toggle} aria-label={playing?'Pause invitation video':'Play invitation video'}>{playing?<Pause size={18}/>:<Play size={18}/>}</button>}
   </div>;
 }

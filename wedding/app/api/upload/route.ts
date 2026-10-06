@@ -1,5 +1,5 @@
 import {planner,guest,failure,checkOrigin,HttpError,photoIndex,addPhoto} from '@/lib/server';
-import {CHUNK_SIZE,MEDIA_TYPES,partCount,readMeta,writeMeta,putPart,hasAllParts,type MediaMeta} from '@/lib/media';
+import {CHUNK_SIZE,MEDIA_TYPES,partCount,readMeta,writeMeta,putPart,hasAllParts,looksLikeMp4,type MediaMeta} from '@/lib/media';
 const GUEST_PHOTO_LIMIT=500;
 // Couple uploads use the signed-in session; guest uploads use their personal invitation token.
 async function uploader(req:Request,token:string){if(token){const {g}=await guest(token);return {uploader:'guest:'+g.id,guestId:String(g.id),name:String(g.name)};}await planner(req);return {uploader:'couple',guestId:'couple',name:'The couple'};}
@@ -26,7 +26,10 @@ export async function POST(req:Request){try{
  }
  if(input.action==='finish'){
   const meta=await readMeta(String(input.id||''));if(!meta)throw new HttpError(404,'This upload was not found.');await authorise(req,meta,token);
-  if(!meta.complete){if(!await hasAllParts(meta))throw new HttpError(400,'The upload is incomplete. Please try again.');meta.complete=true;await writeMeta(meta);}
+  if(!meta.complete){if(!await hasAllParts(meta))throw new HttpError(400,'The upload is incomplete. Please try again.');
+   // Browsers only trust the declared type, so check the bytes: every MP4 starts with an `ftyp` box.
+   if(meta.mime==='video/mp4'&&!await looksLikeMp4(meta.id))throw new HttpError(400,'This file is not a valid MP4 video. Please export it as an MP4 (H.264) and try again.');
+   meta.complete=true;await writeMeta(meta);}
   await addPhoto({id:meta.id,guest:meta.guestId,name:meta.name,mime:meta.mime,kind:meta.kind,created:meta.created},meta.uploader==='couple'?undefined:GUEST_PHOTO_LIMIT);
   return Response.json({id:meta.id,url:'/api/media/'+meta.id,name:meta.name});
  }

@@ -7,7 +7,7 @@ async function serve(req:Request,{params}:Context){try{
  if(!allowed)await planner(req);
  const metadata=await readMeta(id);if(!metadata?.complete)throw new HttpError(404,'This file was not found.');
  const etag=`"${metadata.id}-${metadata.size}"`;
- const headers=new Headers({'Content-Type':metadata.mime||'application/octet-stream','Cache-Control':'private, max-age=300','Netlify-CDN-Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox",'Accept-Ranges':'bytes','Content-Length':String(metadata.size),ETag:etag});
+ const headers=new Headers({'Content-Type':metadata.mime||'application/octet-stream','Cache-Control':'private, max-age=300','Netlify-CDN-Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':metadata.mime.startsWith('image/')?"default-src 'none'; sandbox":"default-src 'none'",'Cross-Origin-Resource-Policy':'same-origin','Accept-Ranges':'bytes','Content-Length':String(metadata.size),ETag:etag});
  if(req.method==='HEAD')return new Response(null,{headers});
  // iPhone playback probes bytes 0–1 before fetching or seeking through video.
  const rangeHeader=req.headers.get('range'),ifRange=req.headers.get('if-range');

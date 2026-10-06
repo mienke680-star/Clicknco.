@@ -8,7 +8,8 @@ export const partCount=(size:number,chunkSize=CHUNK_SIZE)=>Math.max(1,Math.ceil(
 export async function readMeta(id:string):Promise<MediaMeta|null>{if(!/^[a-zA-Z0-9-]{1,100}$/.test(id))return null;return await mediaStore().get(id+'/meta',{type:'json'});}
 export async function writeMeta(meta:MediaMeta,options?:{onlyIfNew:true}){return await mediaStore().setJSON(meta.id+'/meta',meta,options);}
 export async function putPart(id:string,part:number,bytes:ArrayBuffer){await mediaStore().set(`${id}/${part}`,bytes);}
-export async function hasAllParts(meta:MediaMeta){const store=mediaStore();for(let n=0;n<meta.parts;n++){if(!await store.getMetadata(`${meta.id}/${n}`))return false;}return true;}
+export async function hasAllParts(meta:MediaMeta){const store=mediaStore();const found=await Promise.all(Array.from({length:meta.parts},(_,n)=>store.getMetadata(`${meta.id}/${n}`)));return found.every(Boolean);}
+export async function looksLikeMp4(id:string){const first=await mediaStore().get(id+'/0',{type:'arrayBuffer'});return !!first&&first.byteLength>=12&&new TextDecoder().decode(new Uint8Array(first).subarray(4,8))==='ftyp';}
 export async function deleteMedia(id:string){const meta=await readMeta(id);const store=mediaStore();if(meta)for(let n=0;n<meta.parts;n++)await store.delete(`${id}/${n}`);await store.delete(id+'/meta');}
 // Streams bytes [start, end] (inclusive) by reading only the parts that overlap the range.
 export function readRange(meta:MediaMeta,start:number,end:number){

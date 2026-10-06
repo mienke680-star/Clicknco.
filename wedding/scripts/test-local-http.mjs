@@ -28,7 +28,7 @@ try{
  response=await fetch(base+'/',{headers:{cookie}});assert.equal(response.status,200);assert.equal(response.headers.get('x-frame-options'),'DENY');
  response=await fetch(base+'/api/wedding',{headers:{cookie}});assert.equal(response.status,200);const {w,revision}=await response.json();
  // Upload a 7 MB invitation video in parts, like the dashboard does.
- const size=7*1024*1024+123,video=new Uint8Array(size);for(let i=0;i<size;i++)video[i]=i%253;
+ const size=7*1024*1024+123,video=new Uint8Array(size);for(let i=0;i<size;i++)video[i]=i%253;video.set([0,0,0,24,...new TextEncoder().encode('ftypisom')]);
  const upload=async(bytes,type,extra={},auth={cookie})=>{let r=await fetch(base+'/api/upload',json('POST',{action:'start',type,size:bytes.length,...extra},auth));const start=await r.json();assert.equal(r.status,200,JSON.stringify(start));
   for(let part=0;part*start.chunkSize<bytes.length;part++){const q=new URLSearchParams({id:start.id,part:String(part)});if(extra.token)q.set('token',extra.token);r=await fetch(base+'/api/upload?'+q,{method:'PUT',headers:{Origin:base,'Content-Type':'application/octet-stream',...auth},body:bytes.subarray(part*start.chunkSize,(part+1)*start.chunkSize)});assert.equal(r.status,200,await r.clone().text());}
   r=await fetch(base+"/api/upload",json("POST",{action:"finish",id:start.id,token:extra.token},auth));assert.equal(r.status,200,await r.clone().text()+log);return await r.json();};
@@ -51,7 +51,7 @@ try{
  // Guest video playback through their invitation link, iPhone-style.
  const v=media.url+'?token='+guestToken;
  // (Netlify's CDN omits Content-Length on function responses; Content-Range and the body carry the size.)
- response=await fetch(base+v,{headers:{Range:'bytes=0-1'}});assert.equal(response.status,206);assert.equal(response.headers.get('content-range'),`bytes 0-1/${size}`);if(!remote)assert.equal(response.headers.get('content-length'),'2');assert.deepEqual([...new Uint8Array(await response.arrayBuffer())],[0,1]);
+ response=await fetch(base+v,{headers:{Range:'bytes=0-1'}});assert.equal(response.status,206);assert.equal(response.headers.get('content-range'),`bytes 0-1/${size}`);if(!remote)assert.equal(response.headers.get('content-length'),'2');assert.deepEqual([...new Uint8Array(await response.arrayBuffer())],[...video.subarray(0,2)]);
  response=await fetch(base+v,{headers:{Range:'bytes=3145720-3145735'}});assert.equal(response.status,206);assert.deepEqual([...new Uint8Array(await response.arrayBuffer())],[...video.subarray(3145720,3145736)]);
  response=await fetch(base+v,{headers:{Range:'bytes=5-'}});assert.equal(response.status,206);assert.equal(response.headers.get('content-range'),`bytes 5-${5+3*1024*1024-1}/${size}`);assert.equal((await response.arrayBuffer()).byteLength,3*1024*1024);
  response=await fetch(base+v);assert.equal(response.status,200);assert.deepEqual(new Uint8Array(await response.arrayBuffer()),video);
