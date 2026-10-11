@@ -1,0 +1,41 @@
+{
+  "websiteClients": [
+    {
+      "name": "Maglev Africa",
+      "logo": "assets/maglev-africa.jpeg",
+      "services": "Website design & development",
+      "url": "https://magliveafrica.com",
+      "urlVerified": false
+    },
+    {
+      "name": "Labrite",
+      "logo": "assets/labrite.png",
+      "services": "Website design & development",
+      "url": null,
+      "pendingLabel": "Website coming soon"
+    }
+  ],
+  "consultingClients": [
+    {
+      "name": "Huizemark Apex",
+      "logo": null,
+      "services": [
+        "Consulting",
+        "Campaigns",
+        "Digital content"
+      ]
+    }
+  ],
+  "ventures": [
+    {
+      "name": "Nearby",
+      "logo": "assets/nearby.png",
+      "url": null
+    }
+  ],
+  "partnerships": [],
+  "cta": {
+    "label": "Work with CLICK & CO",
+    "destination": "USE_EXISTING_CONTACT_DESTINATION"
+  }
+}

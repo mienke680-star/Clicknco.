@@ -156,24 +156,41 @@
 
     .work{background:#020d1f;overflow:hidden}
     .work::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(73,231,255,.18) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(90deg,transparent,#000 70%,transparent)}
-    .project-layout{position:relative;display:grid;grid-template-columns:1.22fr .78fr;gap:25px;align-items:start}
-    .project{position:relative;z-index:1;transition:transform .45s var(--ease)}
-    .project.secondary{margin-top:130px}
-    .browser{border:1px solid rgba(255,255,255,.15);border-radius:18px;overflow:hidden;background:#071a35;box-shadow:0 35px 80px rgba(0,0,0,.42)}
-    .browser-bar{height:42px;display:flex;align-items:center;gap:7px;padding:0 15px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.04)}
-    .browser-bar i{width:7px;height:7px;border-radius:50%;background:#5d6e83}.browser-bar i:nth-child(2){background:var(--pink)}.browser-bar i:nth-child(3){background:var(--cyan)}
-    .browser-url{height:18px;width:48%;margin-left:12px;border:1px solid rgba(255,255,255,.09);border-radius:20px;background:rgba(0,0,0,.18)}
-    .website-preview{aspect-ratio:16/10;padding:9%;display:flex;align-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 75% 30%,rgba(255,20,147,.23),transparent 25%),linear-gradient(140deg,#020b19,#092653)}
-    .website-preview::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(73,231,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(73,231,255,.05) 1px,transparent 1px);background-size:25px 25px}
-    .preview-copy{position:relative;z-index:1;max-width:73%}
-    .preview-copy b{display:block;font:900 clamp(1.25rem,3.5vw,3.4rem)/.95 Montserrat,sans-serif;letter-spacing:-.06em}
-    .preview-copy span{display:inline-block;margin-top:16px;background:var(--pink);padding:8px 14px;border-radius:7px;font-size:.55rem;font-weight:900}
-    .advert-preview{aspect-ratio:4/5;background:#06152e;display:grid;place-items:center;padding:12px}
-    .advert-preview img{height:100%;width:100%;object-fit:contain}
-    .project-info{display:flex;justify-content:space-between;align-items:end;gap:20px;padding-top:18px}
-    .project-info h3{font-size:1.2rem;margin-bottom:4px}.project-info p{font-size:.76rem;margin:0;text-transform:uppercase;letter-spacing:.13em}
-    .view-project{font-size:.68rem;font-weight:900;letter-spacing:.1em;color:var(--cyan);white-space:nowrap}
-    .project:hover{transform:translateY(-8px)}.project:hover .view-project{color:var(--pink)}
+    /* ============ CLIENTS & BUSINESS RELATIONSHIPS (approved section) ============ */
+    #cc-luxury-clean{background:#fff;color:#101f32;font-family:Arial,Helvetica,sans-serif;border-radius:16px;overflow:hidden;--cc-ink:#101f32;--cc-grey:#536174;--cc-pink:#d80780;--cc-rule:#e1e5e9}
+    #cc-luxury-clean *{box-sizing:border-box}
+    #cc-luxury-clean .cc-content{padding:44px 36px 32px;background:#fff}
+    #cc-luxury-clean .cc-kicker{display:flex;align-items:center;gap:12px;color:var(--cc-pink);font-size:11px;letter-spacing:2px;font-weight:600;margin-bottom:18px}
+    #cc-luxury-clean .cc-kicker::before{content:"";width:28px;height:2px;background:var(--cc-pink)}
+    #cc-luxury-clean h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(34px,6vw,49px);line-height:1.12;letter-spacing:-1.5px;color:var(--cc-ink);font-weight:400;margin:0 0 18px}
+    #cc-luxury-clean .cc-lead{color:var(--cc-grey);font-size:15px;line-height:1.75;max-width:470px;margin:0 0 36px}
+    #cc-luxury-clean .cc-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--cc-rule);padding-bottom:15px;margin-bottom:22px}
+    #cc-luxury-clean h3{font-size:18px;letter-spacing:-.3px;color:var(--cc-ink);font-weight:500;margin:0}
+    #cc-luxury-clean .cc-caption{color:var(--cc-grey);font-size:11px;letter-spacing:1px}
+    #cc-luxury-clean .cc-work{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:36px}
+    #cc-luxury-clean .cc-project{min-width:0}
+    #cc-luxury-clean .cc-logo{height:148px;padding:18px;background:#fff!important;border:0;border-radius:8px;display:flex;justify-content:center;align-items:center}
+    #cc-luxury-clean .cc-logo img{display:block;width:auto;height:auto;max-width:90%;max-height:112px;object-fit:contain;background:#fff!important}
+    #cc-luxury-clean .cc-project:nth-child(2) .cc-logo img{max-width:92%;max-height:100px}
+    #cc-luxury-clean h4{color:var(--cc-ink);font-size:19px;font-weight:500;margin:18px 0 7px;letter-spacing:-.35px}
+    #cc-luxury-clean .cc-project p{font-size:13px;line-height:1.65;color:var(--cc-grey);margin:0 0 13px}
+    #cc-luxury-clean .cc-link{color:var(--cc-ink);font-size:12px;text-decoration:none;display:inline-flex;align-items:center;min-height:44px;gap:18px;border-bottom:1px solid var(--cc-pink)}
+    #cc-luxury-clean .cc-pending{display:inline-flex;align-items:center;min-height:44px;color:var(--cc-grey);font-size:12px}
+    #cc-luxury-clean .cc-support{display:grid;grid-template-columns:1fr 1.25fr;gap:28px;align-items:start;margin:24px 0 38px}
+    #cc-luxury-clean .cc-support h4{margin:0 0 9px;font-size:23px}
+    #cc-luxury-clean .cc-label{font-size:10px;color:var(--cc-pink);letter-spacing:1.4px;line-height:1.6}
+    #cc-luxury-clean .cc-support p{margin:0;color:var(--cc-grey);font-size:14px;line-height:1.75}
+    #cc-luxury-clean .cc-tags{font-size:11px;color:var(--cc-ink);margin-top:12px;line-height:1.8}
+    #cc-luxury-clean .cc-venture{display:grid;grid-template-columns:64px 1fr;gap:22px;align-items:center;margin:24px 0 6px}
+    #cc-luxury-clean .cc-venture img{width:64px;height:64px;object-fit:contain;display:block;border-radius:8px}
+    #cc-luxury-clean .cc-venture h4{margin:0 0 7px;font-size:23px}
+    #cc-luxury-clean .cc-venture p{margin:0;font-size:14px;color:var(--cc-grey);line-height:1.7}
+    #cc-luxury-clean .cc-bottom{background:#091729;color:#fff;padding:30px 36px;display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap}
+    #cc-luxury-clean .cc-bottom p{font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.2;color:#fff;margin:0;max-width:330px}
+    #cc-luxury-clean .cc-cta{color:#fff;font-size:12px;font-weight:700;letter-spacing:.04em;text-decoration:none;border-bottom:2px solid #ff169b;padding:12px 0;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;transition:opacity .25s}
+    #cc-luxury-clean .cc-cta:hover{opacity:.72}
+    @media(max-width:520px){#cc-luxury-clean .cc-content{padding:30px 22px 22px}#cc-luxury-clean .cc-work{grid-template-columns:1fr;gap:28px}#cc-luxury-clean .cc-logo{height:145px}#cc-luxury-clean .cc-logo img{max-width:min(90%,225px);max-height:109px}#cc-luxury-clean .cc-project:nth-child(2) .cc-logo img{max-width:min(92%,230px);max-height:100px}#cc-luxury-clean .cc-support{grid-template-columns:1fr;gap:15px}#cc-luxury-clean .cc-bottom{padding:27px 22px;flex-direction:column;align-items:flex-start}#cc-luxury-clean .cc-caption{display:none}}
+    @media(max-width:360px){#cc-luxury-clean .cc-venture{grid-template-columns:64px 1fr;gap:15px}}
 
     .about{background:
       linear-gradient(rgba(73,231,255,.035) 1px,transparent 1px),
@@ -406,16 +423,47 @@
 
     <section class="section work" id="work">
       <div class="wrap">
-        <div class="section-head reveal"><div><div class="eyebrow">Selected work</div><h2>DESIGN THAT<br><span class="pink">DOES SOMETHING.</span></h2></div><p>Real CLICK & CO. brand work presented as interactive digital experiences—not ordinary portfolio thumbnails.</p></div>
-        <div class="project-layout">
-          <article class="project reveal" data-shift="18">
-            <div class="browser"><div class="browser-bar"><i></i><i></i><i></i><span class="browser-url"></span></div><div class="website-preview"><div class="preview-copy"><b>WEBSITES BUILT TO <span class="pink">MOVE</span> BUSINESS.</b><span>START A PROJECT →</span></div></div></div>
-            <div class="project-info"><div><h3>CLICK & CO. Website Experience</h3><p>Website · Digital direction</p></div><a class="view-project" href="#home">View project ↗</a></div>
-          </article>
-          <article class="project secondary reveal" data-shift="-14">
-            <div class="browser"><div class="browser-bar"><i></i><i></i><i></i><span class="browser-url"></span></div><div class="advert-preview"><img src="assets/clickandco-campaign-advert.jpeg" alt="CLICK & CO. campaign advert featuring the services and websites built to move business message"></div></div>
-            <div class="project-info"><div><h3>CLICK & CO. Brand Campaign</h3><p>Campaign · Business design</p></div><a class="view-project" href="assets/clickandco-campaign-advert.jpeg" target="_blank" rel="noopener">View project ↗</a></div>
-          </article>
+        <div id="cc-luxury-clean" class="reveal">
+          <div class="cc-content">
+            <div class="cc-kicker">CLICK &amp; CO &middot; SELECTED WORK</div>
+            <h2>Our work.<br>Your next opportunity.</h2>
+            <p class="cc-lead">Websites, creative direction and ongoing digital support for businesses ready to move forward.</p>
+
+            <section aria-labelledby="cc-luxe-web">
+              <div class="cc-heading"><h3 id="cc-luxe-web">Websites we&rsquo;ve created</h3><span class="cc-caption">DESIGN &amp; DEVELOPMENT</span></div>
+              <div class="cc-work">
+                <article class="cc-project">
+                  <div class="cc-logo"><img src="assets/maglev-africa.jpeg" alt="Maglev Africa — Electromagnetic Intelligence" loading="lazy"></div>
+                  <h4>Maglev Africa</h4>
+                  <p>Website design &amp; development</p>
+                  <a class="cc-link" href="https://magliveafrica.com" target="_blank" rel="noopener noreferrer">Visit website <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="cc-project">
+                  <div class="cc-logo"><img src="assets/labrite.png" alt="Labrite" loading="lazy"></div>
+                  <h4>Labrite</h4>
+                  <p>Website design &amp; development</p>
+                  <span class="cc-pending">Website coming soon</span>
+                </article>
+              </div>
+            </section>
+
+            <section aria-labelledby="cc-luxe-consult">
+              <div class="cc-heading"><h3 id="cc-luxe-consult">Businesses we support</h3><span class="cc-caption">ONGOING COLLABORATION</span></div>
+              <div class="cc-support">
+                <div><h4>Huizemark Apex</h4><div class="cc-label">DIGITAL &amp; MARKETING CONSULTING</div></div>
+                <div><p>Creative and marketing support across property campaigns and digital content.</p><div class="cc-tags">Consulting &nbsp;&middot;&nbsp; Campaigns &nbsp;&middot;&nbsp; Digital content</div></div>
+              </div>
+            </section>
+
+            <section aria-labelledby="cc-luxe-venture">
+              <div class="cc-heading"><h3 id="cc-luxe-venture">Our ventures</h3></div>
+              <div class="cc-venture">
+                <img src="assets/nearby.png" alt="Nearby — original green and white logo" loading="lazy">
+                <div><h4>Nearby</h4><p>Connecting people with local businesses, services and opportunities.</p></div>
+              </div>
+            </section>
+          </div>
+          <div class="cc-bottom"><p>Let&rsquo;s build your<br>next chapter.</p><a class="cc-cta" href="#contact">Work with CLICK &amp; CO <span aria-hidden="true">↗</span></a></div>
         </div>
       </div>
     </section>
