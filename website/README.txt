@@ -9,7 +9,7 @@ FILES
 
 index.html
 clients.json                (reference content config for the Our Work clients section — see below)
-assets/clickandco-logo-transparent.png
+assets/clickandco-logo-transparent.png   (icon-only pink "C" mark — current official logo, used for the header, footer and favicon; no wordmark/tagline text is baked into this file, unlike the version used before)
 assets/clickandco-3d-cursor.png    (unused — kept from an earlier hero design)
 assets/clickandco-campaign-advert.jpeg   (used as the og:image meta tag)
 assets/clickco-earth-night.png     (Earth night-lights texture for the hero globe)
