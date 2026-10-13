@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { IconChevronLeft, IconChevronRight, IconPlus } from "@tabler/icons-react";
 import { apiFetch } from "@/lib/api-client";
 import { dWeek, relDay } from "@/lib/clickco/format";
@@ -40,13 +41,22 @@ export function CalendarClient({
   canEdit: boolean;
   canDelete: boolean;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [items, setItems] = React.useState(initialItems);
   const [year, setYear] = React.useState(initialYear);
   const [month, setMonth] = React.useState(initialMonth);
   const [mode, setMode] = React.useState<"month" | "agenda">("month");
   const [selectedDate, setSelectedDate] = React.useState(todayKey());
   const [loading, setLoading] = React.useState(false);
-  const [dialog, setDialog] = React.useState<{ date: string; editId?: string } | null>(null);
+  // Seeded once from ?open=<id> (a Ctrl+K/Today deep link) so a search result
+  // or "Needs you" item can land straight on that event's edit dialog --
+  // the real date backfills once EventDialog fetches the event itself.
+  const [dialog, setDialog] = React.useState<{ date: string; editId?: string } | null>(() => {
+    const openId = searchParams.get("open");
+    return openId ? { date: todayKey(), editId: openId } : null;
+  });
 
   const itemsByDate = React.useMemo(() => {
     const map = new Map<string, CalendarItemWithDate[]>();
@@ -102,6 +112,11 @@ export function CalendarClient({
     void loadMonth(today.getUTCFullYear(), today.getUTCMonth());
   }
 
+  function closeDialog() {
+    setDialog(null);
+    if (searchParams.get("open")) router.replace(pathname);
+  }
+
   function upsertEvent() {
     // The server response's startAt could land in a different day/month than
     // what's currently loaded (the user retimed it) -- simplest correct fix
@@ -109,12 +124,12 @@ export function CalendarClient({
     // in place.
     if (mode === "month") void loadMonth(year, month);
     else void loadAgenda();
-    setDialog(null);
+    closeDialog();
   }
 
   function removeEvent(id: string) {
     setItems((prev) => prev.filter((i) => i.id !== id));
-    setDialog(null);
+    closeDialog();
   }
 
   async function loadAgenda() {
@@ -269,7 +284,7 @@ export function CalendarClient({
           editEventId={dialog.editId}
           contacts={contacts}
           canDelete={canDelete}
-          onClose={() => setDialog(null)}
+          onClose={closeDialog}
           onSaved={upsertEvent}
           onDeleted={removeEvent}
         />

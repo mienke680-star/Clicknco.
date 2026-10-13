@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireApiCompanyContext, isApiError } from "@/lib/api-guard";
-import { money } from "@/lib/clickco/format";
+import { money, dShort } from "@/lib/clickco/format";
 import { toNumber } from "@/lib/utils";
 
 export interface HubSearchResult {
@@ -74,6 +74,23 @@ export async function GET(req: NextRequest) {
         sub: `${project.contact.firstName} ${project.contact.lastName ?? ""}`,
         group: "Projects",
         href: `/portal/projects?open=${project.id}`,
+      });
+    }
+  }
+
+  if (ctx.can("calendar", "view")) {
+    const events = await prisma.calendarEvent.findMany({
+      where: { companyId: ctx.company.id, OR: [{ title: { contains: q, mode: "insensitive" } }, ...contactNameMatch.OR] },
+      include: { contact: true },
+      take: 8,
+    });
+    for (const event of events) {
+      results.push({
+        id: `event-${event.id}`,
+        label: event.title,
+        sub: `${dShort(event.startAt)} · ${event.contact ? `${event.contact.firstName} ${event.contact.lastName ?? ""}`.trim() : "Internal"}`,
+        group: "Schedule",
+        href: `/portal/calendar?open=${event.id}`,
       });
     }
   }

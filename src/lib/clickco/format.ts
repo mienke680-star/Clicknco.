@@ -16,19 +16,28 @@ export function money(value: Money): string {
   return decPart ? `R ${grouped},${decPart}` : `R ${grouped}`;
 }
 
+const WEEKDAY_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTH_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+/** Deterministic en-GB-style date formatting -- hand-rolled for the same
+ * reason money() is: Intl.DateTimeFormat's "long" weekday output (with or
+ * without a trailing comma) isn't rendered consistently between Node's and a
+ * browser's bundled ICU data, which caused a real hydration mismatch on
+ * Today's greeting ("Tuesday 13 October 2026" vs "Tuesday, 13 October 2026"). */
 export function dShort(value: Date | string) {
   const d = typeof value === "string" ? new Date(value) : value;
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" }).format(d);
+  return `${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
 }
 
 export function dLong(value: Date | string) {
   const d = typeof value === "string" ? new Date(value) : value;
-  return new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(d);
+  return `${WEEKDAY_LONG[d.getDay()]}, ${d.getDate()} ${MONTH_LONG[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 export function dWeek(value: Date | string) {
   const d = typeof value === "string" ? new Date(value) : value;
-  return new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "short" }).format(d);
+  return `${WEEKDAY_LONG[d.getDay()]}, ${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
 }
 
 /** "today" / "tomorrow" / "in N days" / "N days ago", relative to local midnight. */
