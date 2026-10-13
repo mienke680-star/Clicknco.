@@ -66,3 +66,24 @@ export const paymentCreateSchema = z.object({
   method: z.enum(PAYMENT_METHODS).default("EFT"),
   reference: z.string().trim().max(200).optional().or(z.literal("")),
 });
+
+export const CONSULTING_HEALTHS = ["GROWING", "ON_TRACK", "NEEDS_ATTENTION"] as const;
+
+export const recurringServiceCreateSchema = z.object({
+  contactId: z.string().min(1, "Select a client"),
+  platforms: z.string().trim().min(1, "Add the platforms covered").max(200),
+  cadenceLabel: z.string().trim().min(1, "Add a cadence label").max(60),
+  every: z.number().int().min(1).max(365),
+  designQuota: z.number().int().min(1).max(999),
+  focus: z.string().trim().max(500).optional().or(z.literal("")),
+});
+
+export const recurringServiceHealthSchema = z.object({
+  health: z.enum(CONSULTING_HEALTHS),
+});
+
+export const designBriefCreateSchema = z.object({
+  contactId: z.string().min(1, "Select a client"),
+  title: z.string().trim().min(1, "Add what needs designing").max(200),
+  detail: z.string().trim().max(300).optional().or(z.literal("")),
+});
