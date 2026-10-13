@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { Prisma } from "@/generated/prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -8,6 +9,13 @@ export function cn(...inputs: ClassValue[]) {
 export function formatCurrency(value: number | string, currency = "USD") {
   const n = typeof value === "string" ? Number(value) : value;
   return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(n || 0);
+}
+
+/** Coerces a Prisma Decimal (or its string/number form once serialized across
+ * a server/client boundary) to a plain number for arithmetic and display. */
+export function toNumber(value: Prisma.Decimal | number | string | null | undefined): number {
+  if (value == null) return 0;
+  return typeof value === "object" ? value.toNumber() : Number(value) || 0;
 }
 
 export function formatNumber(value: number | string) {

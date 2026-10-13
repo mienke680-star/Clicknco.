@@ -285,6 +285,12 @@ model User {
   moduleRecordsCreated  ModuleRecord[]      @relation("ModuleRecordCreator")
   moduleRecordsAssigned ModuleRecord[]      @relation("ModuleRecordAssignee")
 
+  // Operations Hub — createdBy back-relations
+  quotesCreated         Quote[]
+  invoicesCreated       Invoice[]
+  paymentsRecorded      Payment[]
+  calendarEventsCreated CalendarEvent[]
+
   @@index([platformRole])
 }
 
@@ -361,6 +367,18 @@ model Company {
   notifications     Notification[]
   auditLogs         AuditLog[]
   billingRecords    CompanyBillingRecord[]
+
+  // Operations Hub
+  businessSettings  BusinessSettings?
+  packages          Package[]
+  addons            Addon[]
+  quotes            Quote[]
+  projects          Project[]
+  invoices          Invoice[]
+  payments          Payment[]
+  recurringServices RecurringService[]
+  designBriefs      DesignBrief[]
+  calendarEvents    CalendarEvent[]
 
   @@index([status])
 }
@@ -572,6 +590,14 @@ model Contact {
   emailMessages     EmailMessage[]
   moduleRecords     ModuleRecord[]
   mediaAssets       MediaAsset[]
+
+  // Operations Hub
+  quotes           Quote[]
+  projects         Project[]
+  invoices         Invoice[]
+  recurringService RecurringService?
+  designBriefs     DesignBrief[]
+  calendarEvents   CalendarEvent[]
 
   @@unique([companyId, email])
   @@index([companyId, createdAt])
@@ -1099,4 +1125,336 @@ model PlatformInquiry {
   message   String?
   status    InquiryStatus @default(NEW)
   createdAt DateTime      @default(now())
+}
+
+// =========================================================================
+// OPERATIONS HUB — per-company quote -> project -> invoice -> payment flow,
+// services catalogue, recurring client work, and a cross-entity calendar.
+// =========================================================================
+
+enum PackageBilling {
+  ONCE_OFF
+  MONTHLY
+}
+
+/// A company's own sellable service catalogue (e.g. website/social-media packages).
+/// Not seeded by provisionNewCompany() -- every tenant defines their own, same as
+/// Pipelines/Contacts start empty for a new company.
+model Package {
+  id               String         @id @default(cuid())
+  companyId        String
+  slug             String // stable id referenced by Quote line-item snapshots
+  category         String
+  name             String
+  strapline        String
+  price            Decimal        @db.Decimal(12, 2)
+  billing          PackageBilling @default(ONCE_OFF)
+  deposit          Decimal?       @db.Decimal(12, 2)
+  instalment       Decimal?       @db.Decimal(12, 2)
+  instalmentMonths Int?
+  onboarding       Decimal?       @db.Decimal(12, 2)
+  minimumMonths    Int?
+  featured         Boolean        @default(false)
+  features         String[]
+  active           Boolean        @default(true)
+  sortOrder        Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  companyRef Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  addons     Addon[]
+  quotes     Quote[]
+  projects   Project[]
+
+  @@unique([companyId, slug])
+  @@index([companyId, sortOrder])
+}
+
+model Addon {
+  id        String         @id @default(cuid())
+  companyId String
+  name      String
+  price     Decimal        @db.Decimal(12, 2)
+  billing   PackageBilling @default(ONCE_OFF)
+  active    Boolean        @default(true)
+  sortOrder Int            @default(0)
+
+  companyRef Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  packageId  String?
+  package    Package? @relation(fields: [packageId], references: [id])
+
+  @@index([companyId, sortOrder])
+}
+
+enum QuotePlan {
+  ONCE
+  INSTALMENT_PLAN
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  VIEWED
+  ACCEPTED
+  DECLINED
+}
+
+enum VatTreatment {
+  UNSET
+  NONE
+  EXCLUSIVE
+  INCLUSIVE
+}
+
+model Quote {
+  id         String      @id @default(cuid())
+  companyId  String
+  number     String // "QUO-2026-0087"
+  contactId  String
+  packageId  String
+  plan       QuotePlan   @default(ONCE)
+  notes      String?     @db.VarChar(2000)
+  status     QuoteStatus @default(DRAFT)
+  issuedAt   DateTime    @default(now())
+  validUntil DateTime // snapshotted issuedAt + 14 days at create/edit time
+
+  // Totals are snapshotted: recomputed on every save while DRAFT/SENT/VIEWED,
+  // frozen once ACCEPTED/DECLINED, so a later Business-details VAT change never
+  // rewrites an already-issued quote.
+  vatTreatment  VatTreatment @default(UNSET)
+  subtotal      Decimal      @db.Decimal(12, 2)
+  vatAmount     Decimal      @default(0) @db.Decimal(12, 2)
+  total         Decimal      @db.Decimal(12, 2)
+  monthlyTotal  Decimal      @default(0) @db.Decimal(12, 2)
+  depositAmount Decimal      @default(0) @db.Decimal(12, 2)
+
+  shareToken      String    @unique @default(cuid())
+  pdfGeneratedAt  DateTime?
+  createdByUserId String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  companyRef Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact    Contact         @relation(fields: [contactId], references: [id])
+  package    Package         @relation(fields: [packageId], references: [id])
+  createdBy  User?           @relation(fields: [createdByUserId], references: [id])
+  lineItems  QuoteLineItem[]
+  project    Project?
+
+  @@unique([companyId, number])
+  @@index([companyId, status, issuedAt])
+}
+
+model QuoteLineItem {
+  id          String  @id @default(cuid())
+  quoteId     String
+  label       String
+  description String?
+  amount      Decimal @db.Decimal(12, 2)
+  recurring   Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  quote Quote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+}
+
+enum ProjectStage {
+  ONBOARDING
+  IN_PRODUCTION
+  CLIENT_REVIEW
+  WAITING_FOR_CLIENT
+  LAUNCHED
+}
+
+model Project {
+  id          String       @id @default(cuid())
+  companyId   String
+  contactId   String
+  packageId   String
+  quoteId     String?      @unique // set only when created via quote acceptance
+  name        String
+  stage       ProjectStage @default(ONBOARDING)
+  dueDate     DateTime
+  waitingNote String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  companyRef Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact    Contact            @relation(fields: [contactId], references: [id])
+  package    Package            @relation(fields: [packageId], references: [id])
+  quote      Quote?             @relation(fields: [quoteId], references: [id])
+  milestones ProjectMilestone[]
+  invoices   Invoice[]
+
+  @@index([companyId, stage, dueDate])
+}
+
+model ProjectMilestone {
+  id        String  @id @default(cuid())
+  projectId String
+  label     String
+  done      Boolean @default(false)
+  sortOrder Int     @default(0)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, sortOrder])
+}
+
+enum PaymentMethod {
+  EFT
+  CARD
+  CASH
+  OTHER
+}
+
+model Invoice {
+  id          String    @id @default(cuid())
+  companyId   String
+  contactId   String
+  projectId   String?
+  number      String
+  description String // flat, single line -- see schema notes on why no line-item table
+  amount      Decimal   @db.Decimal(12, 2)
+  issuedAt    DateTime  @default(now())
+  dueDate     DateTime
+  remindedAt  DateTime?
+
+  shareToken      String   @unique @default(cuid())
+  createdByUserId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  companyRef Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact    Contact   @relation(fields: [contactId], references: [id])
+  project    Project?  @relation(fields: [projectId], references: [id])
+  createdBy  User?     @relation(fields: [createdByUserId], references: [id])
+  payments   Payment[]
+
+  @@unique([companyId, number])
+  @@index([companyId, dueDate])
+}
+
+model Payment {
+  id        String        @id @default(cuid())
+  companyId String // denormalized (like PipelineCard.companyId) -- Today/Invoices sum payments company-wide
+  invoiceId String
+  amount    Decimal       @db.Decimal(12, 2)
+  paidAt    DateTime // the client's payment date, can be backdated
+  method    PaymentMethod @default(EFT)
+  reference String?
+
+  createdByUserId String?
+  createdAt       DateTime @default(now())
+
+  companyRef Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  createdBy  User?   @relation(fields: [createdByUserId], references: [id])
+
+  @@index([companyId, paidAt])
+}
+
+enum ConsultingHealth {
+  GROWING
+  ON_TRACK
+  NEEDS_ATTENTION
+}
+
+/// One row per client currently on a recurring social/consulting retainer.
+model RecurringService {
+  id           String           @id @default(cuid())
+  companyId    String
+  contactId    String           @unique
+  platforms    String
+  cadenceLabel String // display label e.g. "Fortnightly"
+  every        Int // actual day-interval used for scheduling
+  usedDesigns  Int              @default(0)
+  designQuota  Int
+  nextReviewAt DateTime
+  health       ConsultingHealth @default(ON_TRACK)
+  focus        String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  companyRef Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact    Contact @relation(fields: [contactId], references: [id])
+
+  @@index([companyId, nextReviewAt])
+}
+
+enum DesignStatus {
+  BRIEF
+  IN_DESIGN
+  APPROVAL
+  READY
+  DELIVERED
+}
+
+model DesignBrief {
+  id        String       @id @default(cuid())
+  companyId String
+  contactId String
+  title     String
+  detail    String?
+  status    DesignStatus @default(BRIEF)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  companyRef Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact    Contact @relation(fields: [contactId], references: [id])
+
+  @@index([companyId, status])
+}
+
+enum CalendarEventKind {
+  TASK
+  MEETING
+  CLIENT_WORK
+  DEADLINE
+}
+
+/// Manually-created calendar entries. Merged at query time with computed
+/// entries from Invoice.dueDate / Project.dueDate / RecurringService.nextReviewAt
+/// (see src/lib/clickco/calendar.ts) -- this table does not duplicate those.
+model CalendarEvent {
+  id              String            @id @default(cuid())
+  companyId       String
+  contactId       String? // null = internal/Click & Co-only
+  title           String
+  notes           String?
+  startAt         DateTime // encodes date + time together
+  durationMinutes Int               @default(30)
+  kind            CalendarEventKind @default(TASK)
+  done            Boolean           @default(false)
+  createdByUserId String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  companyRef Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact    Contact? @relation(fields: [contactId], references: [id])
+  createdBy  User?    @relation(fields: [createdByUserId], references: [id])
+
+  @@index([companyId, startAt])
+}
+
+/// Singleton per company. Backs the Business details screen and its go-live
+/// checklist -- quote/invoice numbering and VAT math read from here, never
+/// invented. Lazily created (upsert) on first GET rather than at company
+/// provisioning, so a brand-new company's checklist starts "not configured yet".
+model BusinessSettings {
+  id                 String       @id @default(cuid())
+  companyId          String       @unique
+  tradingName        String?
+  ownerName          String?
+  email              String?
+  phone              String?
+  registrationNumber String?
+  bankName           String?
+  accountNumber      String?
+  branchCode         String?
+  vatTreatment       VatTreatment @default(UNSET)
+  nextQuoteNumber    Int          @default(1)
+  nextInvoiceNumber  Int          @default(1)
+  updatedAt          DateTime     @updatedAt
+
+  companyRef Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
