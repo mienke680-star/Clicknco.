@@ -9,6 +9,7 @@ export const contactSchema = z.object({
   address: z.string().trim().max(300).optional().or(z.literal("")),
   leadSource: z.string().trim().max(120).optional().or(z.literal("")),
   status: z.string().trim().max(60).optional().or(z.literal("")),
+  clientNote: z.string().trim().max(2000).optional().or(z.literal("")),
   assignedUserId: z.string().optional().nullable(),
   tagIds: z.array(z.string()).optional(),
 });

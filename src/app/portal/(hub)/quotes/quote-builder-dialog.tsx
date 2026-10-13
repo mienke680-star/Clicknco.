@@ -28,15 +28,18 @@ export interface QuoteBuilderDialogProps {
   businessSettings: BusinessDetailsForDoc | null;
   nextQuoteNumber: number;
   editQuote?: QuoteDTO;
+  /** Pre-selects a client for a brand-new quote (e.g. opened from that
+   * client's "New quote" button) -- ignored when editQuote is set. */
+  defaultContactId?: string;
   onSaved: (quote: QuoteDTO) => void;
 }
 
 /** Mount this only while it should be open, keyed by the quote being edited
  * (or a constant for "new") -- see ComposeDialog for why: a fresh mount is
  * what resets the form, with no reset-on-open effect. */
-export function QuoteBuilderDialog({ onClose, contacts, packages, addons, vatTreatment, businessSettings, nextQuoteNumber, editQuote, onSaved }: QuoteBuilderDialogProps) {
+export function QuoteBuilderDialog({ onClose, contacts, packages, addons, vatTreatment, businessSettings, nextQuoteNumber, editQuote, defaultContactId, onSaved }: QuoteBuilderDialogProps) {
   const toast = useHubToast();
-  const [contactId, setContactId] = React.useState(editQuote?.contactId ?? contacts[0]?.id ?? "");
+  const [contactId, setContactId] = React.useState(editQuote?.contactId ?? defaultContactId ?? contacts[0]?.id ?? "");
   const [packageId, setPackageId] = React.useState(editQuote?.packageId ?? packages[0]?.id ?? "");
   const [plan, setPlan] = React.useState<QuotePlan>(editQuote?.plan ?? "ONCE");
   const [addonIds, setAddonIds] = React.useState<string[]>(

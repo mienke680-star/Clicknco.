@@ -573,6 +573,7 @@ model Contact {
   address        String?
   leadSource     String?
   status         String?  @default("Lead")
+  clientNote     String?  @db.VarChar(2000) // Operations Hub: single autosaved Clients-dialog field, separate from the threaded ContactNote[] log below (named "notes" there)
   assignedUserId String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

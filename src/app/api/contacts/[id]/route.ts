@@ -70,6 +70,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       ...(data.address !== undefined ? { address: data.address || null } : {}),
       ...(data.leadSource !== undefined ? { leadSource: data.leadSource || null } : {}),
       ...(data.status !== undefined ? { status: data.status || "Lead" } : {}),
+      ...(data.clientNote !== undefined ? { clientNote: data.clientNote || null } : {}),
       ...(data.assignedUserId !== undefined ? { assignedUserId: data.assignedUserId || null } : {}),
       ...(tagIds !== undefined ? { tags: { deleteMany: {}, create: tagIds.map((tagId) => ({ tagId })) } } : {}),
       lastActivityAt: new Date(),

@@ -30,3 +30,11 @@ export const MILESTONES_BY_CATEGORY: Record<string, string[]> = {
 export function defaultMilestonesFor(category: string): string[] {
   return MILESTONES_BY_CATEGORY[category] ?? MILESTONES_BY_CATEGORY["Marketing"]!;
 }
+
+/** Percent of milestones marked done, rounded. No "server-only" marker here
+ * (unlike projects.ts) so client components can compute this for live UI
+ * feedback right after a checkbox toggle, without waiting on a re-fetch. */
+export function projectProgress(milestones: { done: boolean }[]): number {
+  if (milestones.length === 0) return 0;
+  return Math.round((milestones.filter((m) => m.done).length / milestones.length) * 100);
+}

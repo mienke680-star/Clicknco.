@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
       address: data.address || null,
       leadSource: data.leadSource || null,
       status: data.status || "Lead",
+      clientNote: data.clientNote || null,
       assignedUserId: data.assignedUserId || null,
       tags: tagIds?.length ? { create: tagIds.map((tagId) => ({ tagId })) } : undefined,
     },

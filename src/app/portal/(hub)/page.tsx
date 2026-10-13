@@ -27,7 +27,7 @@ export default async function TodayPage() {
       <div className="page-head">
         <div>
           <h1 tabIndex={-1}>Hi {ctx.user.name.split(" ")[0]}</h1>
-          <p>Here&apos;s what&apos;s set up so far — Invoices, Projects and your full day view are on their way.</p>
+          <p>Here&apos;s what&apos;s set up so far — Social consulting, Calendar and your full day view are on their way.</p>
         </div>
       </div>
 
@@ -62,12 +62,6 @@ export default async function TodayPage() {
           </div>
         </div>
         <ul className="rows">
-          <li className="row">
-            <div>
-              <b>Projects, invoices and payments</b>
-              <span className="sub">Accepting a quote creates a project and a deposit invoice automatically.</span>
-            </div>
-          </li>
           <li className="row">
             <div>
               <b>Social consulting</b>

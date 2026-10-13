@@ -31,3 +31,38 @@ export const quoteInputSchema = z.object({
 export const quoteStatusSchema = z.object({
   status: z.enum(["SENT", "VIEWED", "DECLINED", "DRAFT"]),
 });
+
+export const PROJECT_STAGES = ["ONBOARDING", "IN_PRODUCTION", "CLIENT_REVIEW", "WAITING_FOR_CLIENT", "LAUNCHED"] as const;
+
+export const projectCreateSchema = z.object({
+  contactId: z.string().min(1, "Select a client"),
+  packageId: z.string().min(1, "Select a package"),
+  name: z.string().trim().max(200).optional().or(z.literal("")),
+  dueDate: z.string().min(1, "Set a due date"),
+});
+
+export const projectUpdateSchema = z.object({
+  stage: z.enum(PROJECT_STAGES).optional(),
+  dueDate: z.string().optional(),
+  waitingNote: z.string().trim().max(500).optional().or(z.literal("")),
+});
+
+export const milestoneUpdateSchema = z.object({
+  done: z.boolean(),
+});
+
+export const PAYMENT_METHODS = ["EFT", "CARD", "CASH", "OTHER"] as const;
+
+export const invoiceCreateSchema = z.object({
+  contactId: z.string().min(1, "Select a client"),
+  description: z.string().trim().min(1, "Add a description").max(300),
+  amount: z.number().positive(),
+  dueDate: z.string().min(1, "Set a due date"),
+});
+
+export const paymentCreateSchema = z.object({
+  amount: z.number().positive(),
+  paidAt: z.string().min(1),
+  method: z.enum(PAYMENT_METHODS).default("EFT"),
+  reference: z.string().trim().max(200).optional().or(z.literal("")),
+});

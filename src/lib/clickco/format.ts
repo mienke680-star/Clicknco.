@@ -41,3 +41,21 @@ export function relDay(value: Date | string) {
   if (diff === -1) return "yesterday";
   return diff > 0 ? `in ${diff} days` : `${-diff} days ago`;
 }
+
+/** Up to 2 uppercase initials from a name, for a mini-avatar. Ported from hub.js. */
+export function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+/** Deterministic av0..av4 class from an id's char codes, for mini-avatar
+ * background color -- same id always gets the same color. Ported from hub.js. */
+export function avatarClass(id: string): string {
+  const sum = [...id].reduce((a, c) => a + c.charCodeAt(0), 0);
+  return `av${sum % 5}`;
+}
