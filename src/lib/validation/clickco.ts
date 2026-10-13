@@ -87,3 +87,19 @@ export const designBriefCreateSchema = z.object({
   title: z.string().trim().min(1, "Add what needs designing").max(200),
   detail: z.string().trim().max(300).optional().or(z.literal("")),
 });
+
+export const CALENDAR_EVENT_KINDS = ["TASK", "MEETING", "CLIENT_WORK", "DEADLINE"] as const;
+
+export const calendarEventCreateSchema = z.object({
+  title: z.string().trim().min(1, "Add a title").max(200),
+  date: z.string().min(1, "Set a date"),
+  time: z.string().regex(/^\d{2}:\d{2}$/, "Set a time"),
+  durationMinutes: z.number().int().min(1).max(1440),
+  kind: z.enum(CALENDAR_EVENT_KINDS).default("TASK"),
+  contactId: z.string().optional().nullable(),
+  notes: z.string().trim().max(2000).optional().or(z.literal("")),
+});
+
+export const calendarEventUpdateSchema = calendarEventCreateSchema.partial().extend({
+  done: z.boolean().optional(),
+});
