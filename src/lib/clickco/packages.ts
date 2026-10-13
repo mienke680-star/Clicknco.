@@ -15,7 +15,7 @@ export type PackageDTO = Omit<Package, "price" | "deposit" | "instalment" | "onb
 };
 export type AddonDTO = Omit<Addon, "price"> & { price: number };
 
-function toPackageDTO(p: Package): PackageDTO {
+export function toPackageDTO(p: Package): PackageDTO {
   return {
     ...p,
     price: toNumber(p.price),
@@ -24,7 +24,7 @@ function toPackageDTO(p: Package): PackageDTO {
     onboarding: p.onboarding != null ? toNumber(p.onboarding) : null,
   };
 }
-function toAddonDTO(a: Addon): AddonDTO {
+export function toAddonDTO(a: Addon): AddonDTO {
   return { ...a, price: toNumber(a.price) };
 }
 

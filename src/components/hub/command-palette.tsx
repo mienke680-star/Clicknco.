@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { IconSearch } from "@tabler/icons-react";
 import { HubDialog } from "@/components/hub/dialog";
+import { apiFetch } from "@/lib/api-client";
 import type { Icon } from "@tabler/icons-react";
 
 export interface PaletteItem {
@@ -15,16 +16,27 @@ export interface PaletteItem {
   icon?: Icon;
 }
 
-/** Ctrl+K / Cmd+K command palette. Phase 1 searches nav destinations only;
- * later phases pass a richer `items` list (clients/quotes/invoices/projects). */
+interface HubSearchResult {
+  id: string;
+  label: string;
+  sub: string;
+  group: string;
+  href: string;
+}
+
+/** Ctrl+K / Cmd+K command palette. Nav destinations filter instantly;
+ * quotes/invoices/projects/clients (as each phase lands) come from
+ * /api/clickco/search, debounced while the dialog is open. */
 export function CommandPalette({ items }: { items: PaletteItem[] }) {
   const [open, setOpen] = React.useState(false);
   const [q, setQ] = React.useState("");
+  const [dynamicResults, setDynamicResults] = React.useState<HubSearchResult[]>([]);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   function openPalette() {
     setQ("");
+    setDynamicResults([]);
     setOpen(true);
     requestAnimationFrame(() => inputRef.current?.focus());
   }
@@ -44,16 +56,35 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const filtered = React.useMemo(() => {
-    const query = q.trim().toLowerCase();
-    if (!query) return items;
-    return items.filter((i) => i.label.toLowerCase().includes(query) || i.sub?.toLowerCase().includes(query));
-  }, [items, q]);
+  React.useEffect(() => {
+    const query = q.trim();
+    // groups() below already ignores dynamicResults once the query is empty,
+    // so there's nothing to reset here -- stale results just sit unused.
+    if (!open || query.length < 1) return;
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      apiFetch<{ results: HubSearchResult[] }>(`/api/clickco/search?q=${encodeURIComponent(query)}`)
+        .then((res) => {
+          if (!cancelled) setDynamicResults(res.results);
+        })
+        .catch(() => {
+          if (!cancelled) setDynamicResults([]);
+        });
+    }, 200);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [q, open]);
 
   const groups = React.useMemo(() => {
+    const query = q.trim().toLowerCase();
+    const navMatches = query ? items.filter((i) => i.label.toLowerCase().includes(query) || i.sub?.toLowerCase().includes(query)) : items;
+    const all: PaletteItem[] = query ? [...dynamicResults, ...navMatches] : navMatches;
+
     const order: string[] = [];
     const map = new Map<string, PaletteItem[]>();
-    for (const item of filtered) {
+    for (const item of all) {
       if (!map.has(item.group)) {
         map.set(item.group, []);
         order.push(item.group);
@@ -61,7 +92,7 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
       map.get(item.group)!.push(item);
     }
     return order.map((g) => ({ group: g, items: map.get(g)! }));
-  }, [filtered]);
+  }, [items, dynamicResults, q]);
 
   function go(href: string) {
     setOpen(false);
@@ -78,13 +109,7 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
       <HubDialog open={open} onClose={() => setOpen(false)} className="cmdk">
         <div className="pal-in">
           <IconSearch className="i" stroke={1.75} />
-          <input
-            ref={inputRef}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search…"
-            aria-label="Search"
-          />
+          <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" aria-label="Search" />
         </div>
         <ul className="pal-list">
           {groups.length === 0 && (

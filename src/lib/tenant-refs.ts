@@ -30,3 +30,10 @@ export async function assertStageInCompany(companyId: string, stageId: string | 
   const stage = await prisma.pipelineStage.findFirst({ where: { id: stageId, pipeline: { companyId } }, select: { id: true } });
   return stage ? null : "That stage doesn't belong to this company.";
 }
+
+/** Confirms a Package id belongs to the caller's company. */
+export async function assertPackageInCompany(companyId: string, packageId: string | null | undefined): Promise<string | null> {
+  if (!packageId) return null;
+  const exists = await prisma.package.findFirst({ where: { id: packageId, companyId }, select: { id: true } });
+  return exists ? null : "That package doesn't belong to this company.";
+}

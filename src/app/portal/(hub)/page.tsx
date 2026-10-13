@@ -1,32 +1,33 @@
 import type { Metadata } from "next";
 import { requireCompanyContext } from "@/lib/auth/rbac";
 import { prisma } from "@/lib/db";
+import { money } from "@/lib/clickco/format";
 
 export const metadata: Metadata = { title: "Today" };
 
-/** Phase 1 of the Operations Hub build: a lightweight Today page covering
- * what already exists (clients, catalogue, team, business profile). The full
- * "Needs you" queue, quick-add and timeline land once Quotes/Invoices/
- * Projects/Calendar exist in later phases. */
+/** Lightweight Today page, built incrementally alongside the rest of the
+ * Operations Hub. The full "Needs you" queue, quick-add and timeline land
+ * once Invoices/Projects/Calendar exist too (see "Coming next" below). */
 export default async function TodayPage() {
   const ctx = await requireCompanyContext();
   const companyId = ctx.company.id;
 
-  const [clientCount, packageCount, memberCount, businessSettings] = await Promise.all([
+  const [clientCount, openQuotes, packageCount, businessSettings] = await Promise.all([
     prisma.contact.count({ where: { companyId } }),
+    prisma.quote.findMany({ where: { companyId, status: { in: ["SENT", "VIEWED"] } }, select: { total: true } }),
     prisma.package.count({ where: { companyId, active: true } }),
-    prisma.membership.count({ where: { companyId, status: "ACTIVE" } }),
     prisma.businessSettings.findUnique({ where: { companyId } }),
   ]);
 
   const businessReady = Boolean(businessSettings?.tradingName && businessSettings.vatTreatment !== "UNSET");
+  const openQuoteValue = openQuotes.reduce((sum, q) => sum + Number(q.total), 0);
 
   return (
     <>
       <div className="page-head">
         <div>
           <h1 tabIndex={-1}>Hi {ctx.user.name.split(" ")[0]}</h1>
-          <p>Here&apos;s what&apos;s set up so far — Quotes, Invoices, Projects and your full day view are on their way.</p>
+          <p>Here&apos;s what&apos;s set up so far — Invoices, Projects and your full day view are on their way.</p>
         </div>
       </div>
 
@@ -37,14 +38,14 @@ export default async function TodayPage() {
           <em>in your CRM</em>
         </div>
         <div className="stat">
+          <small>Quotes awaiting reply</small>
+          <b className="num">{money(openQuoteValue)}</b>
+          <em>{openQuotes.length} open</em>
+        </div>
+        <div className="stat">
           <small>Packages</small>
           <b className="num">{packageCount}</b>
           <em>in your catalogue</em>
-        </div>
-        <div className="stat">
-          <small>Team members</small>
-          <b className="num">{memberCount}</b>
-          <em>active</em>
         </div>
         <div className="stat">
           <small>Business profile</small>
@@ -61,12 +62,6 @@ export default async function TodayPage() {
           </div>
         </div>
         <ul className="rows">
-          <li className="row">
-            <div>
-              <b>Quotes</b>
-              <span className="sub">Build and send quotes from your packages, with real PDF documents.</span>
-            </div>
-          </li>
           <li className="row">
             <div>
               <b>Projects, invoices and payments</b>

@@ -28,5 +28,5 @@ export const MILESTONES_BY_CATEGORY: Record<string, string[]> = {
 };
 
 export function defaultMilestonesFor(category: string): string[] {
-  return MILESTONES_BY_CATEGORY[category] ?? ["Kick-off", "In progress", "Review", "Launch"];
+  return MILESTONES_BY_CATEGORY[category] ?? MILESTONES_BY_CATEGORY["Marketing"]!;
 }

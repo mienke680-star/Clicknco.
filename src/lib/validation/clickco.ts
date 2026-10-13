@@ -15,3 +15,19 @@ export const businessSettingsSchema = z.object({
   nextQuoteNumber: z.number().int().min(1).optional(),
   nextInvoiceNumber: z.number().int().min(1).optional(),
 });
+
+export const QUOTE_PLANS = ["ONCE", "INSTALMENT_PLAN"] as const;
+export const QUOTE_STATUSES = ["DRAFT", "SENT", "VIEWED", "ACCEPTED", "DECLINED"] as const;
+
+export const quoteInputSchema = z.object({
+  contactId: z.string().min(1, "Select a client"),
+  packageId: z.string().min(1, "Select a package"),
+  plan: z.enum(QUOTE_PLANS).default("ONCE"),
+  addonIds: z.array(z.string()).max(50).default([]),
+  notes: z.string().trim().max(2000).optional().or(z.literal("")),
+  send: z.boolean().default(false),
+});
+
+export const quoteStatusSchema = z.object({
+  status: z.enum(["SENT", "VIEWED", "DECLINED", "DRAFT"]),
+});
