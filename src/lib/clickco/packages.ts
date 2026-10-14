@@ -1,6 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/db";
-import { toNumber } from "@/lib/utils";
+import { toNumber, slugify } from "@/lib/utils";
 import type { Package, Addon } from "@/generated/prisma/client";
 
 /** Decimal fields converted to plain numbers -- a Prisma Decimal instance
@@ -30,9 +30,9 @@ export function toAddonDTO(a: Addon): AddonDTO {
 
 /** The one place application code reads the service catalogue through --
  * never prisma.package.findMany()/addon.findMany() directly elsewhere. */
-export async function getPackages(companyId: string): Promise<PackageDTO[]> {
+export async function getPackages(companyId: string, includeArchived = false): Promise<PackageDTO[]> {
   const rows = await prisma.package.findMany({
-    where: { companyId, active: true },
+    where: { companyId, ...(includeArchived ? {} : { active: true }) },
     orderBy: { sortOrder: "asc" },
   });
   return rows.map(toPackageDTO);
@@ -43,10 +43,22 @@ export async function getPackageBySlug(companyId: string, slug: string): Promise
   return row ? toPackageDTO(row) : null;
 }
 
-export async function getAddons(companyId: string): Promise<AddonDTO[]> {
+export async function getAddons(companyId: string, includeArchived = false): Promise<AddonDTO[]> {
   const rows = await prisma.addon.findMany({
-    where: { companyId, active: true },
+    where: { companyId, ...(includeArchived ? {} : { active: true }) },
     orderBy: { sortOrder: "asc" },
   });
   return rows.map(toAddonDTO);
+}
+
+/** Generates a unique (companyId, slug) by appending -2, -3, ... on collision. */
+export async function uniquePackageSlug(companyId: string, base: string) {
+  const root = slugify(base) || "package";
+  let slug = root;
+  let n = 1;
+  while (await prisma.package.findUnique({ where: { companyId_slug: { companyId, slug } } })) {
+    n += 1;
+    slug = `${root}-${n}`;
+  }
+  return slug;
 }

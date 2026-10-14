@@ -1157,6 +1157,10 @@ model Package {
   minimumMonths    Int?
   featured         Boolean        @default(false)
   features         String[]
+  customQuote      Boolean        @default(false) // true = "Built Around You"-style listing with no fixed price
+  turnaroundLabel  String? // e.g. "2-3 weeks" -- display only
+  internalNotes    String? // never shown to clients
+  defaultTasks     String[]       @default([]) // seeded onto a Project created from this package
   active           Boolean        @default(true)
   sortOrder        Int            @default(0)
   createdAt        DateTime       @default(now())
@@ -1172,13 +1176,14 @@ model Package {
 }
 
 model Addon {
-  id        String         @id @default(cuid())
-  companyId String
-  name      String
-  price     Decimal        @db.Decimal(12, 2)
-  billing   PackageBilling @default(ONCE_OFF)
-  active    Boolean        @default(true)
-  sortOrder Int            @default(0)
+  id          String         @id @default(cuid())
+  companyId   String
+  name        String
+  price       Decimal        @db.Decimal(12, 2)
+  billing     PackageBilling @default(ONCE_OFF)
+  customQuote Boolean        @default(false)
+  active      Boolean        @default(true)
+  sortOrder   Int            @default(0)
 
   companyRef Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   packageId  String?

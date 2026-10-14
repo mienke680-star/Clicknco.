@@ -15,6 +15,7 @@ export function AuthShell({
     <main className="flex min-h-screen items-center justify-center bg-cream px-4 py-12">
       <div className="w-full max-w-md">
         <Link href="/" className="mb-8 flex items-center justify-center gap-2">
+          <img src="/brand/logo-mark.png" alt="" width={36} height={40} />
           <span className="text-xl font-extrabold tracking-tight text-navy-900">
             Click <span className="text-coral-500">&amp;</span> Co
           </span>

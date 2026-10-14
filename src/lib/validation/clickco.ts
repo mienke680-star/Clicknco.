@@ -103,3 +103,40 @@ export const calendarEventCreateSchema = z.object({
 export const calendarEventUpdateSchema = calendarEventCreateSchema.partial().extend({
   done: z.boolean().optional(),
 });
+
+export const PACKAGE_BILLINGS = ["ONCE_OFF", "MONTHLY"] as const;
+
+export const packageCreateSchema = z.object({
+  category: z.string().trim().min(1, "Choose a category").max(80),
+  name: z.string().trim().min(1, "Give it a name").max(160),
+  strapline: z.string().trim().max(300).optional().or(z.literal("")),
+  price: z.number().min(0).max(10_000_000),
+  billing: z.enum(PACKAGE_BILLINGS).default("ONCE_OFF"),
+  customQuote: z.boolean().default(false),
+  deposit: z.number().min(0).max(10_000_000).optional().nullable(),
+  instalment: z.number().min(0).max(10_000_000).optional().nullable(),
+  instalmentMonths: z.number().int().min(1).max(60).optional().nullable(),
+  onboarding: z.number().min(0).max(10_000_000).optional().nullable(),
+  minimumMonths: z.number().int().min(1).max(60).optional().nullable(),
+  featured: z.boolean().default(false),
+  features: z.array(z.string().trim().min(1).max(200)).max(40).default([]),
+  turnaroundLabel: z.string().trim().max(80).optional().or(z.literal("")),
+  internalNotes: z.string().trim().max(2000).optional().or(z.literal("")),
+  defaultTasks: z.array(z.string().trim().min(1).max(200)).max(40).default([]),
+});
+
+export const packageUpdateSchema = packageCreateSchema.partial().extend({
+  active: z.boolean().optional(),
+});
+
+export const addonCreateSchema = z.object({
+  name: z.string().trim().min(1, "Give it a name").max(160),
+  price: z.number().min(0).max(10_000_000),
+  billing: z.enum(PACKAGE_BILLINGS).default("ONCE_OFF"),
+  customQuote: z.boolean().default(false),
+  packageId: z.string().optional().nullable(),
+});
+
+export const addonUpdateSchema = addonCreateSchema.partial().extend({
+  active: z.boolean().optional(),
+});

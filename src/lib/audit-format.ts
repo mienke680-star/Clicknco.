@@ -62,6 +62,14 @@ const LABELS: Record<string, string> = {
   "calendarevent.updated": "updated a schedule item",
   "calendarevent.deleted": "deleted a schedule item",
   "businesssettings.updated": "updated business details",
+  "package.created": "added a package",
+  "package.updated": "updated a package",
+  "package.archived": "archived a package",
+  "package.restored": "restored a package",
+  "package.catalogue_imported": "imported the service catalogue",
+  "addon.created": "added an add-on",
+  "addon.updated": "updated an add-on",
+  "addon.archived": "archived an add-on",
 };
 
 export function describeAuditAction(action: string): string {
