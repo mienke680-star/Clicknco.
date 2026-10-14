@@ -5,6 +5,7 @@
 // touches Prisma.
 import { prisma } from "@/lib/db";
 import { fullAccess, viewOnly, noAccess, type StaffPermissions } from "@/lib/permissions";
+import { seedCatalogueForCompany } from "@/lib/clickco/catalogue-seed";
 import type { WidgetType } from "@/generated/prisma/client";
 
 export const BUILTIN_MODULES = [
@@ -142,4 +143,5 @@ export async function provisionNewCompany(companyId: string) {
   await provisionDefaultDashboard(companyId);
   await provisionDefaultStaffRoles(companyId);
   await provisionDefaultPipeline(companyId);
+  await seedCatalogueForCompany(companyId);
 }

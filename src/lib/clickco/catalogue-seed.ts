@@ -1,4 +1,8 @@
-import "server-only";
+// Note: no "server-only" guard -- provisionNewCompany() (src/lib/companies/
+// provision.ts) imports this, and that module is also loaded directly by
+// prisma/seed.ts, a standalone Node script outside the Next.js server
+// runtime where that import guard would throw unconditionally.
+import { prisma } from "@/lib/db";
 
 /** The real Click & Co service catalogue, transcribed verbatim from the
  * 2026 client packages brochure. Prices and feature lists are exact -- never
@@ -329,3 +333,75 @@ export const CATALOGUE_ADDONS: CatalogueAddon[] = [
   { name: "Content updates", price: 450, billing: "ONCE_OFF" },
   { name: "Advanced functionality / custom systems", price: 0, billing: "ONCE_OFF", customQuote: true },
 ];
+
+/** Upserts the real catalogue into a company by (companyId, slug) -- safe to
+ * call more than once. Used both by the "Import Click & Co catalogue" button
+ * and automatically on every new company's provisioning, since this is now a
+ * private single-tenant system built around Click & Co's own real pricing
+ * rather than a generic empty starting point. */
+export async function seedCatalogueForCompany(companyId: string) {
+  let created = 0;
+  let updated = 0;
+
+  for (let i = 0; i < CATALOGUE_PACKAGES.length; i++) {
+    const p = CATALOGUE_PACKAGES[i]!;
+    const existed = await prisma.package.findUnique({ where: { companyId_slug: { companyId, slug: p.slug } } });
+    await prisma.package.upsert({
+      where: { companyId_slug: { companyId, slug: p.slug } },
+      update: {
+        category: p.category,
+        name: p.name,
+        strapline: p.strapline,
+        price: p.price,
+        billing: p.billing,
+        customQuote: p.customQuote ?? false,
+        deposit: p.deposit ?? null,
+        instalment: p.instalment ?? null,
+        instalmentMonths: p.instalmentMonths ?? null,
+        onboarding: p.onboarding ?? null,
+        minimumMonths: p.minimumMonths ?? null,
+        featured: p.featured ?? false,
+        features: p.features,
+        active: true,
+      },
+      create: {
+        companyId,
+        slug: p.slug,
+        category: p.category,
+        name: p.name,
+        strapline: p.strapline,
+        price: p.price,
+        billing: p.billing,
+        customQuote: p.customQuote ?? false,
+        deposit: p.deposit ?? null,
+        instalment: p.instalment ?? null,
+        instalmentMonths: p.instalmentMonths ?? null,
+        onboarding: p.onboarding ?? null,
+        minimumMonths: p.minimumMonths ?? null,
+        featured: p.featured ?? false,
+        features: p.features,
+        sortOrder: i,
+      },
+    });
+    if (existed) updated += 1;
+    else created += 1;
+  }
+
+  const existingAddonCount = await prisma.addon.count({ where: { companyId } });
+  let addonsCreated = 0;
+  if (existingAddonCount === 0) {
+    await prisma.addon.createMany({
+      data: CATALOGUE_ADDONS.map((a, i) => ({
+        companyId,
+        name: a.name,
+        price: a.price,
+        billing: a.billing,
+        customQuote: a.customQuote ?? false,
+        sortOrder: i,
+      })),
+    });
+    addonsCreated = CATALOGUE_ADDONS.length;
+  }
+
+  return { created, updated, addonsCreated };
+}
