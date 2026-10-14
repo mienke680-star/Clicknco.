@@ -48,11 +48,23 @@ export async function provisionDefaultDashboard(companyId: string) {
   await prisma.dashboardWidget.createMany({ data: widgets.map((w) => ({ companyId, ...w })) });
 }
 
-function moduleAccess(overrides: Partial<Record<(typeof BUILTIN_MODULES)[number]["key"], Partial<Record<string, boolean>>>>) {
+/** Operations Hub module keys. Deliberately NOT added to BUILTIN_MODULES --
+ * that array also drives CompanyModule row creation and the classic-portal
+ * nav's BUILTIN_HREF fallback, which exist to let Build Mode show/hide/reorder
+ * modules per tenant. The Hub's own nav (src/lib/clickco/hub-nav.ts) is a
+ * fixed array with no per-tenant toggle, and ctx.can() works from StaffRole
+ * permissions JSON alone with no CompanyModule row required. */
+const HUB_MODULE_KEYS = ["quotes", "invoices", "projects", "packages", "consulting", "calendar", "business_settings"] as const;
+
+function moduleAccess(
+  overrides: Partial<Record<(typeof BUILTIN_MODULES)[number]["key"] | (typeof HUB_MODULE_KEYS)[number], Partial<Record<string, boolean>>>>,
+) {
   const result: StaffPermissions = {};
   for (const m of BUILTIN_MODULES) {
-    const base = overrides[m.key] ?? noAccess();
-    result[m.key] = base as StaffPermissions[string];
+    result[m.key] = (overrides[m.key] ?? noAccess()) as StaffPermissions[string];
+  }
+  for (const key of HUB_MODULE_KEYS) {
+    result[key] = (overrides[key] ?? noAccess()) as StaffPermissions[string];
   }
   return result;
 }
@@ -73,6 +85,13 @@ export async function provisionDefaultStaffRoles(companyId: string) {
           emails: { view: true, create: true },
           documents: { view: true, create: true },
           reports: viewOnly(),
+          quotes: fullAccess(),
+          invoices: fullAccess(),
+          projects: fullAccess(),
+          consulting: fullAccess(),
+          calendar: fullAccess(),
+          packages: viewOnly(),
+          business_settings: viewOnly(),
         }),
       },
       {
@@ -87,6 +106,13 @@ export async function provisionDefaultStaffRoles(companyId: string) {
           emails: viewOnly(),
           documents: viewOnly(),
           reports: viewOnly(),
+          quotes: viewOnly(),
+          invoices: viewOnly(),
+          projects: viewOnly(),
+          consulting: viewOnly(),
+          calendar: viewOnly(),
+          packages: viewOnly(),
+          business_settings: viewOnly(),
         }),
       },
     ],

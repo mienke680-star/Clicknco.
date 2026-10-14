@@ -21,7 +21,9 @@ export async function buildPortalNavItems(ctx: CompanyContext & { company: NonNu
     orderBy: { sortOrder: "asc" },
   });
 
-  const items: NavItem[] = [{ key: "dashboard", label: "Dashboard", href: "/portal", icon: "LayoutDashboard" }];
+  // "/portal" is now the Operations Hub's "Today" page (a different shell) --
+  // this just lets a classic-portal page link back to it.
+  const items: NavItem[] = [{ key: "dashboard", label: "Today", href: "/portal", icon: "LayoutDashboard" }];
 
   for (const m of modules) {
     if (!ctx.can(m.key, "view")) continue;
