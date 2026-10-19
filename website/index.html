@@ -143,11 +143,20 @@
     .services{background:
       radial-gradient(circle at 10% 65%,rgba(255,20,147,.08),transparent 28%),
       linear-gradient(180deg,#04172f,#051c3a)}
-    .service-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .service-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:auto auto;gap:16px}
+    .service-card:nth-child(1){grid-column:1;grid-row:1/3}
+    .service-card:nth-child(2){grid-column:2;grid-row:1}
+    .service-card:nth-child(3){grid-column:3;grid-row:1}
+    .service-card:nth-child(4){grid-column:2/4;grid-row:2}
     .service-card{--mx:50%;--my:50%;position:relative;min-height:360px;padding:34px;border:1px solid transparent;border-radius:20px;background:
       linear-gradient(var(--glass),var(--glass)) padding-box,
       linear-gradient(130deg,rgba(73,231,255,.62),rgba(255,20,147,.68),rgba(255,255,255,.08)) border-box;
-      backdrop-filter:blur(16px);overflow:hidden;transition:transform .38s var(--ease),box-shadow .38s}
+      backdrop-filter:blur(16px);overflow:hidden;display:flex;flex-direction:column;transition:transform .38s var(--ease),box-shadow .38s}
+    .service-card.reveal:nth-child(2){transition-delay:.06s}.service-card.reveal:nth-child(3){transition-delay:.12s}.service-card.reveal:nth-child(4){transition-delay:.18s}
+    .service-card:nth-child(1)::after,.service-card:nth-child(4)::after{content:"";position:absolute;right:-60px;bottom:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(73,231,255,.1),transparent 70%);pointer-events:none}
+    .service-card:nth-child(1){justify-content:flex-end;padding-bottom:54px}
+    .service-card:nth-child(1) .service-top{position:absolute;top:34px;left:34px;right:34px}
+    .service-card:nth-child(1) h3{margin-top:0}
     .service-card::before{content:"";position:absolute;width:260px;height:260px;left:var(--mx);top:var(--my);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,20,147,.16),transparent 67%);opacity:0;transition:opacity .3s;pointer-events:none}
     .service-card:hover{transform:translateY(-9px);box-shadow:0 28px 70px rgba(0,0,0,.27)}
     .service-card:hover::before{opacity:1}
@@ -163,6 +172,22 @@
     .service-card:hover .detail{grid-template-rows:1fr}
     .card-arrow{position:absolute;right:26px;bottom:24px;color:var(--pink);opacity:0;transform:translate(-8px,8px);transition:.3s;font-size:1.35rem}
     .service-card:hover .card-arrow{opacity:1;transform:none}
+
+    .who{background:linear-gradient(180deg,#04172f,#051a38)}
+    .who-info{margin-top:56px;padding:clamp(28px,4vw,44px);border-radius:20px;border:1px solid transparent;background:
+      linear-gradient(var(--glass),var(--glass)) padding-box,
+      linear-gradient(130deg,rgba(73,231,255,.5),rgba(255,20,147,.55),rgba(255,255,255,.08)) border-box;
+      backdrop-filter:blur(16px);display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(30px,5vw,56px)}
+    .who-label{display:block;font:800 .68rem/1 Montserrat,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:18px}
+    .who-list{list-style:none;margin:0;padding:0;display:grid;gap:13px}
+    .who-list li{position:relative;padding-left:22px;font-weight:700;color:var(--white);font-size:1.02rem}
+    .who-list li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:9px;border-radius:2px;background:var(--pink);box-shadow:0 0 8px var(--pink)}
+    .who-help p{margin:0 0 16px;font-size:.98rem;line-height:1.7}
+    .who-base{color:var(--cyan)!important;font-weight:700;font-size:.85rem!important;letter-spacing:.01em}
+    .who-fit{list-style:none;margin:44px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 50px}
+    .who-fit li{display:flex;gap:14px;align-items:flex-start;color:var(--muted);font-size:1rem;line-height:1.6;padding:16px 0;border-top:1px solid var(--line)}
+    .who-fit-dot{flex:none;margin-top:8px;width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink)}
+    @media(max-width:1000px){.who-info{grid-template-columns:1fr;gap:30px}.who-fit{grid-template-columns:1fr}}
 
     .work{background:#020d1f;overflow:hidden}
     .work::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(73,231,255,.18) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(90deg,transparent,#000 70%,transparent)}
@@ -202,6 +227,18 @@
     @media(max-width:520px){#cc-luxury-clean .cc-content{padding:30px 22px 22px}#cc-luxury-clean .cc-work{grid-template-columns:1fr;gap:28px}#cc-luxury-clean .cc-logo{height:145px}#cc-luxury-clean .cc-logo img{max-width:min(90%,225px);max-height:109px}#cc-luxury-clean .cc-project:nth-child(2) .cc-logo img{max-width:min(92%,230px);max-height:100px}#cc-luxury-clean .cc-support{grid-template-columns:1fr;gap:15px}#cc-luxury-clean .cc-bottom{padding:27px 22px;flex-direction:column;align-items:flex-start}#cc-luxury-clean .cc-caption{display:none}}
     @media(max-width:360px){#cc-luxury-clean .cc-venture{grid-template-columns:64px 1fr;gap:15px}}
 
+    .care{background:#020d1f}
+    .care-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .care-card{padding:28px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line);transition:transform .32s var(--ease),border-color .32s}
+    .care-card:hover{transform:translateY(-5px);border-color:rgba(73,231,255,.4)}
+    .care-card h4{margin:0 0 9px;font-family:Montserrat,sans-serif;font-size:1.1rem;letter-spacing:-.01em}
+    .care-card p{margin:0;font-size:.9rem;line-height:1.6}
+    .care-cta{background:linear-gradient(135deg,rgba(255,20,147,.14),rgba(73,231,255,.07));border-color:rgba(255,20,147,.38);display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+    .care-cta .btn{min-height:46px;align-self:flex-start}
+    @media(max-width:1000px){.care-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:650px){.care-grid{grid-template-columns:1fr}.care-cta{align-items:flex-start}.care-cta .btn{width:100%}}
+    .care-card.reveal:nth-child(2){transition-delay:.05s}.care-card.reveal:nth-child(3){transition-delay:.1s}.care-card.reveal:nth-child(4){transition-delay:.15s}.care-card.reveal:nth-child(5){transition-delay:.2s}.care-card.reveal:nth-child(6){transition-delay:.25s}
+
     .about{background:
       linear-gradient(rgba(73,231,255,.035) 1px,transparent 1px),
       linear-gradient(90deg,rgba(73,231,255,.035) 1px,transparent 1px),
@@ -212,6 +249,13 @@
     .about-copy p{font-size:1.1rem}
     .about-label{display:inline-flex;padding:10px 18px;background:#020911;border-radius:0 30px 30px 0;font-size:.72rem;letter-spacing:.17em;text-transform:uppercase;margin-top:25px}
     .mini-rings{position:absolute;width:320px;height:320px;border:1px solid rgba(255,20,147,.32);border-radius:50%;right:-100px;top:20%;animation:spin 18s linear infinite}
+    .about-pillars{grid-column:1/-1;margin-top:clamp(56px,8vw,96px);display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+    .about-pillar{padding:34px 30px 0;border-left:1px solid var(--line);transition:transform .35s var(--ease)}
+    .about-pillar:first-child{border-left:none;padding-left:0}
+    .about-pillar:hover{transform:translateY(-6px)}
+    .about-pillar-num{display:block;font:900 1.2rem/1 Montserrat,sans-serif;color:var(--pink);text-shadow:0 0 16px rgba(255,20,147,.45);margin-bottom:16px}
+    .about-pillar h4{margin:0 0 8px;font-family:Montserrat,sans-serif;font-size:1.15rem;letter-spacing:-.02em}
+    .about-pillar p{margin:0;font-size:.92rem;line-height:1.6;max-width:260px}
     .mini-rings::before,.mini-rings::after{content:"";position:absolute;border-radius:50%;inset:17%;border:1px solid rgba(73,231,255,.22)}
     .mini-rings::after{inset:36%;border-color:rgba(255,20,147,.3)}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -294,6 +338,23 @@
     .step b{display:block;color:var(--cyan);font:800 .72rem/1 Montserrat,sans-serif;letter-spacing:.18em;margin-bottom:18px}
     .step h3{font-size:1.65rem}.step p{font-size:.88rem;max-width:230px}
 
+    .facts{background:#020e21}
+    .facts-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:64px}
+    .facts-item{padding:22px 24px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+    .facts-item span{display:block;font-size:.64rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+    .facts-item b{display:block;font-family:Montserrat,sans-serif;font-weight:700;font-size:1.02rem;line-height:1.3;color:var(--white)}
+    .faq{max-width:880px}
+    .faq-group{font:800 .72rem/1 Montserrat,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:0 0 16px}
+    .faq-group:not(:first-child){margin-top:40px}
+    .faq-item{border-bottom:1px solid var(--line)}
+    .faq-item summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:44px;padding:16px 2px;font-family:Montserrat,sans-serif;font-weight:700;font-size:1.02rem;color:var(--white)}
+    .faq-item summary::-webkit-details-marker{display:none}
+    .faq-item summary::after{content:"+";flex:none;font-size:1.3rem;font-weight:400;color:var(--cyan);transition:transform .3s var(--ease)}
+    .faq-item[open] summary::after{transform:rotate(45deg)}
+    .faq-item p{margin:0 0 20px;font-size:.95rem;line-height:1.7;max-width:70ch}
+    @media(max-width:1000px){.facts-strip{grid-template-columns:1fr 1fr}}
+    @media(max-width:650px){.facts-strip{grid-template-columns:1fr}}
+
     .contact{padding:140px 0 80px;background:
       radial-gradient(circle at 80% 30%,rgba(255,20,147,.17),transparent 30%),
       radial-gradient(circle at 12% 70%,rgba(73,231,255,.1),transparent 25%),
@@ -311,6 +372,7 @@
     .field textarea{min-height:125px;resize:vertical}.field select option{color:#111}
     .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,20,147,.12)}
     .submit{width:100%;margin-top:18px}
+    .submit-note{margin:12px 0 0;text-align:center;font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
     footer{background:#010817;padding:60px 0 96px;border-top:1px solid var(--line)}
     .footer-top{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:start;padding-bottom:42px}
     .footer-logo{width:72px;height:72px;display:flex;align-items:center;justify-content:center}
@@ -330,6 +392,13 @@
       .section-head,.about-grid,.contact-grid{grid-template-columns:1fr;gap:25px}
       .project-layout{grid-template-columns:1fr 1fr}.project.secondary{margin-top:70px}
       .footer-top{grid-template-columns:1fr}
+      .service-grid{grid-template-columns:1fr 1fr;grid-template-rows:none}
+      .service-card:nth-child(1){grid-column:1/3;grid-row:auto;justify-content:flex-start;padding-bottom:34px}
+      .service-card:nth-child(2),.service-card:nth-child(3){grid-column:auto;grid-row:auto}
+      .service-card:nth-child(4){grid-column:1/3;grid-row:auto}
+      .service-card:nth-child(1) .service-top{position:static;margin-bottom:0}
+      .service-card:nth-child(1) h3{margin-top:50px}
+      .service-card:nth-child(1)::after,.service-card:nth-child(4)::after{display:none}
     }
     @media(max-width:720px){
       .wrap{width:min(calc(100% - 30px),var(--max))}
@@ -344,7 +413,9 @@
       .ray.r1{transform:translate(54px,-3px) rotate(-20deg)}.ray.r2{transform:translate(54px,-3px) rotate(-58deg)}.ray.r3{transform:translate(54px,-3px) rotate(-96deg)}.ray.r4{transform:translate(54px,-3px) rotate(-134deg)}
       .hero-note{display:none}.hero-actions{display:grid}.hero-actions .btn{width:100%}
       .section{padding:90px 0}.section-head{margin-bottom:45px}
-      .service-grid{grid-template-columns:1fr}.service-card{min-height:auto;padding:25px}.service-card h3{margin-top:35px}.detail{grid-template-rows:1fr}.detail small{padding-right:22px}
+      .service-grid{grid-template-columns:1fr;grid-template-rows:none}.service-card,.service-card:nth-child(1),.service-card:nth-child(2),.service-card:nth-child(3),.service-card:nth-child(4){grid-column:auto;grid-row:auto}.service-card{min-height:auto;padding:25px}.service-card h3{margin-top:35px}.detail{grid-template-rows:1fr}.detail small{padding-right:22px}
+      .service-card:nth-child(1){justify-content:flex-start;padding-bottom:25px}.service-card:nth-child(1) .service-top{position:static;margin-bottom:0}.service-card:nth-child(1) h3{margin-top:35px}.service-card:nth-child(1)::after,.service-card:nth-child(4)::after{display:none}
+      .about-pillars{grid-template-columns:1fr;gap:28px}.about-pillar{border-left:none;border-top:1px solid var(--line);padding:26px 0 0}.about-pillar:first-child{border-top:none;padding-top:0}
       .project-layout{display:grid;grid-template-columns:1fr;gap:50px}.project.secondary{margin-top:0}.work::before{display:none}
       .steps{grid-template-columns:1fr}.process-line{left:10px;right:auto;top:0;bottom:0;width:2px;height:auto}.process-fill{width:100%;height:0}
       .step{padding:4px 0 40px 58px}.step-dot{left:0;top:3px}.step p{max-width:none}
@@ -396,11 +467,11 @@
         <div class="copy">
           <p class="eyebrow">Websites · Solutions · Results</p>
           <h1 id="hero-title">
-            <span class="line"><span>Websites</span></span>
-            <span class="line"><span>built to <span class="move">move</span></span></span>
-            <span class="line"><span>business.</span></span>
+            <span class="line"><span>Websites that make</span></span>
+            <span class="line"><span>your business easy</span></span>
+            <span class="line"><span>to find, <span class="move">trust</span> and contact.</span></span>
           </h1>
-          <p class="sub">A full-service digital partner for growing businesses.</p>
+          <p class="sub">CLICK & CO. designs and builds professional websites for established and growing businesses in South Africa, the UK and the US.</p>
           <div class="actions">
             <a class="cta primary magnetic" href="#contact"><span>Start a project</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             <a class="cta magnetic" href="#work"><span>Explore our work</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -411,6 +482,29 @@
       <div class="status"><div class="services"><span><i></i>Strategy</span><span><i></i>Design</span><span><i></i>Development</span></div><div class="scroll">Scroll to explore</div></div>
     </section>
     <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>MAKE EVERY CLICK COUNT</span><span>WEBSITE DESIGN</span><span>MARKETING DIRECTION</span><span>BUSINESS DESIGN</span><span>MAKE EVERY CLICK COUNT</span><span>WEBSITE DESIGN</span><span>MARKETING DIRECTION</span><span>BUSINESS DESIGN</span></div></div>
+
+    <section class="section who" id="who">
+      <div class="wrap">
+        <div class="section-head reveal"><div><div class="eyebrow">Who we help</div><h2>WEBSITES AND DESIGN FOR BUSINESSES THAT WANT TO BE <span class="pink">FOUND AND TRUSTED.</span></h2></div><p>CLICK &amp; CO. builds websites, and the branding and design that go with them, for business owners who want to look professional online and make it easy for customers to get in touch.</p></div>
+        <div class="who-info reveal">
+          <div>
+            <span class="who-label">What we do</span>
+            <ul class="who-list"><li>Websites</li><li>Marketing consulting</li><li>Business packages</li><li>Business designs</li></ul>
+          </div>
+          <div class="who-help">
+            <span class="who-label">Who we help</span>
+            <p>Owners and managers of established and growing businesses &mdash; engineering and industrial suppliers, transport and logistics, laboratory services, construction and trades, and food and retail.</p>
+            <p class="who-base">Based in Ballito, South Africa &middot; clients in South Africa, the UK and the US.</p>
+          </div>
+        </div>
+        <ul class="who-fit reveal">
+          <li><span class="who-fit-dot" aria-hidden="true"></span>Have no website, or yours looks dated and doesn&rsquo;t bring in enquiries.</li>
+          <li><span class="who-fit-dot" aria-hidden="true"></span>Get customers through referrals and want them to find and trust you online too.</li>
+          <li><span class="who-fit-dot" aria-hidden="true"></span>Want one team for your website, branding and marketing material.</li>
+          <li><span class="who-fit-dot" aria-hidden="true"></span>Want a clear process and a real person to talk to.</li>
+        </ul>
+      </div>
+    </section>
 
     <section class="section services" id="services">
       <div class="wrap">
@@ -483,11 +577,30 @@
       </div>
     </section>
 
+    <section class="section care" id="care">
+      <div class="wrap">
+        <div class="section-head reveal"><div><div class="eyebrow">After launch</div><h2>WE KEEP YOUR <span class="pink">WEBSITE RUNNING.</span></h2></div><p>A care plan means you are never left on your own with your website. We host it, keep it up to date and fix problems, so you can get on with running your business.</p></div>
+        <div class="care-grid">
+          <article class="care-card reveal"><h4>Hosting</h4><p>Your website stays online on reliable hosting that we set up and manage.</p></article>
+          <article class="care-card reveal"><h4>Updates</h4><p>Need new photos, services, opening hours or text? Send it to us and we will update it.</p></article>
+          <article class="care-card reveal"><h4>Backups</h4><p>Regular backups, so your website can be restored if something goes wrong.</p></article>
+          <article class="care-card reveal"><h4>Fixes</h4><p>If something breaks or the server has problems, we sort it out.</p></article>
+          <article class="care-card reveal"><h4>Support</h4><p>Questions go to the same team that built your website, on WhatsApp or email.</p></article>
+          <article class="care-card care-cta reveal"><div><h4>Which plan fits?</h4><p>Ask us which care plan suits your website.</p></div><a class="btn btn-primary" href="#contact">Talk to us about care <span class="arr">→</span></a></article>
+        </div>
+      </div>
+    </section>
+
     <section class="section about" id="about">
       <div class="mini-rings" aria-hidden="true"></div>
       <div class="wrap about-grid">
         <div class="reveal"><div class="eyebrow">About CLICK & CO.</div><h2>GOOD DESIGN SHOULD DO MORE THAN <span class="pink">LOOK GOOD.</span></h2></div>
         <div class="about-copy reveal"><p>We combine strategy, design and technology to create digital experiences that help businesses look professional, communicate clearly and grow confidently.</p><p>Every decision has a purpose: to make your business easier to understand, trust and choose.</p><span class="about-label">Make every click count</span></div>
+        <div class="about-pillars reveal">
+          <div class="about-pillar"><span class="about-pillar-num">01</span><h4>Strategy</h4><p>Clear direction before a single pixel is placed.</p></div>
+          <div class="about-pillar"><span class="about-pillar-num">02</span><h4>Design</h4><p>Visual systems that make your brand instantly legible.</p></div>
+          <div class="about-pillar"><span class="about-pillar-num">03</span><h4>Technology</h4><p>Built to perform, not just to look good.</p></div>
+        </div>
       </div>
     </section>
 
@@ -554,9 +667,36 @@
       </div>
     </section>
 
+    <section class="section facts" id="facts">
+      <div class="wrap">
+        <div class="section-head reveal"><div><div class="eyebrow">Good to know</div><h2>FACTS <span class="pink">&amp; QUESTIONS.</span></h2></div><p>Quick answers before you reach out &mdash; on who we are, how we work and what happens after launch.</p></div>
+        <div class="facts-strip reveal">
+          <div class="facts-item"><span>Based in</span><b>Ballito, South Africa</b></div>
+          <div class="facts-item"><span>Clients in</span><b>South Africa, the UK and the US</b></div>
+          <div class="facts-item"><span>We reply</span><b>Within 24 hours</b></div>
+          <div class="facts-item"><span>Our process</span><b>Discover, design, build, launch</b></div>
+        </div>
+        <div class="faq reveal">
+          <h3 class="faq-group">About CLICK &amp; CO. and who we help</h3>
+          <details class="faq-item"><summary>What does CLICK &amp; CO. do?</summary><p>We design and build websites, and the branding and design material that goes with them, such as logos, social designs, brochures and menus. We also offer marketing consulting.</p></details>
+          <details class="faq-item"><summary>Who do you work with?</summary><p>Established and growing businesses that want a professional website that makes it easy for customers to get in touch. Our work so far includes industrial suppliers, logistics, laboratory services and food retail.</p></details>
+          <details class="faq-item"><summary>Where are you based, and where are your clients?</summary><p>We are based in Ballito, South Africa. We work with clients in South Africa, the UK and the US.</p></details>
+          <details class="faq-item"><summary>How much does a website cost?</summary><p>It depends on the pages, features and design work you need. Tell us about your business and we will send you a clear quote.</p></details>
+          <details class="faq-item"><summary>What happens after I contact you?</summary><p>We reply within 24 hours. Then we follow four steps: discover, design, build and launch.</p></details>
+
+          <h3 class="faq-group">Hosting and care</h3>
+          <details class="faq-item"><summary>What is a care plan?</summary><p>A plan where we host your website and look after it once it is live: updates, backups, fixes and support.</p></details>
+          <details class="faq-item"><summary>What does a care plan include?</summary><p>Hosting, updates to your content, regular backups, fixes when something breaks, and support from the team that built your website.</p></details>
+          <details class="faq-item"><summary>Do I need a care plan?</summary><p>Every website has to be hosted somewhere and looked after. We recommend a care plan so that someone is responsible for keeping yours online and up to date. Ask us what suits your website.</p></details>
+          <details class="faq-item"><summary>What if something breaks?</summary><p>Message us on WhatsApp or email and we will look into it.</p></details>
+          <details class="faq-item"><summary>What does a care plan cost?</summary><p>It depends on the website. We include the care plan options in your quote.</p></details>
+        </div>
+      </div>
+    </section>
+
     <section class="contact" id="contact">
       <div class="wrap contact-grid">
-        <div class="reveal"><div class="eyebrow">Let's begin</div><h2>READY TO MAKE YOUR BUSINESS <span class="pink">CLICK?</span></h2><p>Tell us what you need and we will come back with clear next steps.</p>
+        <div class="reveal"><div class="eyebrow">Let's begin</div><h2>READY TO MAKE YOUR BUSINESS <span class="pink">CLICK?</span></h2><p>Tell us what you need. We will get back to you within 24 hours with clear next steps.</p>
           <div class="contact-list"><a href="https://wa.me/27690522875" target="_blank" rel="noopener">WhatsApp / Call: 069 052 2875</a><a href="mailto:clickandcocmpny@outlook.com">clickandcocmpny@outlook.com</a><a id="siteUrl" href="/">Website</a></div>
         </div>
         <form class="contact-form reveal" id="contactForm"><img class="contact-cursor" src="assets/clickandco-3d-cursor.png" alt="" aria-hidden="true">
@@ -567,6 +707,7 @@
             <div class="field full"><label for="message">Project details</label><textarea id="message" placeholder="Tell us a little about your project"></textarea></div>
           </div>
           <button class="btn btn-primary submit" type="submit">Start a project <span class="arr">→</span></button>
+          <p class="submit-note">We reply within 24 hours.</p>
         </form>
       </div>
     </section>
