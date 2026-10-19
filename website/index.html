@@ -140,54 +140,28 @@
     .section{padding:130px 0}
     .section-head{display:grid;grid-template-columns:1fr .75fr;gap:10vw;align-items:end;margin-bottom:70px}
     .section-head p{font-size:1.04rem;max-width:520px}
-    .services{background:
-      radial-gradient(circle at 10% 65%,rgba(255,20,147,.08),transparent 28%),
-      linear-gradient(180deg,#04172f,#051c3a)}
-    .service-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:auto auto;gap:16px}
-    .service-card:nth-child(1){grid-column:1;grid-row:1/3}
-    .service-card:nth-child(2){grid-column:2;grid-row:1}
-    .service-card:nth-child(3){grid-column:3;grid-row:1}
-    .service-card:nth-child(4){grid-column:2/4;grid-row:2}
-    .service-card{--mx:50%;--my:50%;position:relative;min-height:360px;padding:34px;border:1px solid transparent;border-radius:20px;background:
-      linear-gradient(var(--glass),var(--glass)) padding-box,
-      linear-gradient(130deg,rgba(73,231,255,.62),rgba(255,20,147,.68),rgba(255,255,255,.08)) border-box;
-      backdrop-filter:blur(16px);overflow:hidden;display:flex;flex-direction:column;transition:transform .38s var(--ease),box-shadow .38s}
-    .service-card.reveal:nth-child(2){transition-delay:.06s}.service-card.reveal:nth-child(3){transition-delay:.12s}.service-card.reveal:nth-child(4){transition-delay:.18s}
-    .service-card:nth-child(1)::after,.service-card:nth-child(4)::after{content:"";position:absolute;right:-60px;bottom:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(73,231,255,.1),transparent 70%);pointer-events:none}
-    .service-card:nth-child(1){justify-content:flex-end;padding-bottom:54px}
-    .service-card:nth-child(1) .service-top{position:absolute;top:34px;left:34px;right:34px}
-    .service-card:nth-child(1) h3{margin-top:0}
-    .service-card::before{content:"";position:absolute;width:260px;height:260px;left:var(--mx);top:var(--my);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,20,147,.16),transparent 67%);opacity:0;transition:opacity .3s;pointer-events:none}
-    .service-card:hover{transform:translateY(-9px);box-shadow:0 28px 70px rgba(0,0,0,.27)}
-    .service-card:hover::before{opacity:1}
-    .service-top{display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1}
-    .service-icon{width:74px;height:74px;border:1px solid rgba(73,231,255,.42);border-radius:18px;display:grid;place-items:center;background:rgba(0,0,0,.17);box-shadow:inset 0 0 20px rgba(73,231,255,.04)}
-    .service-icon svg{width:40px;height:40px;fill:none;stroke:var(--cyan);stroke-width:1.7;filter:drop-shadow(0 0 6px rgba(73,231,255,.65))}
-    .service-num{font:900 2.1rem/1 Montserrat,sans-serif;color:var(--pink);text-shadow:0 0 18px rgba(255,20,147,.5)}
-    .service-card h3{margin:50px 0 13px}
-    .service-card p{max-width:530px;margin-bottom:0}
-    .detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
-    .detail > div{overflow:hidden}
-    .detail small{display:block;padding-top:15px;color:#d5e4f6;font-size:.78rem}
-    .service-card:hover .detail{grid-template-rows:1fr}
-    .card-arrow{position:absolute;right:26px;bottom:24px;color:var(--pink);opacity:0;transform:translate(-8px,8px);transition:.3s;font-size:1.35rem}
-    .service-card:hover .card-arrow{opacity:1;transform:none}
+    .services{background:#04172f}
+    .service-list{border-top:1px solid var(--line)}
+    .service-row{position:relative;display:grid;grid-template-columns:90px 1fr 1.1fr;gap:clamp(20px,4vw,56px);align-items:baseline;padding:clamp(28px,4vw,46px) 0;border-bottom:1px solid var(--line);transition:padding-left .4s var(--ease)}
+    .service-row:hover{padding-left:16px}
+    .service-row .num{font:700 1rem/1 Montserrat,sans-serif;color:var(--cyan)}
+    .service-row h3{margin:0;font-size:clamp(1.7rem,3.1vw,2.65rem);letter-spacing:-.03em}
+    .service-row p{margin:0;font-size:1.02rem;line-height:1.75;max-width:520px}
+    .service-row .arr{position:absolute;right:0;top:50%;transform:translateY(-50%) translateX(-8px);color:var(--pink);font-size:1.4rem;opacity:0;transition:.3s}
+    .service-row:hover .arr{opacity:1;transform:translateY(-50%) translateX(0)}
+    @media(max-width:720px){.service-row{grid-template-columns:1fr;gap:10px;padding-right:34px}.service-row .arr{top:auto;bottom:28px}}
+    .service-row.reveal:nth-child(2){transition-delay:.05s}.service-row.reveal:nth-child(3){transition-delay:.1s}.service-row.reveal:nth-child(4){transition-delay:.15s}
 
-    .who{background:linear-gradient(180deg,#04172f,#051a38)}
-    .who-info{margin-top:56px;padding:clamp(28px,4vw,44px);border-radius:20px;border:1px solid transparent;background:
-      linear-gradient(var(--glass),var(--glass)) padding-box,
-      linear-gradient(130deg,rgba(73,231,255,.5),rgba(255,20,147,.55),rgba(255,255,255,.08)) border-box;
-      backdrop-filter:blur(16px);display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(30px,5vw,56px)}
-    .who-label{display:block;font:800 .68rem/1 Montserrat,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:18px}
-    .who-list{list-style:none;margin:0;padding:0;display:grid;gap:13px}
-    .who-list li{position:relative;padding-left:22px;font-weight:700;color:var(--white);font-size:1.02rem}
-    .who-list li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:9px;border-radius:2px;background:var(--pink);box-shadow:0 0 8px var(--pink)}
-    .who-help p{margin:0 0 16px;font-size:.98rem;line-height:1.7}
+    .who{background:#04172f}
+    .who-info{margin-top:clamp(50px,7vw,88px);padding-top:40px;border-top:1px solid var(--line);display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(30px,5vw,80px)}
+    .who-label{display:block;font:800 .68rem/1 Montserrat,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:22px}
+    .who-list{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+    .who-list li{font-family:Montserrat,sans-serif;font-weight:700;color:var(--white);font-size:1.3rem;letter-spacing:-.01em}
+    .who-help p{margin:0 0 16px;font-size:1.02rem;line-height:1.75}
     .who-base{color:var(--cyan)!important;font-weight:700;font-size:.85rem!important;letter-spacing:.01em}
-    .who-fit{list-style:none;margin:44px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 50px}
-    .who-fit li{display:flex;gap:14px;align-items:flex-start;color:var(--muted);font-size:1rem;line-height:1.6;padding:16px 0;border-top:1px solid var(--line)}
-    .who-fit-dot{flex:none;margin-top:8px;width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink)}
-    @media(max-width:1000px){.who-info{grid-template-columns:1fr;gap:30px}.who-fit{grid-template-columns:1fr}}
+    .who-fit{list-style:none;margin:44px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 60px}
+    .who-fit li{display:block;color:var(--muted);font-size:1.04rem;line-height:1.6;padding:18px 0;border-top:1px solid var(--line)}
+    @media(max-width:1000px){.who-info{grid-template-columns:1fr;gap:34px}.who-fit{grid-template-columns:1fr}}
 
     .work{background:#020d1f;overflow:hidden}
     .work::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(73,231,255,.18) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(90deg,transparent,#000 70%,transparent)}
@@ -228,16 +202,16 @@
     @media(max-width:360px){#cc-luxury-clean .cc-venture{grid-template-columns:64px 1fr;gap:15px}}
 
     .care{background:#020d1f}
-    .care-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .care-card{padding:28px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line);transition:transform .32s var(--ease),border-color .32s}
-    .care-card:hover{transform:translateY(-5px);border-color:rgba(73,231,255,.4)}
-    .care-card h4{margin:0 0 9px;font-family:Montserrat,sans-serif;font-size:1.1rem;letter-spacing:-.01em}
-    .care-card p{margin:0;font-size:.9rem;line-height:1.6}
-    .care-cta{background:linear-gradient(135deg,rgba(255,20,147,.14),rgba(73,231,255,.07));border-color:rgba(255,20,147,.38);display:flex;flex-direction:column;justify-content:space-between;gap:20px}
-    .care-cta .btn{min-height:46px;align-self:flex-start}
-    @media(max-width:1000px){.care-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:650px){.care-grid{grid-template-columns:1fr}.care-cta{align-items:flex-start}.care-cta .btn{width:100%}}
-    .care-card.reveal:nth-child(2){transition-delay:.05s}.care-card.reveal:nth-child(3){transition-delay:.1s}.care-card.reveal:nth-child(4){transition-delay:.15s}.care-card.reveal:nth-child(5){transition-delay:.2s}.care-card.reveal:nth-child(6){transition-delay:.25s}
+    .care-list{border-top:1px solid var(--line)}
+    .care-row{display:grid;grid-template-columns:.85fr 1.6fr;gap:clamp(20px,4vw,60px);align-items:baseline;padding:clamp(22px,3vw,32px) 0;border-bottom:1px solid var(--line)}
+    .care-row h4{margin:0;font-family:Montserrat,sans-serif;font-weight:700;font-size:1.3rem;letter-spacing:-.015em;color:var(--white)}
+    .care-row p{margin:0;font-size:1.02rem;line-height:1.75}
+    .care-row.care-cta-row{align-items:center}
+    .care-row.care-cta-row > div{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+    .care-row.care-cta-row p{margin:0}
+    .care-row .btn{min-height:48px}
+    @media(max-width:720px){.care-row{grid-template-columns:1fr;gap:8px}.care-row.care-cta-row{align-items:flex-start}.care-row.care-cta-row>div{flex-direction:column;align-items:flex-start;gap:14px}.care-row .btn{width:100%;margin-top:4px}}
+    .care-row.reveal:nth-child(2){transition-delay:.04s}.care-row.reveal:nth-child(3){transition-delay:.08s}.care-row.reveal:nth-child(4){transition-delay:.12s}.care-row.reveal:nth-child(5){transition-delay:.16s}.care-row.reveal:nth-child(6){transition-delay:.2s}
 
     .about{background:
       linear-gradient(rgba(73,231,255,.035) 1px,transparent 1px),
@@ -392,13 +366,6 @@
       .section-head,.about-grid,.contact-grid{grid-template-columns:1fr;gap:25px}
       .project-layout{grid-template-columns:1fr 1fr}.project.secondary{margin-top:70px}
       .footer-top{grid-template-columns:1fr}
-      .service-grid{grid-template-columns:1fr 1fr;grid-template-rows:none}
-      .service-card:nth-child(1){grid-column:1/3;grid-row:auto;justify-content:flex-start;padding-bottom:34px}
-      .service-card:nth-child(2),.service-card:nth-child(3){grid-column:auto;grid-row:auto}
-      .service-card:nth-child(4){grid-column:1/3;grid-row:auto}
-      .service-card:nth-child(1) .service-top{position:static;margin-bottom:0}
-      .service-card:nth-child(1) h3{margin-top:50px}
-      .service-card:nth-child(1)::after,.service-card:nth-child(4)::after{display:none}
     }
     @media(max-width:720px){
       .wrap{width:min(calc(100% - 30px),var(--max))}
@@ -413,8 +380,6 @@
       .ray.r1{transform:translate(54px,-3px) rotate(-20deg)}.ray.r2{transform:translate(54px,-3px) rotate(-58deg)}.ray.r3{transform:translate(54px,-3px) rotate(-96deg)}.ray.r4{transform:translate(54px,-3px) rotate(-134deg)}
       .hero-note{display:none}.hero-actions{display:grid}.hero-actions .btn{width:100%}
       .section{padding:90px 0}.section-head{margin-bottom:45px}
-      .service-grid{grid-template-columns:1fr;grid-template-rows:none}.service-card,.service-card:nth-child(1),.service-card:nth-child(2),.service-card:nth-child(3),.service-card:nth-child(4){grid-column:auto;grid-row:auto}.service-card{min-height:auto;padding:25px}.service-card h3{margin-top:35px}.detail{grid-template-rows:1fr}.detail small{padding-right:22px}
-      .service-card:nth-child(1){justify-content:flex-start;padding-bottom:25px}.service-card:nth-child(1) .service-top{position:static;margin-bottom:0}.service-card:nth-child(1) h3{margin-top:35px}.service-card:nth-child(1)::after,.service-card:nth-child(4)::after{display:none}
       .about-pillars{grid-template-columns:1fr;gap:28px}.about-pillar{border-left:none;border-top:1px solid var(--line);padding:26px 0 0}.about-pillar:first-child{border-top:none;padding-top:0}
       .project-layout{display:grid;grid-template-columns:1fr;gap:50px}.project.secondary{margin-top:0}.work::before{display:none}
       .steps{grid-template-columns:1fr}.process-line{left:10px;right:auto;top:0;bottom:0;width:2px;height:auto}.process-fill{width:100%;height:0}
@@ -498,10 +463,10 @@
           </div>
         </div>
         <ul class="who-fit reveal">
-          <li><span class="who-fit-dot" aria-hidden="true"></span>Have no website, or yours looks dated and doesn&rsquo;t bring in enquiries.</li>
-          <li><span class="who-fit-dot" aria-hidden="true"></span>Get customers through referrals and want them to find and trust you online too.</li>
-          <li><span class="who-fit-dot" aria-hidden="true"></span>Want one team for your website, branding and marketing material.</li>
-          <li><span class="who-fit-dot" aria-hidden="true"></span>Want a clear process and a real person to talk to.</li>
+          <li>Have no website, or yours looks dated and doesn&rsquo;t bring in enquiries.</li>
+          <li>Get customers through referrals and want them to find and trust you online too.</li>
+          <li>Want one team for your website, branding and marketing material.</li>
+          <li>Want a clear process and a real person to talk to.</li>
         </ul>
       </div>
     </section>
@@ -509,23 +474,11 @@
     <section class="section services" id="services">
       <div class="wrap">
         <div class="section-head reveal"><div><div class="eyebrow">What we do</div><h2>ONE PARTNER.<br><span class="pink">MORE IMPACT.</span></h2></div><p>Strategy, design and technology brought together into one connected digital experience—built around what your business actually needs.</p></div>
-        <div class="service-grid">
-          <article class="service-card reveal">
-            <div class="service-top"><div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="8" width="38" height="31" rx="4"/><path d="M5 16h38M11 12h1M16 12h1"/></svg></div><span class="service-num">01</span></div>
-            <h3>WEBSITES</h3><p>Business, e-commerce, landing page, portfolio, booking and property websites—plus redesigns.</p><div class="detail"><div><small>Responsive, clear and created to turn attention into action.</small></div></div><span class="card-arrow">↗</span>
-          </article>
-          <article class="service-card reveal">
-            <div class="service-top"><div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 22h8l20-9v22l-20-9H8zM16 26l4 11h7"/></svg></div><span class="service-num">02</span></div>
-            <h3>MARKETING CONSULTING</h3><p>Strategy, brand positioning, audits, campaign planning and ongoing monthly guidance.</p><div class="detail"><div><small>Practical direction based on your audience, goals and budget.</small></div></div><span class="card-arrow">↗</span>
-          </article>
-          <article class="service-card reveal">
-            <div class="service-top"><div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5 41 15 24 25 7 15zM7 15v19l17 9 17-9V15M24 25v18"/></svg></div><span class="service-num">03</span></div>
-            <h3>BUSINESS PACKAGES</h3><p>Website, brand identity, stationery and social design—combined and scoped to your goals.</p><div class="detail"><div><small>One connected foundation instead of disconnected pieces.</small></div></div><span class="card-arrow">↗</span>
-          </article>
-          <article class="service-card reveal">
-            <div class="service-top"><div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="18" cy="24" r="12"/><circle cx="30" cy="17" r="12"/><circle cx="30" cy="31" r="12"/></svg></div><span class="service-num">04</span></div>
-            <h3>BUSINESS DESIGNS</h3><p>Logo and brand identity, social media designs, advertising, brochures and presentations.</p><div class="detail"><div><small>Professional visual material that keeps your brand recognisable.</small></div></div><span class="card-arrow">↗</span>
-          </article>
+        <div class="service-list">
+          <article class="service-row reveal"><span class="num">01</span><h3>Websites</h3><p>Business, e-commerce, landing page, portfolio, booking and property websites&mdash;plus redesigns. Responsive, clear and created to turn attention into action.</p><span class="arr" aria-hidden="true">↗</span></article>
+          <article class="service-row reveal"><span class="num">02</span><h3>Marketing consulting</h3><p>Strategy, brand positioning, audits, campaign planning and ongoing monthly guidance. Practical direction based on your audience, goals and budget.</p><span class="arr" aria-hidden="true">↗</span></article>
+          <article class="service-row reveal"><span class="num">03</span><h3>Business packages</h3><p>Website, brand identity, stationery and social design&mdash;combined and scoped to your goals. One connected foundation instead of disconnected pieces.</p><span class="arr" aria-hidden="true">↗</span></article>
+          <article class="service-row reveal"><span class="num">04</span><h3>Business designs</h3><p>Logo and brand identity, social media designs, advertising, brochures and presentations. Professional visual material that keeps your brand recognisable.</p><span class="arr" aria-hidden="true">↗</span></article>
         </div>
       </div>
     </section>
@@ -580,13 +533,13 @@
     <section class="section care" id="care">
       <div class="wrap">
         <div class="section-head reveal"><div><div class="eyebrow">After launch</div><h2>WE KEEP YOUR <span class="pink">WEBSITE RUNNING.</span></h2></div><p>A care plan means you are never left on your own with your website. We host it, keep it up to date and fix problems, so you can get on with running your business.</p></div>
-        <div class="care-grid">
-          <article class="care-card reveal"><h4>Hosting</h4><p>Your website stays online on reliable hosting that we set up and manage.</p></article>
-          <article class="care-card reveal"><h4>Updates</h4><p>Need new photos, services, opening hours or text? Send it to us and we will update it.</p></article>
-          <article class="care-card reveal"><h4>Backups</h4><p>Regular backups, so your website can be restored if something goes wrong.</p></article>
-          <article class="care-card reveal"><h4>Fixes</h4><p>If something breaks or the server has problems, we sort it out.</p></article>
-          <article class="care-card reveal"><h4>Support</h4><p>Questions go to the same team that built your website, on WhatsApp or email.</p></article>
-          <article class="care-card care-cta reveal"><div><h4>Which plan fits?</h4><p>Ask us which care plan suits your website.</p></div><a class="btn btn-primary" href="#contact">Talk to us about care <span class="arr">→</span></a></article>
+        <div class="care-list">
+          <article class="care-row reveal"><h4>Hosting</h4><p>Your website stays online on reliable hosting that we set up and manage.</p></article>
+          <article class="care-row reveal"><h4>Updates</h4><p>Need new photos, services, opening hours or text? Send it to us and we will update it.</p></article>
+          <article class="care-row reveal"><h4>Backups</h4><p>Regular backups, so your website can be restored if something goes wrong.</p></article>
+          <article class="care-row reveal"><h4>Fixes</h4><p>If something breaks or the server has problems, we sort it out.</p></article>
+          <article class="care-row reveal"><h4>Support</h4><p>Questions go to the same team that built your website, on WhatsApp or email.</p></article>
+          <article class="care-row care-cta-row reveal"><h4>Which plan fits?</h4><div><p>Ask us which care plan suits your website.</p><a class="btn btn-primary" href="#contact">Talk to us about care <span class="arr">→</span></a></div></article>
         </div>
       </div>
     </section>
