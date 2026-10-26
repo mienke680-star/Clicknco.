@@ -29,6 +29,7 @@ button{color:inherit;background:none;border:none}
 img,svg{display:block;max-width:100%}
 section{position:relative}
 section[id]{scroll-margin-top:96px}
+.edit-row[id]{scroll-margin-top:110px}
 .wrap{width:min(calc(100% - 44px),var(--max));margin-inline:auto}
 .skip{position:fixed;left:18px;top:-70px;z-index:1000;background:var(--pink);color:#fff;padding:12px 18px;border-radius:100px;font-weight:700;transition:.25s}
 .skip:focus{top:18px}
@@ -146,6 +147,40 @@ footer{background:var(--dark-peony);color:#ddc7bd;padding:64px 0 40px}
 .teaser-item h4{margin:0}
 .teaser-item p{font-size:.92rem;margin:0}
 .teaser-more{margin-top:40px}
+
+/* services promo (home "what we do" bento) */
+.services-promo{position:relative;overflow:hidden}
+.services-promo-head{position:relative;overflow:hidden;border-radius:22px;min-height:360px;display:flex;align-items:center;margin-top:50px;margin-bottom:60px}
+.services-promo-bg{position:absolute;inset:0;z-index:0}
+.services-promo-bg img{width:100%;height:100%;object-fit:cover;object-position:right center}
+.services-promo-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ivory) 0%,rgba(248,247,242,.94) 32%,rgba(248,247,242,.55) 55%,rgba(248,247,242,.08) 74%,transparent 86%)}
+.services-promo-copy{position:relative;z-index:2;max-width:600px;padding:48px 40px}
+.services-promo-copy h2{text-transform:uppercase}
+.services-promo-copy h2 em{font-style:italic;color:var(--dark-peony)}
+.services-promo-copy h2 .pink-dot{color:var(--pink)}
+.services-promo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;padding-bottom:70px}
+.promo-card{background:#fff;border-radius:22px;padding:26px;box-shadow:0 18px 44px rgba(74,8,24,.07);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.promo-card:hover{transform:translateY(-6px);box-shadow:0 26px 60px rgba(74,8,24,.12)}
+.promo-card-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.promo-num{flex:none;width:46px;height:46px;border-radius:50%;background:var(--sage);color:var(--dark-peony);display:flex;align-items:center;justify-content:center;font-family:var(--sans-sc);font-weight:700;font-size:.85rem}
+.promo-card-head h3{margin:3px 0 4px;font-size:1.3rem}
+.promo-sub{display:block;font-family:var(--sans-sc);font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--charcoal)}
+.promo-img{border-radius:14px;overflow:hidden;aspect-ratio:4/3;margin-bottom:18px}
+.promo-img img{width:100%;height:100%;object-fit:cover}
+.promo-card p{font-size:.92rem;margin-bottom:20px}
+.promo-more{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.promo-more span:first-child{font-family:var(--sans-sc);font-size:.64rem;font-weight:700;letter-spacing:.1em;color:var(--dark-peony)}
+.promo-arr{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:var(--ivory);color:var(--dark-peony);font-size:1rem;transition:background .3s,transform .3s var(--ease),color .3s}
+.promo-card:hover .promo-arr{background:var(--pink);color:#fff;transform:translateX(3px)}
+.promo-card.reveal:nth-child(2){transition-delay:.06s}.promo-card.reveal:nth-child(3){transition-delay:.12s}.promo-card.reveal:nth-child(4){transition-delay:.18s}
+@media(max-width:1000px){.services-promo-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){
+  .services-promo-grid{grid-template-columns:1fr}
+  .services-promo-head{min-height:0;margin-top:34px;margin-bottom:40px}
+  .services-promo-copy{padding:30px 22px}
+  .services-promo-bg img{object-position:80% center}
+  .services-promo-scrim{background:linear-gradient(180deg,rgba(248,247,242,.4) 0%,var(--ivory) 72%)}
+}
 
 .stripe{background:var(--sage);color:var(--dark-peony);padding:60px 0}
 .stripe h2{color:var(--dark-peony);margin-bottom:10px}
