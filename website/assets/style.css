@@ -236,6 +236,15 @@ footer{background:var(--dark-peony);color:#ddc7bd;padding:64px 0 40px}
 .client p{margin:0 0 10px;font-size:.92rem}
 .client-link{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans-sc);font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--dark-peony);border-bottom:1px solid var(--pink);padding-bottom:3px}
 .client-pending{display:inline-flex;font-family:var(--sans-sc);font-size:.72rem;color:var(--charcoal);letter-spacing:.04em}
+
+/* mockup cards (laptop-preview work cards) */
+.mockup-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.mockup-card{min-width:0}
+.mockup-img{border-radius:10px;overflow:hidden;aspect-ratio:1452/1083;margin-bottom:22px;background:var(--taupe)}
+.mockup-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.mockup-card:hover .mockup-img img{transform:scale(1.03)}
+.mockup-card h4{margin:0 0 4px;font-size:1.3rem}
+.mockup-card p{margin:0 0 10px;font-size:.92rem}
 .support-row{display:grid;grid-template-columns:1fr 1.3fr;gap:28px;align-items:start}
 .support-row h4{margin:0 0 8px}
 .support-tags{margin-top:12px;font-family:var(--sans-sc);font-size:.68rem;letter-spacing:.06em;color:var(--peony-red)}
@@ -304,6 +313,7 @@ footer{background:var(--dark-peony);color:#ddc7bd;padding:64px 0 40px}
   .pillar{border-left:none;border-top:1px solid var(--line);padding:26px 0 0;margin-top:26px}
   .pillar:first-child{border-top:none;padding-top:0;margin-top:0}
   .client-grid{grid-template-columns:1fr;gap:40px}
+  .mockup-grid{grid-template-columns:1fr;gap:40px}
   .support-row{grid-template-columns:1fr;gap:14px}
   .founders-shell{grid-template-columns:1fr;gap:40px}
   .facts-strip{grid-template-columns:1fr 1fr}
