@@ -37,6 +37,9 @@ assets/style.css   All brand tokens + component styles for every page
 assets/main.js     All shared JS behaviour for every page
 assets/clickandco-logo-transparent.png   Icon-only pink "C" mark — header, footer, favicon
 assets/clickandco-3d-cursor.png          unused — kept from an earlier hero design
+assets/hero-laptop-table.jpg             Home page hero background (laptop/phone mockup on stone table)
+assets/hero-desktop.jpg                  unused — replaced by hero-laptop-table.jpg
+assets/hero-mobile.jpg                   unused — replaced by hero-laptop-table.jpg
 assets/clickandco-campaign-advert.jpeg   used as the og:image meta tag
 assets/clickco-earth-night.png           unused — leftover from the retired WebGL globe hero
 assets/globe-webgl.js                    unused — leftover from the retired WebGL globe hero
